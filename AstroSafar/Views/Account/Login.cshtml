@@ -1,4 +1,4 @@
-﻿@model AstroSafar.Models.Registration
+﻿@* @model AstroSafar.Models.Registration
 <h2>Login</h2>
 <form asp-action="Login" method="post">
     <div class="form-group">
@@ -18,4 +18,25 @@
 
 <div>
     <a href="@Url.Action("Index", "Home")">Back to Home</a>
+</div>
+ *@
+ @model AstroSafar.Models.Registration
+<h2>Login</h2>
+<form asp-action="Login" method="post">
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Login" class="btn btn-primary" />
+    </div>
+</form>
+<div>
+    <a href="@Url.Action("Register", "Account")">Don't have an account? Register</a>
 </div>
