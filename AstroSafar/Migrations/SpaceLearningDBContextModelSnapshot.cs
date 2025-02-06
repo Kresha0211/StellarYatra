@@ -22,8 +22,8 @@ namespace AstroSafar.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
-=======
+
+
             modelBuilder.Entity("AstroSafar.Models.Course", b =>
                 {
                     b.Property<int>("CourseID")
@@ -112,7 +112,6 @@ namespace AstroSafar.Migrations
                     b.ToTable("Feedbacks");
                 });
 
->>>>>>> 7a4937a7082ec329b77d8f5d7b719e4fe5000d5b
             modelBuilder.Entity("AstroSafar.Models.Registration", b =>
                 {
                     b.Property<int>("Id")
