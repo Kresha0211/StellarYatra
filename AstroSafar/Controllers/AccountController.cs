@@ -38,7 +38,7 @@ namespace AstroSafar.Controllers
                     _context.Registrations.Add(registration);
                     await _context.SaveChangesAsync();
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Login", "Account");
                 }
                 catch (Exception ex)
                 {
