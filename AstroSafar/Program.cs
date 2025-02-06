@@ -1,15 +1,46 @@
+﻿
+
 using AstroSafar.Models;
 using Microsoft.EntityFrameworkCore;
+using AstroSafar.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+//using AstroSafar.Services;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+
 builder.Services.AddDbContext<SpaceLearningDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddSession();
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<SpaceLearningDBContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";  // Redirect to login page
+    options.AccessDeniedPath = "/Account/Register";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);// Redirect when access denied
+});
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+
+builder.Services.AddAuthorization();
+
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);  // Set session timeout as needed
+    options.Cookie.IsEssential = true;  // Make the session cookie essential for the application
+});
 
 var app = builder.Build();
 
@@ -17,7 +48,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -26,11 +56,19 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSession();
-
+app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+//app.MapControllerRoute(
+//    name: "earthquake",
+//    pattern: "earthquake",
+//    defaults: new { controller = "Earthquake", action = "Index" });
+
+

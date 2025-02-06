@@ -1,6 +1,10 @@
-﻿using AstroSafar.Models;
+﻿using AstroSafar.Data;
+using AstroSafar.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace AstroSafar.Controllers
 {
@@ -21,6 +25,53 @@ namespace AstroSafar.Controllers
         {
             return View();
         }
+
+        //public IActionResult Course()
+        //{
+        //    var courses = CourseRepository.GetInitialCourses();
+        //    return View(courses);
+        //}
+        //public IActionResult ShowMore()
+        //{
+        //    return View();
+        //}
+        //[Authorize] // Only logged-in users can access this
+        //public IActionResult MoreCourses()
+        //{
+        //    var moreCourses = CourseRepository.GetMoreCourses();
+        //    return View("Course", moreCourses); // Reusing Index.cshtml for more courses
+        //}
+        //public IActionResult SubmitFeedback()
+        //{
+        //    return View();
+        //}
+
+        //private static List<Feedback> feedbackList = new List<Feedback>();
+
+        //[HttpPost]
+        //public IActionResult SubmitFeedback(Feedback feedback)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        feedbackList.Add(feedback);
+        //        ViewBag.Message = "Thank you for your feedback!";
+        //    }
+        //    return View("Index");
+        //}
+
+
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // If user is logged in, capture their ID
+        //        feedback.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Anonymous";
+
+        //        _context.Feedbacks.Add(feedback);
+        //        _context.SaveChanges();
+
+        //        ViewBag.Message = "Thank you for your feedback!";
+        //    }
+        //    return View("Index");
 
         //public IActionResult CourseGuideline()
         //{
