@@ -4,6 +4,7 @@ using AstroSafar.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstroSafar.Migrations
 {
     [DbContext(typeof(SpaceLearningDBContext))]
-    partial class SpaceLearningDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250204085753_weee")]
+    partial class weee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,8 +25,6 @@ namespace AstroSafar.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("AstroSafar.Models.Course", b =>
                 {
                     b.Property<int>("CourseID")
@@ -85,34 +86,6 @@ namespace AstroSafar.Migrations
                     b.ToTable("Earthquakes");
                 });
 
-            modelBuilder.Entity("AstroSafar.Models.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Feedbacks");
-                });
-
->>>>>>> 7a4937a7082ec329b77d8f5d7b719e4fe5000d5b
             modelBuilder.Entity("AstroSafar.Models.Registration", b =>
                 {
                     b.Property<int>("Id")

@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+  @model List<AstroSafar.Models.Course>
+@{
+  
+   
+
+
+    ViewData["Title"] = "Courses";
+}
+
+<h2>Available Courses</h2>
+
+<div class="row">
+    @foreach (var course in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@course.ImageURL" class="card-img-top" alt="@course.Title">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">@course.Description</p>
+                    <p><strong>Duration:</strong> @course.Duration</p>
+                    <p><strong>Published Date:</strong> @course.PublishedDate.ToShortDateString()</p>
+                </div>
+            </div>
+        </div>
+       @*  <div>
+            <a href="@Url.Action("Index" ,"Course")">Course</a>
+        </div> *@
+    }
+</div>
+ @if (ViewContext.RouteData.Values["action"]?.ToString() == "Course") // Only show on the main course page
+    {
+        <div class="text-center mt-4">
+            <a asp-controller="Course" asp-action="ShowMore" class="btn btn-primary">View More Courses</a>
+        </div>
+    }
+
+

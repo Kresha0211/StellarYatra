@@ -1,18 +1,24 @@
 ﻿using AstroSafar.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity;
 
 namespace AstroSafar.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly SpaceLearningDBContext _context;
 
-        public AccountController(SpaceLearningDBContext context)
+         public AccountController(SpaceLearningDBContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Registration Page
