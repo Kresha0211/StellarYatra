@@ -26,8 +26,6 @@ namespace AstroSafar.Controllers
             return View();
         }
 
-       
-
         //private static List<Feedback> feedbackList = new List<Feedback>();
 
         //[HttpPost]
@@ -74,9 +72,6 @@ namespace AstroSafar.Controllers
 
         //    return View(guidelines); // ✅ Pass data to Index.cshtml
         //}
-
-
-
         public IActionResult Privacy()
         {
             return View();
