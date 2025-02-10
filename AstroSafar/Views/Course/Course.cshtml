@@ -1,12 +1,19 @@
+<<<<<<< HEAD
 ﻿@* 
 @* @{
     @model List<AstroSafar.Models.Course>
 
 
+=======
+﻿ @model List<AstroSafar.Models.Course>
+@{
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
     ViewData["Title"] = "Courses";
 }
 
 <h2>Available Courses</h2>
+
+<!-- Display Login/Logout links -->
 @if (User.Identity.IsAuthenticated)
 {
     <p>Logged in as: @User.Identity.Name</p>
@@ -14,13 +21,14 @@
 }
 else
 {
-   
     <a href="@Url.Action("Login", "Account")">Login</a>
 }
-<div class="row">
+
+<!-- Courses Container -->
+<div class="row" id="course-container">
     @foreach (var course in Model)
     {
-        <div class="col-md-4">
+        <div class="col-md-4 course-card">
             <div class="card">
                 <img src="@course.ImageURL" class="card-img-top" alt="@course.Title">
                 <div class="card-body">
@@ -31,6 +39,7 @@ else
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
        @*  <div>
             <a href="@Url.Action("Index" ,"Course")">Course</a>
         </div> *@
@@ -108,8 +117,17 @@ else
  
 
 
+=======
+    }
+</div>
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
 
+<!-- Button to load more courses -->
+<div class="text-center mt-4">
+    <button id="loadMoreCourses" class="btn btn-primary">View More Courses</button>
+</div>
 
+<<<<<<< HEAD
  *@
 
 
@@ -158,6 +176,8 @@ else
     <button id="loadMoreCourses" class="btn btn-primary">View More Courses</button>
 </div>
 
+=======
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -170,6 +190,7 @@ else
                         let courseContainer = $("#course-container");
                         $.each(data, function (index, course) {
                             let courseCard = `
+<<<<<<< HEAD
                                         <div class="col-md-4 course-card">
                                             <div class="card">
                                                 <img src="${course.imageURL}" class="card-img-top" alt="${course.title}">
@@ -181,6 +202,19 @@ else
                                                 </div>
                                             </div>
                                         </div>`;
+=======
+                                                <div class="col-md-4 course-card">
+                                                    <div class="card">
+                                                        <img src="${course.imageURL}" class="card-img-top" alt="${course.title}">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">${course.title}</h5>
+                                                            <p class="card-text">${course.description}</p>
+                                                            <p><strong>Duration:</strong> ${course.duration}</p>
+                                                            <p><strong>Published Date:</strong> ${new Date(course.publishedDate).toLocaleDateString()}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
                             courseContainer.append(courseCard);
                         });
                         $("#loadMoreCourses").hide(); // Hide button after loading more courses
@@ -197,4 +231,8 @@ else
             });
         });
     </script>
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d

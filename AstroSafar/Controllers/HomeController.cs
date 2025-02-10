@@ -20,31 +20,13 @@ namespace AstroSafar.Controllers
         {
             return View();
         }
-
+       
         public IActionResult CourseGuideline()
         {
             return View();
         }
 
-        //public IActionResult Course()
-        //{
-        //    var courses = CourseRepository.GetInitialCourses();
-        //    return View(courses);
-        //}
-        //public IActionResult ShowMore()
-        //{
-        //    return View();
-        //}
-        //[Authorize] // Only logged-in users can access this
-        //public IActionResult MoreCourses()
-        //{
-        //    var moreCourses = CourseRepository.GetMoreCourses();
-        //    return View("Course", moreCourses); // Reusing Index.cshtml for more courses
-        //}
-        //public IActionResult SubmitFeedback()
-        //{
-        //    return View();
-        //}
+       
 
         //private static List<Feedback> feedbackList = new List<Feedback>();
 

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.RegularExpressions;
 
 namespace AstroSafar.Models
 {
@@ -19,6 +20,7 @@ namespace AstroSafar.Models
 
         [Required(ErrorMessage = " * ")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
+
         public string Email { get; set; }
 
         [Required(ErrorMessage = "*")]

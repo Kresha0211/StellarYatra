@@ -10,8 +10,8 @@ namespace AstroSafar.Controllers
     {
 
         private readonly SpaceLearningDBContext _context;
-
-        public CourseController(SpaceLearningDBContext context)
+       
+        public CourseController(SpaceLearningDBContext context, ILogger<CourseController> logger)
         {
             _context = context;
         }
@@ -47,6 +47,7 @@ namespace AstroSafar.Controllers
     }
 }
 
+<<<<<<< HEAD
 
 
 
@@ -56,5 +57,8 @@ namespace AstroSafar.Controllers
        
 
 
+=======
+    
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
 
 
