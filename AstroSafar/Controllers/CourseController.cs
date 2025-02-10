@@ -15,67 +15,46 @@ namespace AstroSafar.Controllers
         {
             _context = context;
         }
+        public IActionResult Index()
+        {
+            var courses = CourseRepository.GetInitialCourses();
+            return View(courses);
+        }
 
-        //[Authorize] // Ensures only authenticated users can access
-        //public IActionResult MoreCourses()
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    if (userId != null)
-        //    {
-        //        //var courses = _context.Courses.ToList();
-        //        //return View(courses);
-        //        var moreCourses = CourseRepository.GetMoreCourses();
-        //        return View("Course", moreCourses);c
-        //    }
 
-        //    return RedirectToAction("Login", "Account");
-        //}
         public IActionResult Course()
         {
             var courses = CourseRepository.GetInitialCourses();
             return View(courses);
         }
-        public IActionResult ShowMore()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                Console.WriteLine("✅ User is logged in, redirecting to MoreCourses...");
-                return RedirectToAction("MoreCourses");
-            }
-            else
-            {
-                Console.WriteLine("❌ User is NOT logged in, redirecting to Login...");
-                return RedirectToAction("Login", "Account");
-            }
-        }
 
-        [Authorize] // Ensures only logged-in users can access
-        public IActionResult MoreCourses()
+        [HttpGet]
+        public IActionResult GetMoreCourses()
         {
-            // 🔹 Check if user is authenticated
-            if (!User.Identity.IsAuthenticated)
+            // Check if the user is logged in via session
+            if (HttpContext.Session.GetInt32("RegisterId") == null)
             {
-                return RedirectToAction("Login", "Account"); // Redirect if not logged in
+                // For an AJAX call, return 401 Unauthorized so the client can handle redirection
+                Response.StatusCode = 401;
+                return Json(new { error = "User is not authenticated." });
             }
 
+            // If the user is authenticated, return the additional courses as JSON
             var moreCourses = CourseRepository.GetMoreCourses();
-            return View(moreCourses); // Ensure "Index.cshtml" exists inside Views/Course/
+            return Json(moreCourses);
         }
+    }
+}
+
+
+
+
 
 
         
-        // Only logged-in users can access this
-        //public IActionResult MoreCourses()
-        //{
-        //    var moreCourses = CourseRepository.GetMoreCourses();
-        //    return View("Course", moreCourses); // Reusing Index.cshtml for more courses
-        //}
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
 
 
-    }
-}
+
+

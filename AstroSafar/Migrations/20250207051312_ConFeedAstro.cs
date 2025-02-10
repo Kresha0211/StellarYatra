@@ -5,7 +5,7 @@
 namespace AstroSafar.Migrations
 {
     /// <inheritdoc />
-    public partial class space : Migration
+    public partial class ConFeedAstro : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

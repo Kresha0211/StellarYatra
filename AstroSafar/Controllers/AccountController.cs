@@ -20,6 +20,30 @@ namespace AstroSafar.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        //[HttpGet]
+        //public IActionResult CheckUserAuthentication()
+        //{
+        //    Console.WriteLine("🔹 Checking User Authentication...");
+        //    bool isAuthenticated = User.Identity.IsAuthenticated;
+        //    Console.WriteLine($"✅ User Authenticated: {isAuthenticated}");
+        //    return Json(isAuthenticated);
+        //}
+
+        //[HttpGet]
+        //public IActionResult CheckUserAuthentication()
+        //{
+        //    bool isAuthenticated = User.Identity.IsAuthenticated;
+        //    return Json(new { isAuthenticated }); // Send JSON response
+        //}
+
+        [HttpGet]
+        public IActionResult CheckUserAuthentication()
+        {
+            bool isAuthenticated = User.Identity.IsAuthenticated;
+            return Json(new { isAuthenticated });
+        }
+
+
 
         // GET: Registration Page
         public IActionResult Register()
@@ -75,6 +99,7 @@ namespace AstroSafar.Controllers
             ViewBag.Message = "Invalid Email or Password!";
             return View();
         }
+
 
         public IActionResult Logout()
         {

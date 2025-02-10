@@ -25,7 +25,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>
-{
+{  
     options.LoginPath = "/Account/Login";  // Redirect to login page
     options.AccessDeniedPath = "/Account/Register";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);// Redirect when access denied

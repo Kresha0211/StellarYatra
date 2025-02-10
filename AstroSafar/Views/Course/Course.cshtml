@@ -1,5 +1,5 @@
-﻿
-@{
+﻿@* 
+@* @{
     @model List<AstroSafar.Models.Course>
 
 
@@ -34,15 +34,167 @@ else
        @*  <div>
             <a href="@Url.Action("Index" ,"Course")">Course</a>
         </div> *@
-    }
+@*     }
 </div>
  @if (ViewContext.RouteData.Values["action"]?.ToString() == "Course") // Only show on the main course page
     {
         <div class="text-center mt-4">
             <a asp-controller="Course" asp-action="ShowMore" class="btn btn-primary">View More Courses</a>
         </div>
+    } *@
+ @*--------------------*@
+    @* @model List<AstroSafar.Models.Course>
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h2>Available Courses</h2>
+
+<div class="row" id="course-container">
+    @foreach (var course in Model)
+    {
+        <div class="col-md-4 course-card">
+            <div class="card">
+                <img src="@course.ImageURL" class="card-img-top" alt="@course.Title">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">@course.Description</p>
+                    <p><strong>Duration:</strong> @course.Duration</p>
+                    <p><strong>Published Date:</strong> @course.PublishedDate.ToShortDateString()</p>
+                </div>
+            </div>
+        </div>
     }
+</div>
+
+<div class="text-center mt-4">
+    <button id="loadMoreCourses" class="btn btn-primary">View More Courses</button>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () { 
+            $("#loadMoreCourses").click(function () {
+                $.ajax({
+                    url: '@Url.Action("GetMoreCourses", "Course")',
+                    type: 'GET',
+                    success: function (data) {
+                        let courseContainer = $("#course-container");
+                        $.each(data, function (index, course) {
+                            let courseCard = `
+                                            <div class="col-md-4 course-card">
+                                                <div class="card">
+                                                    <img src="${course.imageURL}" class="card-img-top" alt="${course.title}">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">${course.title}</h5>
+                                                        <p class="card-text">${course.description}</p>
+                                                        <p><strong>Duration:</strong> ${course.duration}</p>
+                                                        <p><strong>Published Date:</strong> ${new Date(course.publishedDate).toLocaleDateString()}</p>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                            courseContainer.append(courseCard);
+                        });
+
+                        $("#loadMoreCourses").hide(); // Hide button after loading more courses
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+ 
 
 
 
 
+ *@
+
+
+                                                        @*------------*@
+
+
+
+@model List<AstroSafar.Models.Course>
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h2>Available Courses</h2>
+
+<!-- Display Login/Logout links -->
+@if (User.Identity.IsAuthenticated)
+{
+    <p>Logged in as: @User.Identity.Name</p>
+    <a href="@Url.Action("Logout", "Account")">Logout</a>
+}
+else
+{
+    <a href="@Url.Action("Login", "Account")">Login</a>
+}
+
+<!-- Courses Container -->
+<div class="row" id="course-container">
+    @foreach (var course in Model)
+    {
+        <div class="col-md-4 course-card">
+            <div class="card">
+                <img src="@course.ImageURL" class="card-img-top" alt="@course.Title">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">@course.Description</p>
+                    <p><strong>Duration:</strong> @course.Duration</p>
+                    <p><strong>Published Date:</strong> @course.PublishedDate.ToShortDateString()</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Button to load more courses -->
+<div class="text-center mt-4">
+    <button id="loadMoreCourses" class="btn btn-primary">View More Courses</button>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#loadMoreCourses").click(function () {
+                $.ajax({
+                    url: '@Url.Action("GetMoreCourses", "Course")',
+                    type: 'GET',
+                    success: function (data) {
+                        let courseContainer = $("#course-container");
+                        $.each(data, function (index, course) {
+                            let courseCard = `
+                                        <div class="col-md-4 course-card">
+                                            <div class="card">
+                                                <img src="${course.imageURL}" class="card-img-top" alt="${course.title}">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${course.title}</h5>
+                                                    <p class="card-text">${course.description}</p>
+                                                    <p><strong>Duration:</strong> ${course.duration}</p>
+                                                    <p><strong>Published Date:</strong> ${new Date(course.publishedDate).toLocaleDateString()}</p>
+                                                </div>
+                                            </div>
+                                        </div>`;
+                            courseContainer.append(courseCard);
+                        });
+                        $("#loadMoreCourses").hide(); // Hide button after loading more courses
+                    },
+                    error: function (xhr, status, error) {
+                        if (xhr.status === 401) {
+                            // If the user is not authenticated, redirect to the Login page
+                            window.location.href = '@Url.Action("Login", "Account")';
+                        } else {
+                            console.error("An error occurred: " + error);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    @model List<AstroSafar.Models.Course>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>No courses found.</p>
+    }
+    else
+    {
+        @foreach (var course in Model)
+        {
+            <p>@course.Title</p>
+        }
+    }
+}
