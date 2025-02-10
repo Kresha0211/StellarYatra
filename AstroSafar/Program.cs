@@ -21,17 +21,19 @@ builder.Services.AddDbContext<SpaceLearningDBContext>(options =>
 
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    //.AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<SpaceLearningDBContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login";  // Redirect to login page
-    options.AccessDeniedPath = "/Account/Register";
+    options.LoginPath = "/Account/Login";   // Redirect to login page
+    options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);// Redirect when access denied
 });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
+
 
 builder.Services.AddAuthorization();
 
@@ -66,9 +68,5 @@ app.MapControllerRoute(
 
 app.Run();
 
-//app.MapControllerRoute(
-//    name: "earthquake",
-//    pattern: "earthquake",
-//    defaults: new { controller = "Earthquake", action = "Index" });
 
 

@@ -63,7 +63,7 @@ namespace AstroSafar.Controllers
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
-            var regis = _context.Registrations.FirstOrDefault(c => c.Email==email && c.Password == password);
+            var regis = _context.Registrations.FirstOrDefault(c => c.Email == email && c.Password == password);
 
             if (regis != null)
             {
@@ -76,6 +76,7 @@ namespace AstroSafar.Controllers
             return View();
         }
 
+        
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();

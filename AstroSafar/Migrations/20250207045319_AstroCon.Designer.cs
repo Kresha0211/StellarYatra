@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstroSafar.Migrations
 {
     [DbContext(typeof(SpaceLearningDBContext))]
-    [Migration("20250204085753_weee")]
-    partial class weee
+    [Migration("20250207045319_AstroCon")]
+    partial class AstroCon
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace AstroSafar.Migrations
                     b.ToTable("Courses");
                 });
 
-            modelBuilder.Entity("AstroSafar.Models.Earthquake", b =>
+            modelBuilder.Entity("AstroSafar.Models.Feedback", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,19 +71,23 @@ namespace AstroSafar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Location")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Magnitude")
-                        .HasColumnType("float");
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Earthquakes");
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.Registration", b =>

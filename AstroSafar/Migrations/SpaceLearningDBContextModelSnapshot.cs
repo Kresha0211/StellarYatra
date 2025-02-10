@@ -22,8 +22,6 @@ namespace AstroSafar.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-
-
             modelBuilder.Entity("AstroSafar.Models.Course", b =>
                 {
                     b.Property<int>("CourseID")
@@ -60,29 +58,6 @@ namespace AstroSafar.Migrations
                     b.HasKey("CourseID");
 
                     b.ToTable("Courses");
-                });
-
-            modelBuilder.Entity("AstroSafar.Models.Earthquake", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Magnitude")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Earthquakes");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.Feedback", b =>
