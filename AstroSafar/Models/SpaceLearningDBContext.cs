@@ -12,7 +12,11 @@ namespace AstroSafar.Models
 
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Course> Courses { get; set; }
+<<<<<<< HEAD
+        
+=======
    
+>>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -20,9 +20,14 @@ namespace AstroSafar.Data
         {
             return new List<Course>
             {
-                new Course { CourseID = 4, Title = "Astrobiology", Description = "Study of life in the universe.", Duration = "3 hours", PublishedDate = DateTime.UtcNow, IsPublished = true, ImageURL = "/images/astrobiology.jpg" },
+                new Course { CourseID = 4, Title = "Astrobiology",
+                                           Description = "Study of life in the universe.",
+                                           Duration = "3 hours",
+                                           PublishedDate = DateTime.UtcNow, 
+                                           IsPublished = true,
+                                           ImageURL = "/images/Astrobiology.jpg" },
                 new Course { CourseID = 5, Title = "Mars Exploration", Description = "History and future of Mars missions.", Duration = "4.5 hours", PublishedDate = DateTime.UtcNow, IsPublished = true, ImageURL = "/images/mars.jpg" },
-                new Course { CourseID = 6, Title = "Exoplanets", Description = "Discover planets beyond our solar system.", Duration = "5 hours", PublishedDate = DateTime.UtcNow, IsPublished = true, ImageURL = "/images/exoplanets.jpg" }
+                new Course { CourseID = 6, Title = "Exoplanets", Description = "Discover planets beyond our solar system.", Duration = "5 hours", PublishedDate = DateTime.UtcNow, IsPublished = true, ImageURL = "/images/explanets.jpg" }
             };
         }
 
