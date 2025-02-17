@@ -1,0 +1,30 @@
+﻿@model IEnumerable<AstroSafar.Models.Category>
+
+<h2>Categories</h2>
+
+<a class="btn btn-primary" asp-action="AddCategory">Add New Category</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Category Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+                <td>
+                    <a class="btn btn-warning" asp-action="EditCategory" asp-route-id="@category.Id">Edit</a>
+                    <form asp-action="DeleteCategory" asp-route-id="@category.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

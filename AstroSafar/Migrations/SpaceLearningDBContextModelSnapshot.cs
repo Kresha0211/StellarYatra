@@ -22,13 +22,71 @@ namespace AstroSafar.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AstroSafar.Models.Course", b =>
+            modelBuilder.Entity("AstroSafar.Models.AdminLogin", b =>
                 {
-                    b.Property<int>("CourseID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AdminLogins");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Primary"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Secondary"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Higher Secondary"
+                        });
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -36,28 +94,18 @@ namespace AstroSafar.Migrations
 
                     b.Property<string>("Duration")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageURL")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsPublished")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("PublishedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("CourseID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("courseAdmins");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.Feedback", b =>
@@ -123,6 +171,64 @@ namespace AstroSafar.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Registrations", (string)null);
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.UnitAdmin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VideoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("unitAdmins");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Category", "Category")
+                        .WithMany("Courses")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.UnitAdmin", b =>
+                {
+                    b.HasOne("AstroSafar.Models.CourseAdmin", "CourseAdmin")
+                        .WithMany("UnitAdmins")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CourseAdmin");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.Category", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
+                {
+                    b.Navigation("UnitAdmins");
                 });
 #pragma warning restore 612, 618
         }

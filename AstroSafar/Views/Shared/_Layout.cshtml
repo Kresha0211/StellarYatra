@@ -28,26 +28,45 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-<<<<<<< HEAD
-=======
-
->>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SelfAssesment">SelfAssesment</a>
                         </li>
-<<<<<<< HEAD
-=======
 
->>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
+                        <!-- Course Dropdown Starts Here -->
+                        @{
+                            var categories = ViewData["Categories"] as List<Category>;
+                        }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Course" asp-action="Course">Courses</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" data-bs-toggle="dropdown">
+                                Courses
+                            </a>
+                            <div class="dropdown-menu">
+                                @if (categories != null && categories.Any())
+                                {
+                                    @foreach (var category in categories)
+                                    {
+                                        <a class="dropdown-item" href="@Url.Action("CourseList", "Admin", new { categoryId = category.Id })">
+                                            @category.Name
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="dropdown-item text-muted">No categories available</span>
+                                }
+                            </div>
                         </li>
+
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Earthquake" asp-action="Index">Earth</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Gallery">Gallery</a>
                         </li>
                         
                         <li class="nav-item">
@@ -57,12 +76,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="SubmitFeedback" asp-action="SubmitFeedback">ContactUs</a>
                         </li>
-                       
-<<<<<<< HEAD
-=======
-
->>>>>>> 9f11d452a012207b723c953258bd01175e53f43d
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dashboard
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dashboardDropdown">
+                             @*  <li><a class="dropdown-item" href="/AdminLogin/Admin">Admin Panel</a></li>
+                                < li><a class="dropdown-item" href="/Client/Dashboard">Client Panel</a></li> 
+                                <li><a class="dropdown-item" href="/Home/Logout">Logout</a></li> *@
+                                <li><a class="dropdown-item" href="@Url.Action("AdminLogin", "Admin")">Admin Panel</a></li>
+                                <li><a class="dropdown-item" href="/Account/Login">Client Panel</a></li>
+                                <li><a class="dropdown-item" href="/Home/Logout">Logout</a></li>
+                            </ul>
+                        </li>
                     </ul>
+                 
                   
                     <ul class="navbar-nav">
                         @if (Context.Session.GetInt32("RegisterId") != null)
@@ -83,6 +111,7 @@
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
+
                     </ul>
                 </div>
             </div>
@@ -101,6 +130,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿using AstroSafar.Data;
+﻿//using AstroSafar.Data;
 using AstroSafar.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -77,6 +77,11 @@ namespace AstroSafar.Controllers
             return View();
         }
         public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        public IActionResult Gallery()
         {
             return View();
         }

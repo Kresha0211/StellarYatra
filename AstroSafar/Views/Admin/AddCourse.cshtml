@@ -1,0 +1,43 @@
+﻿ @model AstroSafar.Models.CourseAdmin
+
+<h2 class="mb-4">Add New Course</h2>
+
+<form asp-action="AddCourse" method="post" class="p-4 border rounded shadow-sm">
+    <!-- Course Name -->
+    <div class="mb-3">
+        <label for="Name" class="form-label">Course Name:</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter course name" required />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+    <!-- Description -->
+    <div class="mb-3">
+        <label for="Description" class="form-label">Course Description:</label>
+        <textarea asp-for="Description" class="form-control" placeholder="Enter course description" rows="4" required></textarea>
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+
+    <!-- Duration (Read-only) -->
+    <div class="mb-3">
+        <label for="Duration" class="form-label">Course Duration (Months):</label>
+        <input asp-for="Duration" class="form-control" />
+        <span class="text-danger" asp-validation-for="Duration"></span>
+    </div>
+    <!-- Category Dropdown -->
+    <div class="mb-3">
+        <label for="CategoryId" class="form-label">Select Category:</label>
+        <select asp-for="CategoryId" class="form-control" required>
+            <option value="">-- Select Category --</option>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+        <span class="text-danger" asp-validation-for="CategoryId"></span>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success">Add Course</button>
+</form>
+
+
+

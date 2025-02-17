@@ -1,0 +1,46 @@
+﻿@* @{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Welcome, Admin!</h2>
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+        Manage Courses
+    </button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" asp-controller="Course" asp-action="Primary">Primary Courses</a>
+        <a class="dropdown-item" asp-controller="Course" asp-action="Secondary">Secondary Courses</a>
+        <a class="dropdown-item" asp-controller="Course" asp-action="HigherSecondary">Higher Secondary Courses</a>
+    </div>
+</div>
+
+<a href="@Url.Action("Logout", "Admin")" class="btn btn-danger mt-3">Logout</a>
+ *@
+
+ @model IEnumerable<AstroSafar.Models.Category>
+
+<h2>Admin Dashboard</h2>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" asp-action="CategoryList">Manage Categories</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="CourseList">Manage Courses</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-action="UnitList">Manage Units</a>
+    </li>
+</ul>
+
+<h3>Course Categories</h3>
+
+<ul class="list-group">
+    @foreach (var category in Model)
+    {
+        <li class="list-group-item">
+            <a asp-action="CourseList" asp-route-categoryId="@category.Id">@category.Name</a>
+        </li>
+    }
+</ul>

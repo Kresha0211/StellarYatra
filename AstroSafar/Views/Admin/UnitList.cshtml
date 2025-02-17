@@ -1,0 +1,36 @@
+﻿ @model IEnumerable<AstroSafar.Models.UnitAdmin>
+
+<h2>Units</h2>
+
+<a class="btn btn-primary" asp-action="AddUnit">Add New Unit</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Unit Name</th>
+            <th>Course Name</th>
+            <th>Video URL</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var unit in Model)
+        {
+            <tr>
+                <td>@unit.Id</td>
+                <td>@unit.Name</td>
+                <td>@unit.CourseAdmin.Name</td>
+                <td><a href="@unit.VideoUrl" target="_blank">Watch Video</a></td>
+                <td>
+                    <a class="btn btn-warning" asp-action="EditUnit" asp-route-id="@unit.Id">Edit</a>
+                    <form asp-action="DeleteUnit" asp-route-id="@unit.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

@@ -1,0 +1,13 @@
+﻿@model List<AstroSafar.Models.UnitAdmin>
+
+<h2>Course Units</h2>
+<ul>
+    @foreach (var unit in Model)
+    {
+        <li>
+            <a href="@unit.VideoUrl" target="_blank">
+                @unit.Name
+            </a>
+        </li>
+    }
+</ul>

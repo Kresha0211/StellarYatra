@@ -1,0 +1,26 @@
+﻿@model AstroSafar.Models.Category
+
+<h2 class="mb-4">Update Category</h2>
+
+<form asp-action="EditCategory" method="post" class="p-4 border rounded shadow-sm">
+    <!-- Hidden ID Field -->
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Category Name -->
+    <div class="mb-3">
+        <label for="Name" class="form-label">Category Name:</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter category name" required />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+@* 
+    <!-- Description -->
+    <div class="mb-3">
+        <label for="Description" class="form-label">Description:</label>
+        <textarea asp-for="Description" class="form-control" placeholder="Enter category description" required></textarea>
+        <span class="text-danger" asp-validation-for="Description"></span>
+    </div>
+ *@
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary">Update Category</button>
+    <a asp-action="CategoryList" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,167 @@
+﻿@{
+    ViewData["Title"] = "Gallery";
+}
+
+<h2 class="gallery-title">🚀 Space & Research Gallery</h2>
+
+<div class="gallery-container">
+    <div class="gallery-slider">
+        <div class="slide"><img src="~/Images/Space1.jpg" alt="Galaxy"></div>
+        <div class="slide"><img src="~/Images/Space3.jpg" alt="Nebula"></div>
+        <div class="slide"><img src="~/Images/Space4.jpg" alt="Mars Surface"></div>
+        <div class="slide"><img src="~/Images/Space2.jpg" alt="Telescope"></div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+    <button class="next" onclick="moveSlide(1)">&#10095;</button>
+</div>
+
+<!-- Dots Navigation -->
+<div class="dots">
+    <span class="dot" onclick="jumpToSlide(0)"></span>
+    <span class="dot" onclick="jumpToSlide(1)"></span>
+    <span class="dot" onclick="jumpToSlide(2)"></span>
+    <span class="dot" onclick="jumpToSlide(3)"></span>
+    <span class="dot" onclick="jumpToSlide(4)"></span>
+</div>
+
+<!-- CSS for Styling -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #0d1b2a;
+        color: white;
+        text-align: center;
+        margin: 0;
+    }
+
+    .gallery-title {
+        margin-top: 20px;
+        font-size: 2em;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .gallery-container {
+        position: relative;
+        max-width: 90%;
+        height: 450px;
+        margin: 20px auto;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+    }
+
+    .gallery-slider {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        height: 100%;
+    }
+
+    .slide {
+        min-width: 100%;
+        height: 100%;
+    }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+    /* Navigation Buttons */
+    .prev, .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        padding: 15px;
+        cursor: pointer;
+        font-size: 24px;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    .prev {
+        left: 10px;
+    }
+
+    .next {
+        right: 10px;
+    }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: black;
+        }
+
+    /* Dots */
+    .dots {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .dot {
+        height: 12px;
+        width: 12px;
+        margin: 5px;
+        background-color: #bbb;
+        border-radius: 50%;
+        display: inline-block;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .active {
+        background-color: white;
+    }
+</style>
+
+<!-- JavaScript for Slideshow -->
+<script>
+    let slideIndex = 0;
+    let slides = document.querySelectorAll(".slide");
+    let dots = document.querySelectorAll(".dot");
+    let autoSlideInterval;
+
+    function showSlide(index) {
+        if (index >= slides.length) { slideIndex = 0; }
+        if (index < 0) { slideIndex = slides.length - 1; }
+
+        document.querySelector(".gallery-slider").style.transform = `translateX(${-slideIndex * 100}%)`;
+
+        dots.forEach(dot => dot.classList.remove("active"));
+        dots[slideIndex].classList.add("active");
+    }
+
+    function moveSlide(step) {
+        slideIndex += step;
+        showSlide(slideIndex);
+        restartAutoSlide();
+    }
+
+    function jumpToSlide(index) {
+        slideIndex = index;
+        showSlide(slideIndex);
+        restartAutoSlide();
+    }
+
+    function autoSlide() {
+        slideIndex++;
+        showSlide(slideIndex);
+        autoSlideInterval = setTimeout(autoSlide, 3000);
+    }
+
+    function restartAutoSlide() {
+        clearTimeout(autoSlideInterval);
+        autoSlideInterval = setTimeout(autoSlide, 3000);
+    }
+
+    // Initialize
+    showSlide(slideIndex);
+    autoSlide();
+</script>

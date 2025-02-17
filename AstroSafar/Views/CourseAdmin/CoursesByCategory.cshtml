@@ -1,0 +1,13 @@
+﻿@model List<AstroSafar.Models.CourseAdmin>
+
+<h2>Courses</h2>
+<ul>
+    @foreach (var course in Model)
+    {
+        <li>
+            <a asp-controller="Unit" asp-action="UnitsByCourse" asp-route-courseId="@course.Id">
+                @course.Name
+            </a>
+        </li>
+    }
+</ul>

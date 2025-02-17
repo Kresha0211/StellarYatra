@@ -1,0 +1,35 @@
+﻿@model AstroSafar.Models.UnitAdmin
+
+<div class="container mt-4">
+    <h2 class="mb-3">Add New Unit</h2>
+
+    <form asp-action="AddUnit" method="post">
+        <!-- Unit Title -->
+        <div class="mb-3">
+            <label for="Name" class="form-label">Unit Name</label>
+            <input type="text" id="Name" name="Name" class="form-control" required placeholder="Enter Unit Name">
+        </div>
+
+        <!-- YouTube Video URL -->
+        <div class="mb-3">
+            <label for="VideoUrl" class="form-label">YouTube Video URL</label>
+            <input type="url" id="VideoUrl" name="VideoUrl" class="form-control" required placeholder="Enter Video URL (https://)">
+        </div>
+
+        <!-- Course Selection Dropdown -->
+        <div class="mb-3">
+            <label for="CourseId" class="form-label">Select Course</label>
+            <select id="CourseId" name="CourseId" class="form-select" required>
+                <option value="">-- Select Course --</option>
+                @foreach (var course in ViewBag.Courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Add Unit</button>
+    </form>
+</div>
+
