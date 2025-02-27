@@ -1,4 +1,5 @@
 ﻿using AstroSafar.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace AstroSafar.Controllers
             return View();
         }
         private readonly SpaceLearningDBContext _context;
+        private string? category;
 
         public AdminController(SpaceLearningDBContext context)
         {
@@ -54,13 +56,14 @@ namespace AstroSafar.Controllers
                 ViewBag.Message = "No categories available.";
             }
 
-            return View(categories); // Pass categories to the view
-
+            return View(categories); 
         }
 
         public IActionResult Logout()
         {
-            return RedirectToAction("Login");
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Login", "Admin");
+           
         }
 
         // Add Category
@@ -81,7 +84,7 @@ namespace AstroSafar.Controllers
                 return RedirectToAction("CategoryList");
             }
 
-            // Debugging - Check if ModelState is invalid
+          
             foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
             {
                 Console.WriteLine(error.ErrorMessage);
@@ -145,6 +148,28 @@ namespace AstroSafar.Controllers
 
             return RedirectToAction("CategoryList");
         }
+        // Select Category
+        public IActionResult CategoryDetails(int categoryId)
+        {
+            // Fetch courses only for the selected category
+            var courses = _context.courseAdmins
+                                  .Where(c => c.CategoryId == categoryId)
+                                  .ToList();
+
+            var units = _context.unitAdmins
+                                .Where(u => u.CourseAdmin.CategoryId == categoryId)
+                                .ToList();
+
+            var viewModel = new CategoryDetailsViewModel
+            {
+                Courses = courses,
+                Units = units,
+                CategoryId = categoryId
+            };
+
+            return View(viewModel);
+        }
+
 
 
         // Add Course
@@ -210,10 +235,11 @@ namespace AstroSafar.Controllers
             course.Description = model.Description;
             course.Duration = model.Duration;
             course.CategoryId = model.CategoryId;
+            course.ImageURL = model.ImageURL;
 
-            _context.SaveChanges();  // Save changes to the database
+            _context.SaveChanges();
 
-            return RedirectToAction("CourseList");   // Return the view with model if validation fails
+            return RedirectToAction("CourseList"); 
         }
 
         // Delete Course
@@ -239,10 +265,9 @@ namespace AstroSafar.Controllers
             // Fetch courses for the dropdown
             var courses = _context.courseAdmins.Select(c => new { c.Id, c.Name }).ToList();
 
-            // Pass the list to the view
+         
             ViewBag.Courses = courses;
 
-            // Optional: Fetch existing units if needed
             var units = _context.unitAdmins
                 .Select(u => new { u.Id, u.Name, CourseName = u.CourseAdmin.Name })
                 .ToList();
@@ -263,7 +288,6 @@ namespace AstroSafar.Controllers
                 return RedirectToAction("UnitList");
             }
 
-            // Debugging - Check if ModelState is invalid
             foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
             {
                 Console.WriteLine(error.ErrorMessage);
@@ -274,29 +298,50 @@ namespace AstroSafar.Controllers
         public IActionResult UnitList()
         {
             var units = _context.unitAdmins
-           .Include(u => u.CourseAdmin) // Ensure Course is loaded
+           .Include(u => u.CourseAdmin) 
            .Select(u => new UnitAdmin
            {
                Id = u.Id,
                Name = u.Name,
+               Content = u.Content,  // Ensure Content is fetched
+               ImageURL = u.ImageURL,
                VideoUrl = u.VideoUrl,
-               CourseAdmin = u.CourseAdmin  // Assign actual Course object
+               CourseAdmin = u.CourseAdmin  
            })
            .ToList();
-            ViewBag.Message = "List of Units for the selected Course";  // For example, a custom message
-            ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin.Name ?? "No Course Selected"; // Assign course name dynamically
+            ViewBag.Message = "List of Units for the selected Course";  
+            ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin.Name ?? "No Course Selected"; 
 
             return View(units);
         }
 
         // Edit Unit
 
+        //[HttpGet]
+        //public IActionResult EditUnit(int id)
+        //{
+        //    // Fetch the unit with its associated course for editing
+        //    var unit = _context.unitAdmins
+        //        .Include(u => u.CourseAdmin) // Load the course related to the unit
+        //        .FirstOrDefault(u => u.Id == id);
+
+        //    if (unit == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Fetch courses for the dropdown
+        //    var courses = _context.courseAdmins.Select(c => new { c.Id, c.Name }).ToList();
+        //    ViewBag.Courses = courses;
+
+        //    return View(unit);  
+        //}
         [HttpGet]
         public IActionResult EditUnit(int id)
         {
             // Fetch the unit with its associated course for editing
             var unit = _context.unitAdmins
-                .Include(u => u.CourseAdmin) // Load the course related to the unit
+                .Include(u => u.CourseAdmin) // Load the related course
                 .FirstOrDefault(u => u.Id == id);
 
             if (unit == null)
@@ -305,24 +350,50 @@ namespace AstroSafar.Controllers
             }
 
             // Fetch courses for the dropdown
-            var courses = _context.courseAdmins.Select(c => new { c.Id, c.Name }).ToList();
-            ViewBag.Courses = courses;
+            var courses = _context.courseAdmins
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList();
 
-            return View(unit);  // Pass the unit to the view for editing
+            ViewBag.Courses = courses; // Assign to ViewBag
+
+            return View(unit);
         }
+
+        //[HttpPost]
+        //public IActionResult EditUnit(UnitAdmin unit)
+        //{
+        //    // Find the existing unit and update its properties
+        //    var existingUnit = _context.unitAdmins.Find(unit.Id);
+        //    existingUnit.Name = unit.Name;
+        //    existingUnit.VideoUrl = unit.VideoUrl;
+        //    existingUnit.CourseAdmin = unit.CourseAdmin; // Update the course
+
+
+        //    _context.SaveChanges();
+
+        //    return RedirectToAction("UnitList"); 
+        //}
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult EditUnit(UnitAdmin unit)
         {
-            // Find the existing unit and update its properties
-            var existingUnit = _context.unitAdmins.Find(unit.Id);
-            existingUnit.Name = unit.Name;
-            existingUnit.VideoUrl = unit.VideoUrl;
-            existingUnit.CourseAdmin = unit.CourseAdmin; // Update the course
+            var existingUnit = _context.unitAdmins.FirstOrDefault(u => u.Id == unit.Id);
+            if (existingUnit == null)
+            {
+                return NotFound();
+            }
 
-            // Save changes to the database
+            // Update properties directly
+            existingUnit.Name = unit.Name;
+            existingUnit.CourseId = unit.CourseId; // Ensure CourseId is updated
+
+            _context.Update(existingUnit);
             _context.SaveChanges();
 
-            return RedirectToAction("UnitList"); // Return the view with model if validation fails
+            return RedirectToAction("UnitList"); // Redirect to the units list or another appropriate page
         }
 
 
@@ -340,6 +411,64 @@ namespace AstroSafar.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("UnitList");
+        }
+        public IActionResult EnrolledUsers(string? categoryFilter = "All")
+        {
+
+            var primaryEnrollments = _context.enrollments.ToList();
+            var secondaryEnrollments = _context.secondaryEnrolls.ToList();
+            var higherSecondaryEnrollments = _context.higherSecondaryEnrolls.ToList();
+
+            // Filter based on the selected category
+            if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter != "All")
+            {
+                switch (categoryFilter)
+                {
+                    case "Primary":
+                        secondaryEnrollments.Clear();
+                        higherSecondaryEnrollments.Clear();
+                        break;
+
+                    case "Secondary":
+                        primaryEnrollments.Clear();
+                        higherSecondaryEnrollments.Clear();
+                        break;
+
+                    case "HigherSecondary":
+                        primaryEnrollments.Clear();
+                        secondaryEnrollments.Clear();
+                        break;
+                }
+            }
+
+            var model = new EnrolledUsersViewModel
+            {
+                enrollments = primaryEnrollments,
+                SecondaryEnrolls = secondaryEnrollments,
+                HigherSecondaryEnrolls = higherSecondaryEnrollments
+            };
+
+            ViewBag.SelectedCategory = categoryFilter; 
+
+            return View(model);
+        }
+
+      
+        public IActionResult EnrollmentDetails(int id, string category)
+        {
+            object model = null;
+
+            if (category == "Primary")
+                model = _context.enrollments.FirstOrDefault(e => e.Id == id);
+            else if (category == "Secondary")
+                model = _context.secondaryEnrolls.FirstOrDefault(e => e.Id == id);
+            else if (category == "HigherSecondary")
+                model = _context.higherSecondaryEnrolls.FirstOrDefault(e => e.Id == id);
+
+            if (model == null)
+                return NotFound();
+
+            return View(model);
         }
 
     }

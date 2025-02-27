@@ -10,6 +10,18 @@
             <input type="text" id="Name" name="Name" class="form-control" required placeholder="Enter Unit Name">
         </div>
 
+        <div class="mb-3">
+            <label for="Content" class="form-label">Content</label>
+            <input type="text" id="Content" name="Content" class="form-control" required placeholder="Content addition">
+        </div>
+
+        <div class="mb-3">
+            <label for="ImageUrl" class="form-label">Upload Unit Image:</label>
+            <input type="file" name="ImageUrl" class="form-control" accept="image/*" />
+            <span class="text-danger" asp-validation-for="ImageURL"></span>
+        </div>
+
+
         <!-- YouTube Video URL -->
         <div class="mb-3">
             <label for="VideoUrl" class="form-label">YouTube Video URL</label>

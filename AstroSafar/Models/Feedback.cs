@@ -5,11 +5,7 @@ namespace AstroSafar.Models
     public class Feedback
     {
         [Key]
-        public int Id { get; set; } // Feedback ID (Primary Key)
-
-        //[Required]
-       // public string UserId { get; set; } // ID of the user giving feedback
-
+        public int Id { get; set; }
         [Required]
         [StringLength(100)]
         public string Name { get; set; }

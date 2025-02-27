@@ -1,0 +1,35 @@
+﻿
+@model List<AstroSafar.Models.CourseAdmin>
+
+<h2 class="mb-4 text-center">Primary Courses</h2>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row g-4">
+        @foreach (var course in Model)
+        {
+            <div class="col-md-4">
+                <div class="card shadow-lg border-0 h-100">
+                    <!-- Course Image -->
+                    <img src="@Url.Content("~/Images/" + course.ImageURL)" alt="@course.Name" class="course-image" />
+
+                    <!-- Card Body -->
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-primary">@course.Name</h5>
+                        <p class="card-text">@course.Description</p>
+                        <p class="text-muted mb-3">Duration: @course.Duration</p>
+
+
+                        <a asp-controller="Client" asp-action="Enroll" asp-route-courseId="@course.Id" class="btn btn-success mt-auto">
+                            Enroll
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-center text-danger">No Primary courses available.</p>
+}

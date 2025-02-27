@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Course Categories";
+}
+
+<h2>Select a Course Category</h2>
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Categories
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @foreach (var category in Model) // Assuming Model contains list of categories
+        {
+            <li><a class="dropdown-item" href="@Url.Action("Courses", "Client", new { category = category.Name })">@category.Name</a></li>
+        }
+    </ul>
+</div>

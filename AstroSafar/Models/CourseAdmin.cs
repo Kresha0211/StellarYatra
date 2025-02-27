@@ -8,6 +8,7 @@ namespace AstroSafar.Models
       
         [Key]
         public int Id { get; set; }
+        public string ImageURL { get; set; }
 
         [Required(ErrorMessage = "Course name is required.")]
         [StringLength(100, ErrorMessage = "Course name cannot exceed 100 characters.")]

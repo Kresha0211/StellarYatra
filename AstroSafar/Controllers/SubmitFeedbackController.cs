@@ -23,10 +23,10 @@ namespace AstroSafar.Controllers
             if (ModelState.IsValid)
             {
                 _context.Feedbacks.Add(feedback);
-                _context.SaveChanges(); // ✅ Save to database
+                _context.SaveChanges(); 
 
-                TempData["Message"] = "Thank you! Your feedback has been submitted.";
-                return RedirectToAction("SubmitFeedback"); // ✅ Redirect to avoid duplicate submissions
+                TempData["Message"] = "Thank you! Your Response has being Resolve Soon!";
+                return RedirectToAction("SubmitFeedback");
             }
 
             return View("SubmitFeedback", feedback);

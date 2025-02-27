@@ -12,14 +12,6 @@
         <input asp-for="Name" class="form-control" placeholder="Enter category name" required />
         <span class="text-danger" asp-validation-for="Name"></span>
     </div>
-@* 
-    <!-- Description -->
-    <div class="mb-3">
-        <label for="Description" class="form-label">Description:</label>
-        <textarea asp-for="Description" class="form-control" placeholder="Enter category description" required></textarea>
-        <span class="text-danger" asp-validation-for="Description"></span>
-    </div>
- *@
     <!-- Submit Button -->
     <button type="submit" class="btn btn-primary">Update Category</button>
     <a asp-action="CategoryList" class="btn btn-secondary">Cancel</a>

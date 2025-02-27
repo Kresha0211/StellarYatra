@@ -1,4 +1,4 @@
-﻿ @model IEnumerable<AstroSafar.Models.UnitAdmin>
+﻿@*  @model IEnumerable<AstroSafar.Models.UnitAdmin>
 
 <h2>Units</h2>
 
@@ -9,6 +9,8 @@
         <tr>
             <th>ID</th>
             <th>Unit Name</th>
+            <th>Content</th>
+            <th>ImageUrl</th>
             <th>Course Name</th>
             <th>Video URL</th>
 
@@ -20,6 +22,8 @@
             <tr>
                 <td>@unit.Id</td>
                 <td>@unit.Name</td>
+                <td>@unit.Content</td>
+                <td>@unit.ImageURL</td>
                 <td>@unit.CourseAdmin.Name</td>
                 <td><a href="@unit.VideoUrl" target="_blank">Watch Video</a></td>
                 <td>
@@ -32,5 +36,98 @@
         }
     </tbody>
 </table>
+<a asp-action="CourseList">Course List</a>
+
+ *@
 
 
+ @model IEnumerable<AstroSafar.Models.UnitAdmin>
+
+<h2 class="mb-4">🚀 Units</h2>
+
+<a class="btn btn-primary mb-3" asp-action="AddUnit">Add New Unit</a>
+
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Unit Name</th>
+            <th>Content</th>
+            <th>Image</th>
+            <th>Course Name</th>
+            <th>Video</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var unit in Model)
+        {
+            <tr>
+                <td>@unit.Id</td>
+                <td>@unit.Name</td>
+                <td>
+                    <div class="formatted-content">
+                        @Html.Raw(unit.Content.Replace("🌱", "<br/><b>🌱</b> ")
+                                 .Replace("🚀", "<br/><b>🚀</b> ")
+                                 .Replace("🌍", "<br/><b>🌍</b> ")
+                                 .Replace("🛰️", "<br/><b>🛰️</b> ")
+                                 .Replace("📌", "<br/><b>📌</b> ")
+                                 .Replace("💡", "<br/><b>💡</b> "))
+                    </div>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(unit.ImageURL))
+                    {
+                        <img src="@unit.ImageURL" alt="Unit Image" class="unit-image" />
+                    }
+                </td>
+                <td>@unit.CourseAdmin?.Name</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(unit.VideoUrl))
+                    {
+                        <div class="video-container">
+                            <iframe width="200" height="120"
+                                    src="@unit.VideoUrl.Replace("watch?v=", "embed/")"
+                                    frameborder="0" allowfullscreen>
+                            </iframe>
+                        </div>
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-warning btn-sm" asp-action="EditUnit" asp-route-id="@unit.Id">Edit</a>
+                    <form asp-action="DeleteUnit" asp-route-id="@unit.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-secondary mt-3" asp-action="CourseList">🔙 Back to Course List</a>
+
+<style>
+    .unit-image {
+        max-width: 80px;
+        height: auto;
+        border-radius: 8px;
+        display: block;
+    }
+
+    .video-container {
+        margin-top: 10px;
+    }
+
+    .formatted-content {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>

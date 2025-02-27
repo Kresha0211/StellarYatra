@@ -1,4 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace AstroSafar.Models
 {
@@ -11,15 +15,16 @@ namespace AstroSafar.Models
         }
 
         public DbSet<Registration> Registrations { get; set; }
-        //public DbSet<Course> Courses { get; set; }
 
         public DbSet<AdminLogin> AdminLogins { get; set; }
         public DbSet<Category> Categories { get; set; }
-        //public DbSet<CourseA> CoursesA { get; set; }
-        //public DbSet<Unit> Units { get; set; }
+        
         public DbSet<CourseAdmin> courseAdmins { get; set; }
         public DbSet<UnitAdmin> unitAdmins { get; set; }
-
+        public DbSet<Enrollment> enrollments { get; set; }
+        public DbSet<SecondaryEnroll> secondaryEnrolls { get; set; }
+        public DbSet<HigherSecondaryEnroll> higherSecondaryEnrolls { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Registration>().ToTable("Registrations");
@@ -38,7 +43,7 @@ namespace AstroSafar.Models
 
 
         public DbSet<Feedback> Feedbacks { get; set; }
-
+        public object CourseAdmins { get; internal set; }
     }
 
 }

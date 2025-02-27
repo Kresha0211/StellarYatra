@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -35,36 +37,17 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SelfAssesment">SelfAssesment</a>
                         </li>
 
-                        <!-- Course Dropdown Starts Here -->
-                        @{
-                            var categories = ViewData["Categories"] as List<Category>;
-                        }
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" data-bs-toggle="dropdown">
+@*                         <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="coursesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Courses
                             </a>
-                            <div class="dropdown-menu">
-                                @if (categories != null && categories.Any())
-                                {
-                                    @foreach (var category in categories)
-                                    {
-                                        <a class="dropdown-item" href="@Url.Action("CourseList", "Admin", new { categoryId = category.Id })">
-                                            @category.Name
-                                        </a>
-                                    }
-                                }
-                                else
-                                {
-                                    <span class="dropdown-item text-muted">No categories available</span>
-                                }
-                            </div>
-                        </li>
-
-                        
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Earthquake" asp-action="Index">Earth</a>
-                        </li>
+                            <ul class="dropdown-menu" aria-labelledby="coursesDropdown">
+                                <li><a class="dropdown-item" asp-controller="Client" asp-action="Primary" asp-route-category="Primary">Primary</a></li>
+                                <li><a class="dropdown-item" asp-controller="Client" asp-action="Secondary" asp-route-category="Secondary">Secondary</a></li>
+                                <li><a class="dropdown-item" asp-controller="Client" asp-action="HigherSecondary" asp-route-category="Higher Secondary">Higher Secondary</a></li>
+                            </ul>
+                        </li> *@
+                 
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Gallery">Gallery</a>
                         </li>
@@ -81,22 +64,59 @@
                                 Dashboard
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dashboardDropdown">
-                             @*  <li><a class="dropdown-item" href="/AdminLogin/Admin">Admin Panel</a></li>
-                                < li><a class="dropdown-item" href="/Client/Dashboard">Client Panel</a></li> 
-                                <li><a class="dropdown-item" href="/Home/Logout">Logout</a></li> *@
                                 <li><a class="dropdown-item" href="@Url.Action("AdminLogin", "Admin")">Admin Panel</a></li>
                                 <li><a class="dropdown-item" href="/Account/Login">Client Panel</a></li>
-                                <li><a class="dropdown-item" href="/Home/Logout">Logout</a></li>
+                                <li><a class="dropdown-item" href="/Home/Index">Logout</a></li>
                             </ul>
                         </li>
                     </ul>
+                   @*  <ul class="navbar-nav ms-auto">
+                        @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("CustomerId")))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="@Context.Session.GetString("UserProfilePic")" alt="Profile" class="rounded-circle" width="40" height="40">
+
+                                         alt="Profile" class="rounded-circle" width="40" height="40">
+                                    <span>@HttpContextAccessor.HttpContext.Session.GetString("CustomerName")</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Profile">View Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        
+                    </ul> *@
                  
-                  
-                    <ul class="navbar-nav">
-                        @if (Context.Session.GetInt32("RegisterId") != null)
+                  @* Already exist *@
+                    @* <ul class="navbar-nav">
+                        @if (Context.Session.GetInt32("CustomerId") != null)
                         {
                             <li class="nav-item">
-                                <span class="nav-link text-dark">Welcome, @Context.Session.GetString("RegisterFN")</span>
+                                <span class="nav-link text-dark">Welcome, @Context.Session.GetString("CustomerName")</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        } *@
+                    <ul class="navbar-nav">
+                        @if (Context.Session.GetInt32("CustomerId") != null)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-dark">Welcome, @Context.Session.GetString("CustomerName")</span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Profile">Profile</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Logout</a>
@@ -111,6 +131,7 @@
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
+                    </ul>
 
                     </ul>
                 </div>

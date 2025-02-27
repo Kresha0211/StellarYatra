@@ -1,0 +1,92 @@
+﻿@model AstroSafar.Models.Enrollment
+
+@{
+    ViewData["Title"] = "Enroll in Course";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<!-- Display Course Name -->
+<h4>@Model.CourseAdmin.Name</h4>
+<p>@Model.CourseAdmin.Description</p>
+
+<form asp-action="Enroll" method="post">
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label">Full Name</label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" type="email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Gender</label><br />
+
+        <div class="form-check form-check-inline">
+            <input asp-for="Gender" type="radio" class="form-check-input" value="Male" id="genderMale" />
+            <label class="form-check-label" for="genderMale">Male</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input asp-for="Gender" type="radio" class="form-check-input" value="Female" id="genderFemale" />
+            <label class="form-check-label" for="genderFemale">Female</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input asp-for="Gender" type="radio" class="form-check-input" value="Other" id="genderOther" />
+            <label class="form-check-label" for="genderOther">Other</label>
+        </div>
+
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateOfBirth" class="control-label"></label>
+        <input asp-for="DateOfBirth" class="form-control" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Standard" class="form-label">Standard</label>
+        <input asp-for="Standard" class="form-control" />
+        <span asp-validation-for="Standard" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label">Address</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <!-- Hidden field to send CourseId -->
+    <input type="hidden" asp-for="CourseId" />
+
+    <button type="submit" class="btn btn-primary">Enroll</button>
+</form>
+
+<!-- Validation Summary -->
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dobInput = document.getElementById("DateOfBirth");
+            if (dobInput) {
+                // Prevent future dates
+                const today = new Date().toISOString().split("T")[0];
+                dobInput.setAttribute("max", today);
+
+               
+                const currentYear = new Date().getFullYear();
+                dobInput.value = `${currentYear}-01-01`; // Default to January 1st of the current year
+            }
+        });
+    </script>
+}
+

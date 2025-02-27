@@ -1,16 +1,15 @@
-﻿@* @{
-    @model List<AstroSafar.Models.Course>
+﻿@model List<AstroSafar.Models.Category>  
 
-    @if (Model == null || !Model.Any())
-    {
-        <p>No courses found.</p>
-    }
-    else
-    {
-        @foreach (var course in Model)
+<h2>Select a Course Category</h2>
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Categories
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        @foreach (var category in Model) // Iterate through all categories
         {
-            <p>@course.Title</p>
+            <li><a class="dropdown-item" href="@Url.Action("Courses", "Client", new { category = category.Name })">@category.Name</a></li>
         }
-    }
-}
- *@
+    </ul>
+</div>

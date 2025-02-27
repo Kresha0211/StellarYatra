@@ -3,6 +3,7 @@
 <h2 class="mb-4">Add New Course</h2>
 
 <form asp-action="AddCourse" method="post" class="p-4 border rounded shadow-sm">
+
     <!-- Course Name -->
     <div class="mb-3">
         <label for="Name" class="form-label">Course Name:</label>
@@ -34,6 +35,13 @@
         </select>
         <span class="text-danger" asp-validation-for="CategoryId"></span>
     </div>
+    <!--Image-->
+    <div class="mb-3">
+        <label for="ImageUrl" class="form-label">Upload Course Image:</label>
+        <input type="file" name="ImageUrl" class="form-control" accept="image/*" />
+        <span class="text-danger" asp-validation-for="ImageURL"></span>
+    </div>
+
 
     <!-- Submit Button -->
     <button type="submit" class="btn btn-success">Add Course</button>

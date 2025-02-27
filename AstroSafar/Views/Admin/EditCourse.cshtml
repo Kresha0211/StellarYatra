@@ -45,7 +45,12 @@
                 </select>
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
-
+            <!--Image-->
+            <div class="mb-3">
+                <label for="ImageUrl" class="form-label">Upload Course Image:</label>
+                <input type="file" name="ImageUrl" class="form-control" accept="image/*" />
+                <span class="text-danger" asp-validation-for="ImageURL"></span>
+            </div>
             <!-- Submit Button -->
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

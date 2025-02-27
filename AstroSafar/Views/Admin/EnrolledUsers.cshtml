@@ -1,0 +1,116 @@
+﻿@model AstroSafar.Models.EnrolledUsersViewModel
+
+@{
+    ViewData["Title"] = "Enrolled Users";
+}
+
+<h2>Enrolled Users</h2>
+<!-- Filter Options -->
+<form method="get" asp-action="EnrolledUsers" class="mb-3">
+    <label for="categoryFilter">Select Category:</label>
+    <select id="categoryFilter" name="categoryFilter" class="form-select">
+        <option value="All" selected="@(ViewBag.SelectedCategory == "All" ? "selected" : null)">Show All</option>
+        <option value="Primary" selected="@(ViewBag.SelectedCategory == "Primary" ? "selected" : null)">Primary</option>
+        <option value="Secondary" selected="@(ViewBag.SelectedCategory == "Secondary" ? "selected" : null)">Secondary</option>
+        <option value="HigherSecondary" selected="@(ViewBag.SelectedCategory == "HigherSecondary" ? "selected" : null)">Higher Secondary</option>
+    </select>
+    <button type="submit" class="btn btn-primary mt-2">Filter</button>
+</form>
+
+
+
+<!-- PRIMARY STUDENTS -->
+<h3>Primary Course Enrollments</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Standard</th>
+            <th>Address</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.enrollments)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.Gender</td>
+                <td>@user.DateOfBirth.ToShortDateString()</td>
+                <td>@user.Standard</td>
+                <td>@user.Address</td>
+                <td>
+                    <a asp-action="EnrollmentDetails" asp-route-id="@user.Id" asp-route-category="Primary" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- SECONDARY STUDENTS -->
+<h3>Secondary Course Enrollments</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Standard</th>
+            <th>Address</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.SecondaryEnrolls)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.Gender</td>
+                <td>@user.DateOfBirth.ToShortDateString()</td>
+                <td>@user.Standard</td>
+                <td>@user.Address</td>
+                <td>
+                    <a asp-action="EnrollmentDetails" asp-route-id="@user.Id" asp-route-category="Secondary" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- HIGHER SECONDARY STUDENTS -->
+<h3>Higher Secondary Course Enrollments</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Standard</th>
+            <th>Address</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.HigherSecondaryEnrolls)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.Gender</td>
+                <td>@user.DateOfBirth.ToShortDateString()</td>
+                <td>@user.Standard</td>
+                <td>@user.Address</td>
+                <td>
+                    <a asp-action="EnrollmentDetails" asp-route-id="@user.Id" asp-route-category="HigherSecondary" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

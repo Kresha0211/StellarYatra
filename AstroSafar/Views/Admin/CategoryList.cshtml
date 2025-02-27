@@ -7,7 +7,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Category Name</th>
             <th>Actions</th>
         </tr>
@@ -16,7 +15,6 @@
         @foreach (var category in Model)
         {
             <tr>
-                <td>@category.Id</td>
                 <td>@category.Name</td>
                 <td>
                     <a class="btn btn-warning" asp-action="EditCategory" asp-route-id="@category.Id">Edit</a>
@@ -25,6 +23,9 @@
                     </form>
                 </td>
             </tr>
+            
+
         }
     </tbody>
 </table>
+<a asp-action="CourseList">Course List</a>

@@ -1,76 +1,4 @@
-﻿@*  @{
-     ViewData["Title"] = "Home Page";
- }
-
-  @* <div class="text-center">
-      <h1 class="display-4">Welcome</h1>
-      <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-  </div>
-
-  <script>
-      window.onload = function() {
-          document.querySelector('.registration-container').classList.add('show');
-      }
-  </script> *@
-
-
- @* <!DOCTYPE html>
- <html lang="en">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Home</title>
-     <style>
-         body {
-             font-family: 'Poppins', sans-serif;
-             background-color: #0b0c10;
-             color: white;
-             text-align: center;
-         }
-
-         .space-container {
-             position: relative;
-             max-width: 100%;
-             height: 80vh;
-             overflow: hidden;
-         }
-
-             .space-container img {
-                 width: 100%;
-                 height: 100%;
-                 object-fit: cover;
-                 opacity: 0.9;
-             }
-
-         .overlay-text {
-             position: absolute;
-             top: 50%;
-             left: 50%;
-             transform: translate(-50%, -50%);
-             background: rgba(0, 0, 0, 0.6);
-             padding: 20px;
-             border-radius: 10px;
-             font-size: 24px;
-             font-weight: bold;
-         }
-     </style>
- </head>
- <body>
-
-     <div class="space-container">
-         <img src="~/Image/4965.jpg" alt="Space Image">
-         <div class="overlay-text">Welcome to AstroSafar - Explore the Universe!</div>
-     </div>
-
- </body>
- </html>
-  *@
-
-
-
-
-
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,11 +33,41 @@
             pointer-events: none;
             z-index: 1;
         }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 16px;
+            font-size: 1em; /* Reduced size */
+            color: white;
+            background-color: #ff9800;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+            .cta-button:hover {
+                background-color: #e68900;
+                transform: scale(1.05); /* Subtle hover effect */
+            }
+
+        .cta-button {
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
     </style>
 </head>
 <body>
     <div id="scene-container">
-        <div id="overlay-text">Welcome to AstroSafar</div>
+        <div id="overlay-text">
+            Welcome to AstroSafar
+            <br>   
+            
+          
+            <a href="/Home/EducationLevels" class="cta-button">Explore Courses</a>
+          
+           
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
@@ -217,13 +175,12 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+        document.querySelector(".cta-button").addEventListener("click", function () {
+            window.location.href = "/Home/EducationLevels";
+        });
+
     </script>
 </body>
 </html>
 
 
-<<<<<<< HEAD
-=======
-</p>
-
->>>>>>> f65db38fad01506a234e20b2029a47459529071c

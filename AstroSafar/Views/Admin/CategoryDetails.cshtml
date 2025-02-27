@@ -1,0 +1,19 @@
+﻿@model AstroSafar.Models.CategoryDetailsViewModel
+
+<h2>Courses and Units for Selected Category</h2>
+
+<h3>Courses</h3>
+<ul>
+    @foreach (var course in Model.Courses)
+    {
+        <li>@course.Name</li>
+    }
+</ul>
+
+<h3>Units</h3>
+<ul>
+    @foreach (var unit in Model.Units)
+    {
+        <li>@unit.Name</li>
+    }
+</ul>

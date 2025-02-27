@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewData["Title"] = "Education Levels";
+}
+
+<div class="container">
+    <h1>Education Levels</h1>
+
+    @if (Context.Session.GetInt32("CustomerId") != null)
+    {
+
+        <!-- Primary Education -->
+        <div class="category primary" onclick="location.href='@Url.Action("Primary", "Client")'">
+            <h2>📘 Primary Education</h2>
+            <p><strong>Grades:</strong> 1st - 6th</p>
+
+            <p><strong>Focus:</strong> Basic literacy, numeracy, introductory science, and creative activities.</p>
+            <button class="btn-explore">Explore Primary Courses</button>
+        </div>
+
+        <!-- Secondary Education -->
+        <div class="category secondary" onclick="location.href='@Url.Action("Secondary", "Client")'">
+            <h2>📗 Secondary Education</h2>
+            <p><strong>Grades:</strong> 7th - 10th</p>
+
+            <p><strong>Focus:</strong> Advanced science, mathematics, technology, and critical thinking skills.</p>
+            <button class="btn-explore">Explore Secondary Courses</button>
+        </div>
+
+        <!-- Higher Secondary Education -->
+        <div class="category higher-secondary" onclick="location.href='@Url.Action("HigherSecondary", "Client")'">
+            <h2>📕 Higher Secondary Education</h2>
+            <p><strong>Grades:</strong> 11th and 12th</p>
+
+            <p><strong>Focus:</strong> Specialized subjects, career preparation, and university entrance exams.</p>
+            <button class="btn-explore">Explore Higher Secondary Courses</button>
+        </div>
+    }
+    else
+    {
+
+        <div class="text-center mt-2">
+            <a href="@Url.Action("Login", "Account", new { isClickedFromExporePage = true})"
+               class="btn btn-warning fw-bold">
+                🔑 Log In Now
+            </a>
+       </div>
+
+    } 
+</div>
+<!-- CSS Styling -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .category {
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: center;
+    }
+
+        .category:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+    .primary {
+        background-color: #ffeb99;
+    }
+
+    .secondary {
+        background-color: #99ccff;
+    }
+
+    .higher-secondary {
+        background-color: #ff9999;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    p {
+        font-size: 1.1em;
+    }
+
+    .btn-explore {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background-color 0.3s;
+    }
+
+        .btn-explore:hover {
+            background-color: #0056b3;
+        }
+</style>

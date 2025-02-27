@@ -1,0 +1,38 @@
+﻿
+
+@model IEnumerable<AstroSafar.Models.UnitAdmin>
+
+<h2 class="mb-4">🚀 Units</h2>
+<ul class="list-group">
+    @foreach (var unit in Model)
+    {
+        <li class="list-group-item">
+            <h3>@unit.Name</h3>
+
+            @if (!string.IsNullOrEmpty(unit.ImageURL))
+            {
+                <img src="@unit.ImageURL" alt="Unit Image" class="unit-image" />
+            }
+
+            <p>@unit.Content</p>
+            <a href="@unit.VideoUrl" target="_blank">Watch Video</a>
+
+        </li>
+    }
+</ul>
+
+<style>
+    .unit-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-top: 10px;
+        display: block;
+    }
+
+    .video-container {
+        margin-top: 15px;
+    }
+</style>
+
+
