@@ -44,6 +44,9 @@ namespace AstroSafar.Models
 
         public DbSet<Feedback> Feedbacks { get; set; }
         public object CourseAdmins { get; internal set; }
+        public DbSet<UnitProgress> UnitProgresses { get; set; }
+        public DbSet<UserCourseProgress> UserCourseProgresses { get; set; }
+
     }
 
 }

@@ -42,11 +42,19 @@ namespace AstroSafar.Controllers
         {
             return View();
         }
-      
+
         public IActionResult EducationLevels()
         {
+            int? customerId = HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                TempData["ErrorMessage"] = "You must be logged in to access this page.";
+                return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("EducationLevels", "Home") });
+            }
             return View();
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

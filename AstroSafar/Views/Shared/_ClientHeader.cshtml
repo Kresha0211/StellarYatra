@@ -1,0 +1,55 @@
+﻿<header>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/Images/astrologo.jpg" alt="AstroSafar Logo" height="40" class="me-2">
+                <span class="fw-bold">AstroSafar</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="AboutUs">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="SelfAssesment">Self Assessment</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="CourseGuideline">Guidelines</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="SubmitFeedback" asp-action="SubmitFeedback">Contact Us</a></li>
+                    <!-- Dashboard Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dashboard
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="Admin" asp-action="AdminLogin">Admin Panel</a></li>
+                            <li><a class="dropdown-item" href="/Home/Index">Client Panel</a></li>
+                            <li><a class="dropdown-item" href="/Home/Index">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+                </ul>
+
+                <ul class="navbar-nav">
+                    @if (Context.Session.GetInt32("CustomerId") != null)
+                    {
+                        <li class="nav-item">
+                            <span class="nav-link text-white">Welcome, @Context.Session.GetString("CustomerName")</span>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Profile">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

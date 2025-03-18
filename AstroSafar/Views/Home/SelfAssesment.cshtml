@@ -1,21 +1,41 @@
-﻿@{
-    ViewData["Title"] = "Self-Assessment - Space Exploration";
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Space Exploration Learning Platform</title>
+    <title>@ViewData["Title"]</title>
     <style>
+        :root {
+            --space-light: #f0f5ff;
+            --deep-sky: #e6f0ff;
+            --nebula-purple-light: #c5b3dd;
+            --cosmic-blue-light: #6699cc;
+            --star-color: #4d94ff;
+            --meteor-orange-light: #ff9966;
+            --moon-silver: #e6e6e6;
+            --planet-ring-light: rgba(102, 153, 204, 0.15);
+            --heading-color: #007bff;
+        }
+
         /* Basic styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: lavender;
+            background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0; /* Remove padding to allow full-width header */
+            text-align: center;
+        }
+
+        .heading-title {
+            color: var(--heading-color);
+            text-align: center;
+            font-weight: bold;
+            width: 100%; /* Ensure it spans the full width */
+            margin: 0; /* Remove default margin */
+            padding: 20px 0; /* Add padding for better spacing */
+/*             background-color: var(--cosmic-blue-light); /* Optional: Add a background color */
+            /*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for depth */ */
         }
 
         h1 {
@@ -56,7 +76,7 @@
             display: block;
             width: 100%;
             padding: 10px;
-            background-color: #3498db;
+            background-color: var(--cosmic-blue-light);
             color: white;
             border: none;
             border-radius: 5px;
@@ -65,7 +85,7 @@
         }
 
             button:hover {
-                background-color: #2980b9;
+                background-color: var(--star-color);
             }
 
         #result {
@@ -79,7 +99,7 @@
 <body>
 
     <!-- Self-Assessment Quiz Section -->
-    <h1>Space Exploration Self-Assessment</h1>
+    <h1 class="heading-title">Space Exploration Self-Assessment</h1>
 
     <form id="quiz-form">
         <!-- Question 1 -->
@@ -176,7 +196,7 @@
     <script>
         // Function to check quiz answers
         function checkAnswers() {
-            // Correct answers (Extend this for all questions if needed)
+            // Correct answers
             const correctAnswers = {
                 question1: 'Mercury',
                 question2: 'Neil Armstrong',
@@ -188,7 +208,6 @@
                 question8: 'Hydrogen',
                 question9: 'Jupiter',
                 question10: 'Sputnik 1'
-                // Add correct answers for further questions if needed
             };
 
             // Get selected answers
@@ -204,7 +223,6 @@
                 question8: form.question8.value,
                 question9: form.question9.value,
                 question10: form.question10.value
-                // Extend for additional questions if needed
             };
 
             // Check if all questions have been answered
@@ -236,7 +254,3 @@
 
 </body>
 </html>
-  
-
-
-

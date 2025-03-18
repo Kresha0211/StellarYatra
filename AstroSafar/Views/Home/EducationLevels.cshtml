@@ -1,55 +1,27 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Education Levels";
 }
-
-<div class="container">
-    <h1>Education Levels</h1>
-
-    @if (Context.Session.GetInt32("CustomerId") != null)
-    {
-
-        <!-- Primary Education -->
-        <div class="category primary" onclick="location.href='@Url.Action("Primary", "Client")'">
-            <h2>📘 Primary Education</h2>
-            <p><strong>Grades:</strong> 1st - 6th</p>
-
-            <p><strong>Focus:</strong> Basic literacy, numeracy, introductory science, and creative activities.</p>
-            <button class="btn-explore">Explore Primary Courses</button>
-        </div>
-
-        <!-- Secondary Education -->
-        <div class="category secondary" onclick="location.href='@Url.Action("Secondary", "Client")'">
-            <h2>📗 Secondary Education</h2>
-            <p><strong>Grades:</strong> 7th - 10th</p>
-
-            <p><strong>Focus:</strong> Advanced science, mathematics, technology, and critical thinking skills.</p>
-            <button class="btn-explore">Explore Secondary Courses</button>
-        </div>
-
-        <!-- Higher Secondary Education -->
-        <div class="category higher-secondary" onclick="location.href='@Url.Action("HigherSecondary", "Client")'">
-            <h2>📕 Higher Secondary Education</h2>
-            <p><strong>Grades:</strong> 11th and 12th</p>
-
-            <p><strong>Focus:</strong> Specialized subjects, career preparation, and university entrance exams.</p>
-            <button class="btn-explore">Explore Higher Secondary Courses</button>
-        </div>
-    }
-    else
-    {
-
-        <div class="text-center mt-2">
-            <a href="@Url.Action("Login", "Account", new { isClickedFromExporePage = true})"
-               class="btn btn-warning fw-bold">
-                🔑 Log In Now
-            </a>
-       </div>
-
-    } 
-</div>
-<!-- CSS Styling -->
 <style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
@@ -57,18 +29,11 @@
         padding: 20px;
     }
 
-    .container {
-        max-width: 900px;
-        margin: auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+
 
     h1 {
         text-align: center;
-        color: #333;
+        color: #007bff;
     }
 
     .category {
@@ -121,3 +86,51 @@
             background-color: #0056b3;
         }
 </style>
+
+<div class="container">
+    <h1 class="fw-bold">Education Levels</h1>
+
+    @if (Context.Session.GetInt32("CustomerId") != null)
+    {
+
+        <!-- Primary Education -->
+        <div class="category primary" onclick="location.href='@Url.Action("Primary", "Client")'">
+            <h2>📘 Primary Education</h2>
+            <p><strong>Standards:</strong> 1st - 6th</p>
+
+            <p><strong>Focus:</strong> Basic literacy, numeracy, introductory science, and creative activities.</p>
+            <button class="btn-explore">Explore Primary Courses</button>
+        </div>
+
+        <!-- Secondary Education -->
+        <div class="category secondary" onclick="location.href='@Url.Action("Secondary", "Client")'">
+            <h2>📗 Secondary Education</h2>
+            <p><strong>Standards:</strong> 7th - 10th</p>
+
+            <p><strong>Focus:</strong> Advanced science, mathematics, technology, and critical thinking skills.</p>
+            <button class="btn-explore">Explore Secondary Courses</button>
+        </div>
+
+        <!-- Higher Secondary Education -->
+        <div class="category higher-secondary" onclick="location.href='@Url.Action("HigherSecondary", "Client")'">
+            <h2>📕 Higher Secondary Education</h2>
+            <p><strong>Standards:</strong> 11th and 12th</p>
+
+            <p><strong>Focus:</strong> Specialized subjects, career preparation, and university entrance exams.</p>
+            <button class="btn-explore">Explore Higher Secondary Courses</button>
+        </div>
+    }
+    else
+    {
+@* 
+        <div class="text-center mt-2">
+            <a href="@Url.Action("Login", "Account", new { isClickedFromExporePage = true})"
+               class="btn btn-warning fw-bold">
+                🔑 Log In Now
+            </a>
+        </div>
+ *@
+    }
+</div>
+<!-- CSS Styling -->
+

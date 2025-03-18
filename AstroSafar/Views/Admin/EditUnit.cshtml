@@ -1,4 +1,4 @@
-﻿@model AstroSafar.Models.UnitAdmin
+﻿@* @model AstroSafar.Models.UnitAdmin
 @{
     ViewBag.Title = "Edit Unit";
 }
@@ -10,34 +10,113 @@
         <label for="Name">Unit Name</label>
         <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
     </div>
-    <div class="mb-3">
-        <label for="Content" class="form-label">Content</label>
-        <input type="text" id="Content" name="Content" class="form-control" required placeholder="Content addition">
+
+    <div class="form-group">
+        <label asp-for="Content" class="control-label">Unit Content (Point-wise Format)</label>
+        <div class="mb-2">
+            <small class="text-muted">Use emojis like ✅, 1️⃣ to prefix your points. Each line will be treated as a separate point.</small>
+        </div>
+        <textarea asp-for="Content" class="form-control content-editor" rows="10" 
+                  placeholder="Example:
+✅ Each Course has Units.
+1️⃣ Each Completed Unit updates Progress.
+✅ If Progress ≥ 80%, Exam Unlocks."></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
+    <style>
+        .content-editor {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 15px;
+        }
+        .content-editor:focus {
+            box-shadow: 0 0 5px rgba(0,123,255,0.5);
+            border-color: #80bdff;
+        }
+    </style>
     <div class="mb-3">
-        <label for="ImageUrl" class="form-label">Upload Unit Image:</label>
-        <input type="file" name="ImageUrl" class="form-control" accept="image/*" />
+        <label asp-for="ImageURL" class="form-label">Upload Unit Image:</label>
+        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
         <span class="text-danger" asp-validation-for="ImageURL"></span>
-    </div>
-    <div class="form-group">
-        <label for="VideoUrl">Video URL</label>
-        <input type="text" id="VideoUrl" name="VideoUrl" class="form-control" value="@Model.VideoUrl" />
+
+        @if (!string.IsNullOrEmpty(Model.ImageURL))
+        {
+            <img src="@Model.ImageURL" alt="Unit Image" class="img-thumbnail mt-2" width="150" />
+        }
     </div>
 
-    @* <div class="form-group">
-        <label asp-for="CourseAdmin" class="control-label"></label>
-        <select asp-for="CourseAdmin" class="form-control" asp-items="ViewBag.CourseName">
-            <option value="">Select Course</option>
-        </select>
-        <span asp-validation-for="CourseAdmin" class="text-danger"></span>
-    </div> *@
+    <div class="form-group">
+        <label asp-for="VideoUrl">Video URL</label>
+        <input asp-for="VideoUrl" class="form-control" />
+        <span class="text-danger" asp-validation-for="VideoUrl"></span>
+    </div>
 
     <div class="form-group">
-        <label for="CourseId">Select Course</label>
+        <label asp-for="CourseId">Select Course</label>
         <select asp-for="CourseId" asp-items="ViewBag.Courses" class="form-control">
             <option value="">-- Select a Course --</option>
         </select>
+        <span class="text-danger" asp-validation-for="CourseId"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>*@
+ 
+
+@model AstroSafar.Models.UnitAdmin
+@{
+    ViewBag.Title = "Edit Unit";
+}
+
+<h2>Edit Unit</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<form asp-action="EditUnit" asp-controller="Admin" method="post" enctype="multipart/form-data">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name">Unit Name</label>
+        <input asp-for="Name" class="form-control" required />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Content" class="control-label"></label>
+        <textarea asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageURL" class="form-label">Upload Unit Image:</label>
+        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+        <span class="text-danger" asp-validation-for="ImageURL"></span>
+
+        @if (!string.IsNullOrEmpty(Model.ImageURL))
+        {
+            <img src="@Model.ImageURL" alt="Unit Image" class="img-thumbnail mt-2" width="150" />
+        }
+    </div>
+
+    <div class="form-group">
+        <label asp-for="VideoUrl">Video URL</label>
+        <input asp-for="VideoUrl" class="form-control" />
+        <span class="text-danger" asp-validation-for="VideoUrl"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CourseId">Select Course</label>
+        <select asp-for="CourseId" asp-items="ViewBag.Courses" class="form-control">
+            <option value="">-- Select a Course --</option>
+        </select>
+        <span class="text-danger" asp-validation-for="CourseId"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Save Changes</button>

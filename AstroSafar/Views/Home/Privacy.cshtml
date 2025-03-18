@@ -1,6 +1,219 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+        --text-dark: #112d4e;
+        --text-accent: #3a6ea5;
+        --heading-color: #1a4b8c;
+        --course-bg: #ffffff;
+        --course-shadow: rgba(0, 0, 0, 0.1);
+    }
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        font-family: 'Arial', sans-serif;
+    }
+
+    .privacy-container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #007bff;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .accordion-button {
+        font-weight: bold;
+        color: #333;
+    }
+
+        .accordion-button::after {
+            content: "\f107";
+            font-family: "FontAwesome";
+            float: right;
+            transition: 0.3s;
+        }
+
+        .accordion-button.collapsed::after {
+            content: "\f105";
+        }
+
+    .accordion-body {
+        background: #f9f9f9;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="container">
+    <div class="privacy-container">
+        <h2>Privacy Policy</h2>
+        <p class="text-muted text-center">Last updated: March 2025</p>
+
+        <div class="accordion" id="privacyAccordion">
+            <!-- Introduction -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIntro">
+                        1. Introduction
+                    </button>
+                </h3>
+                <div id="collapseIntro" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        Welcome to AstroSafar! We respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, and safeguard your information when you use our space learning platform.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data We Collect -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseData">
+                        2. Information We Collect
+                    </button>
+                </h3>
+                <div id="collapseData" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        We collect the following data when you use AstroSafar:
+                        <ul>
+                            <li>Full Name</li>
+                            <li>Email Address</li>
+                            <li>Phone Number (if provided)</li>
+                            <li>Course Enrollment Details</li>
+                            <li>Progress Tracking Data</li>
+                            <li>Payment Information (processed securely through third-party gateways)</li>
+                            <li>Activity logs (course interactions, quiz attempts, and video views)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purpose of Data Collection -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUse">
+                        3. How We Use Your Information
+                    </button>
+                </h3>
+                <div id="collapseUse" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        Your information is used for:
+                        <ul>
+                            <li>Providing access to space-related educational content</li>
+                            <li>Tracking and improving your learning progress</li>
+                            <li>Issuing certificates upon course completion</li>
+                            <li>Facilitating secure payments for premium courses</li>
+                            <li>Sending important notifications and updates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Security -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecurity">
+                        4. Data Security
+                    </button>
+                </h3>
+                <div id="collapseSecurity" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        We implement industry-standard security measures to protect your data from unauthorized access, alteration, or disclosure. Your payment details are encrypted and handled securely by trusted third-party payment processors.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third-Party Services -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirdParty">
+                        5. Third-Party Services
+                    </button>
+                </h3>
+                <div id="collapseThirdParty" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        AstroSafar may use third-party services such as:
+                        <ul>
+                            <li>YouTube for video content</li>
+                            <li>Stripe/PayPal for payment processing</li>
+                            <li>Google Analytics for website insights</li>
+                        </ul>
+                        These third parties have their own privacy policies governing the use of your data.
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Rights -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRights">
+                        6. Your Rights
+                    </button>
+                </h3>
+                <div id="collapseRights" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        You have the right to:
+                        <ul>
+                            <li>Request access to your personal data</li>
+                            <li>Request deletion of your account and data</li>
+                            <li>Opt-out of promotional emails and notifications</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cookies -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCookies">
+                        7. Cookies & Tracking
+                    </button>
+                </h3>
+                <div id="collapseCookies" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        We use cookies to enhance your experience and improve our services. You can control cookie settings in your browser.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Us -->
+            <div class="accordion-item">
+                <h3 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContact">
+                        8. Contact Us
+                    </button>
+                </h3>
+                <div id="collapseContact" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
+                    <div class="accordion-body">
+                        If you have any questions, contact us at <strong>support@astrosafar.com</strong>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap & FontAwesome -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -184,3 +184,311 @@
 </html>
 
 
+ *@
+
+@* @{
+    ViewData["Title"] = "Home - Space Learning";
+}
+
+<!-- Hero Section with 3D Space Scene -->
+<header class="hero">
+    <canvas id="spaceCanvas"></canvas>
+    <div class="hero-content text-center text-white">
+        <h1 class="display-3">EXPLORE THE UNIVERSE</h1>
+        <p class="lead">Dive into the wonders of space with interactive courses and real-time data.</p>
+        <a href="#courses-section" class="btn btn-primary btn-lg" id="start-learning-btn">Start Learning</a>
+    </div>
+</header>
+
+<!-- Featured News or Courses -->
+<section id="courses-section" class="featured-section container">
+    <h2 class="text-center my-5">Latest Discoveries & Courses</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="/images/moon.jpg" class="card-img-top" alt="Moon Mission">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Moon Exploration</h5>
+                    <p class="card-text">Learn about recent missions to the Moon and upcoming lunar explorations.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <img src="/images/mars.jpg" class="card-img-top" alt="Mars Rover">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Mars Missions</h5>
+                    <p class="card-text">Explore the latest findings from Mars rovers and future manned missions.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <img src="/images/blackhole.jpg" class="card-img-top" alt="Black Holes">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Black Holes & Beyond</h5>
+                    <p class="card-text">Understand the mysteries of black holes and space-time concepts.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Explore Space Section -->
+<section id="explore-courses-section" class="explore-space text-white text-center">
+    <div class="container">
+        <h2 class="display-4">Discover Space Like Never Before</h2>
+        <p class="lead">Join our courses to explore galaxies, exoplanets, and deep space phenomena.</p>
+        <a href="/Home/EducationLevels" class="btn btn-warning btn-lg">Explore Courses</a>
+    </div>
+</section>
+
+<!-- Smooth Scrolling Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("start-learning-btn").addEventListener("click", function (event) {
+            event.preventDefault();
+            document.querySelector("#courses-section").scrollIntoView({ behavior: "smooth" });
+        });
+
+        document.querySelectorAll(".read-more-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (event) {
+                event.preventDefault();
+                document.querySelector("#explore-courses-section").scrollIntoView({ behavior: "smooth" });
+            });
+        });
+    });
+</script>
+<!-- Three.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("spaceCanvas"), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Load Earth Texture
+        const textureLoader = new THREE.TextureLoader();
+        const earthTexture = textureLoader.load('/images/earth.jpg');
+        const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const earthMaterial = new THREE.MeshBasicMaterial({ map: earthTexture });
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earth);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            earth.rotation.y += 0.005; // Rotate Earth
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    });
+</script>
+
+<!-- Styles -->
+<style>
+    body {
+        background-color: #000;
+        color:white;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .hero {
+        position: relative;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    #spaceCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+    .card{
+        background:black;
+        color:wheat;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 10px;
+    }
+</style>
+ *@
+
+@{
+    ViewData["Title"] = "Home - Space Learning";
+}
+
+<!-- Hero Section with 3D Space Scene -->
+<header class="hero d-flex align-items-center justify-content-center text-center">
+    <canvas id="spaceCanvas"></canvas>
+    <div class="hero-content text-white">
+        <h1 class="display-4">EXPLORE THE UNIVERSE</h1>
+        <p class="lead">Dive into the wonders of space with interactive courses and real-time data.</p>
+        <a href="#courses-section" class="btn btn-primary btn-lg" id="start-learning-btn">Start Learning</a>
+    </div>
+</header>
+
+<!-- Featured News or Courses -->
+<section id="courses-section" class="featured-section container py-5">
+    <h2 class="text-center mb-4">Latest Discoveries & Courses</h2>
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card">
+                <img src="/images/moon.jpg" class="card-img-top" alt="Moon Mission">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Moon Exploration</h5>
+                    <p class="card-text">Learn about recent missions to the Moon and upcoming lunar explorations.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card">
+                <img src="/images/mars.jpg" class="card-img-top" alt="Mars Rover">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Mars Missions</h5>
+                    <p class="card-text">Explore the latest findings from Mars rovers and future manned missions.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="card">
+                <img src="/images/blackhole.jpg" class="card-img-top" alt="Black Holes">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Black Holes & Beyond</h5>
+                    <p class="card-text">Understand the mysteries of black holes and space-time concepts.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Explore Space Section -->
+<section id="explore-courses-section" class="explore-space text-white text-center py-5">
+    <div class="container">
+        <h2 class="display-5">Discover Space Like Never Before</h2>
+        <p class="lead">Join our courses to explore galaxies, exoplanets, and deep space phenomena.</p>
+        <a href="/Home/EducationLevels" class="btn btn-warning btn-lg">Explore Courses</a>
+    </div>
+</section>
+
+<!-- Smooth Scrolling Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("start-learning-btn").addEventListener("click", function (event) {
+            event.preventDefault();
+            document.querySelector("#courses-section").scrollIntoView({ behavior: "smooth" });
+        });
+        document.querySelectorAll(".read-more-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (event) {
+                event.preventDefault();
+                document.querySelector("#explore-courses-section").scrollIntoView({ behavior: "smooth" });
+            });
+        });
+    });
+</script>
+
+<!-- Three.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("spaceCanvas"), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const textureLoader = new THREE.TextureLoader();
+        const earthTexture = textureLoader.load('/images/earth.jpg');
+        const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const earthMaterial = new THREE.MeshBasicMaterial({ map: earthTexture });
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earth);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            earth.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    });
+</script>
+
+
+<!-- Styles -->
+<style>
+
+    body {
+        background-color: #000;
+        color: white;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .hero {
+        position: relative;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    #spaceCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    
+    .card {
+        background: black;
+        color: wheat;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 10px;
+    }
+</style>

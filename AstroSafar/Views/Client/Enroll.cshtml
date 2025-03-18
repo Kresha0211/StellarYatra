@@ -1,4 +1,4 @@
-﻿@model AstroSafar.Models.Enrollment
+﻿@* @model AstroSafar.Models.Enrollment
 
 @{
     ViewData["Title"] = "Enroll in Course";
@@ -6,9 +6,6 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<!-- Display Course Name -->
-<h4>@Model.CourseAdmin.Name</h4>
-<p>@Model.CourseAdmin.Description</p>
 
 <form asp-action="Enroll" method="post">
     <div class="mb-3">
@@ -90,3 +87,430 @@
     </script>
 }
 
+
+
+ *@
+
+      @*       @model AstroSafar.Models.Enrollment
+@{
+    ViewData["Title"] = "Embark on Your Space Journey";
+}
+
+<style>
+
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .enrollment-pod {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 16px;
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(100, 100, 100, 0.15);
+        border: 1px solid rgba(200, 200, 200, 0.3);
+        position: relative;
+        z-index: 10;
+    }
+
+    .cosmic-title {
+        text-align: center;
+        color: var(--star-color);
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    .cosmic-label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 0.3rem;
+    }
+
+    .cosmic-input, .cosmic-textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--cosmic-blue-light);
+        background: rgba(240, 245, 255, 0.6);
+        transition: all 0.3s ease;
+    }
+
+        .cosmic-input:focus, .cosmic-textarea:focus {
+            background-color: rgba(230, 240, 255, 0.7);
+            border-color: var(--star-color);
+            box-shadow: 0 0 0 0.25rem rgba(77, 148, 255, 0.25);
+        }
+
+    .launch-button {
+        background: linear-gradient(135deg, var(--cosmic-blue-light) 0%, var(--nebula-purple-light) 100%);
+        border: none;
+        font-weight: 600;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        padding: 12px;
+        border-radius: 8px;
+        width: 100%;
+        transition: all 0.3s ease;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .launch-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(77, 148, 255, 0.3);
+        }
+
+    .launch-icon {
+        margin-left: 8px;
+    }
+
+    .text-danger {
+        color: #e74c3c !important;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+    }
+</style>
+
+<div class="space-container">
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    
+    <div class="enrollment-pod">
+        <h2 class="cosmic-title">@ViewData["Title"]</h2>
+        <div class="mission-description">
+            <p>Ready to explore the cosmos? Fill in your details below to secure your spot on this incredible journey of discovery.</p>
+        </div>
+        
+        <form asp-action="Enroll" method="post" class="space-form">
+            <div class="form-field-group">
+                <div class="mb-4">
+                    <label asp-for="FullName" class="cosmic-label">Astronaut Name</label>
+                    <input asp-for="FullName" class="cosmic-input" placeholder="Enter your full name" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-4">
+                    <label asp-for="Email" class="cosmic-label">Communication Channel (Email)</label>
+                    <input asp-for="Email" type="email" class="cosmic-input" placeholder="Your email for mission updates" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="cosmic-label">Astronaut Classification</label>
+                    <div class="cosmic-radio-group">
+                        <div class="cosmic-radio">
+                            <input asp-for="Gender" type="radio" class="cosmic-radio-input" value="Male" id="genderMale" />
+                            <label class="cosmic-radio-label" for="genderMale">Male</label>
+                        </div>
+                        <div class="cosmic-radio">
+                            <input asp-for="Gender" type="radio" class="cosmic-radio-input" value="Female" id="genderFemale" />
+                            <label class="cosmic-radio-label" for="genderFemale">Female</label>
+                        </div>
+                        <div class="cosmic-radio">
+                            <input asp-for="Gender" type="radio" class="cosmic-radio-input" value="Other" id="genderOther" />
+                            <label class="cosmic-radio-label" for="genderOther">Other</label>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-4">
+                    <label asp-for="DateOfBirth" class="cosmic-label">Earth Date of Birth</label>
+                    <input asp-for="DateOfBirth" class="cosmic-input" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-4">
+                        <label asp-for="Standard" class="form-label">Standard</label>
+                        <input asp-for="Standard" class="form-control" />
+                        <span asp-validation-for="Standard" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-4">
+                    <label asp-for="Address" class="cosmic-label">Earth Base Location</label>
+                    <textarea asp-for="Address" class="cosmic-textarea" rows="3" placeholder="Your current Earth coordinates"></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                
+                <!-- Hidden field to send CourseId -->
+                <input type="hidden" asp-for="CourseId" />
+                
+                <div class="launch-control">
+                    <button type="submit" class="launch-button">
+                        <span class="launch-text">Launch Your Journey</span>
+                        <i class="fas fa-rocket launch-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Validation Summary -->
+        <div asp-validation-summary="ModelOnly" class="cosmic-alert"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dobInput = document.getElementById("DateOfBirth");
+            if (dobInput) {
+                // Prevent future dates
+                const today = new Date().toISOString().split("T")[0];
+                dobInput.setAttribute("max", today);
+               
+                const currentYear = new Date().getFullYear();
+                dobInput.value = `${currentYear}-01-01`; // Default to January 1st of the current year
+            }
+            
+            // Optional: Add subtle stars animation
+            const enrollmentPod = document.querySelector('.enrollment-pod');
+            for (let i = 0; i < 30; i++) {
+                let star = document.createElement('div');
+                star.className = 'animated-star';
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${5 + Math.random() * 10}s`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                enrollmentPod.appendChild(star);
+            }
+        });
+    </script>
+} *@
+
+
+            @model AstroSafar.Models.Enrollment
+@{
+    ViewData["Title"] = "Enroll in Course";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #f0f5ff, #e6f0ff);
+        font-family: 'Exo 2', sans-serif;
+        color: #333;
+    }
+
+    .enrollment-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(100, 100, 100, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(200, 200, 200, 0.3);
+    }
+
+    .course-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .course-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #4d94ff;
+    }
+
+    .course-description {
+        font-size: 1rem;
+        color: #555;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #6699cc;
+        background: rgba(240, 245, 255, 0.6);
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            background-color: rgba(230, 240, 255, 0.7);
+            border-color: #4d94ff;
+            box-shadow: 0 0 0 0.25rem rgba(77, 148, 255, 0.25);
+        }
+
+    .form-check-inline {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 15px;
+    }
+
+    .form-check-input {
+        margin-right: 8px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6699cc, #c5b3dd);
+        border: none;
+        font-weight: 600;
+        padding: 12px 24px;
+        border-radius: 8px;
+        width: 100%;
+        transition: all 0.3s ease;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(77, 148, 255, 0.3);
+        }
+
+    .text-danger {
+        color: #e74c3c !important;
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+    }
+</style>
+<div class="enrollment-container">
+    <div class="course-header">
+        <h2 class="course-title">@ViewData["Title"]</h2>
+        <h4 class="course-title">@Model.CourseAdmin.Name</h4>
+        <p class="course-description">@Model.CourseAdmin.Description</p>
+    </div>
+
+    <form asp-action="Enroll" method="post">
+        <!-- Full Name -->
+        <div class="mb-3">
+            <label asp-for="FullName" class="form-label">Full Name</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+            </div>
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" />
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+            <label class="form-label">Gender</label><br />
+            <div class="form-check form-check-inline">
+                <input asp-for="Gender" type="radio" class="form-check-input" value="Male" id="genderMale" />
+                <label class="form-check-label" for="genderMale"><i class="fas fa-mars"></i> Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input asp-for="Gender" type="radio" class="form-check-input" value="Female" id="genderFemale" />
+                <label class="form-check-label" for="genderFemale"><i class="fas fa-venus"></i> Female</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input asp-for="Gender" type="radio" class="form-check-input" value="Other" id="genderOther" />
+                <label class="form-check-label" for="genderOther"><i class="fas fa-genderless"></i> Other</label>
+            </div>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <!-- Date of Birth -->
+       <div class="mb-4">
+                @Html.LabelFor(model => model.DateOfBirth, new { @class = "form-label" })
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", type = "date", required = "required", id = "dobInput" })
+                </div>
+                <div class="invalid-feedback">Please enter your date of birth.</div>
+                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+            </div>
+
+        <!-- Standard -->
+        <div class="mb-3">
+            <label asp-for="Standard" class="form-label">Standard</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                <input asp-for="Standard" class="form-control" placeholder="Enter your standard" />
+            </div>
+            <span asp-validation-for="Standard" class="text-danger"></span>
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3">
+            <label asp-for="Address" class="form-label">Address</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                <input asp-for="Address" class="form-control" placeholder="Enter your address" />
+            </div>
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <!-- Hidden field for CourseId -->
+        <input type="hidden" asp-for="CourseId" />
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-rocket"></i> Enroll Now
+        </button>
+    </form>
+</div>
+
+
+<!-- Validation Summary -->
+<div asp-validation-summary="ModelOnly" class="cosmic-alert"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dobInput = document.getElementById("DateOfBirth");
+            if (dobInput) {
+                // Prevent future dates
+                const today = new Date().toISOString().split("T")[0];
+                dobInput.setAttribute("max", today);
+
+                const currentYear = new Date().getFullYear();
+                dobInput.value = `${currentYear}-01-01`; // Default to January 1st of the current year
+            }
+
+            // Optional: Add subtle stars animation
+            const enrollmentPod = document.querySelector('.enrollment-pod');
+            for (let i = 0; i < 30; i++) {
+                let star = document.createElement('div');
+                star.className = 'animated-star';
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${5 + Math.random() * 10}s`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                enrollmentPod.appendChild(star);
+            }
+
+        });
+    </script>
+}

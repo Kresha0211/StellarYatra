@@ -10,24 +10,25 @@ namespace AstroSafar.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_unitAdmins_courseAdmins_CoursesId",
-                table: "unitAdmins");
+            // Drop the problematic foreign key only if it exists
+            migrationBuilder.Sql(@"
+        IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_unitAdmins_CoursesA_CoursesId')
+        ALTER TABLE [unitAdmins] DROP CONSTRAINT [FK_unitAdmins_CoursesA_CoursesId];
+    ");
 
-            migrationBuilder.DropTable(
-                name: "Units");
+            // Drop Index only if it exists
+            migrationBuilder.Sql(@"
+        IF EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'IX_unitAdmins_CoursesId' AND object_id = OBJECT_ID('unitAdmins'))
+        DROP INDEX [IX_unitAdmins_CoursesId] ON [unitAdmins];
+    ");
 
-            migrationBuilder.DropTable(
-                name: "CoursesA");
+            // Now it's safe to drop the column
+            migrationBuilder.Sql(@"
+        IF EXISTS (SELECT 1 FROM sys.columns WHERE name = 'CoursesId' AND object_id = OBJECT_ID('unitAdmins'))
+        ALTER TABLE [unitAdmins] DROP COLUMN [CoursesId];
+    ");
 
-            migrationBuilder.DropIndex(
-                name: "IX_unitAdmins_CoursesId",
-                table: "unitAdmins");
-
-            migrationBuilder.DropColumn(
-                name: "CoursesId",
-                table: "unitAdmins");
-
+            // Modify column
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "courseAdmins",
@@ -37,11 +38,13 @@ namespace AstroSafar.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
 
+            // Create new index
             migrationBuilder.CreateIndex(
                 name: "IX_unitAdmins_CourseId",
                 table: "unitAdmins",
                 column: "CourseId");
 
+            // Add new foreign key
             migrationBuilder.AddForeignKey(
                 name: "FK_unitAdmins_courseAdmins_CourseId",
                 table: "unitAdmins",
@@ -51,17 +54,21 @@ namespace AstroSafar.Migrations
                 onDelete: ReferentialAction.Cascade);
         }
 
+
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            // Drop new foreign key
             migrationBuilder.DropForeignKey(
                 name: "FK_unitAdmins_courseAdmins_CourseId",
                 table: "unitAdmins");
 
+            // Drop new index
             migrationBuilder.DropIndex(
                 name: "IX_unitAdmins_CourseId",
                 table: "unitAdmins");
 
+            // Restore old column (if needed)
             migrationBuilder.AddColumn<int>(
                 name: "CoursesId",
                 table: "unitAdmins",
@@ -69,6 +76,7 @@ namespace AstroSafar.Migrations
                 nullable: false,
                 defaultValue: 0);
 
+            // Revert column change
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "courseAdmins",
@@ -78,6 +86,7 @@ namespace AstroSafar.Migrations
                 oldType: "nvarchar(100)",
                 oldMaxLength: 100);
 
+            // Recreate tables if they were dropped
             migrationBuilder.CreateTable(
                 name: "CoursesA",
                 columns: table => new
@@ -120,6 +129,7 @@ namespace AstroSafar.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            // Restore index
             migrationBuilder.CreateIndex(
                 name: "IX_unitAdmins_CoursesId",
                 table: "unitAdmins",
@@ -135,6 +145,7 @@ namespace AstroSafar.Migrations
                 table: "Units",
                 column: "CoursesId");
 
+            // Restore old foreign key
             migrationBuilder.AddForeignKey(
                 name: "FK_unitAdmins_courseAdmins_CoursesId",
                 table: "unitAdmins",

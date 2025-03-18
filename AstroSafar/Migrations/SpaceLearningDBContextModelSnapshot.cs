@@ -341,6 +341,64 @@ namespace AstroSafar.Migrations
                     b.ToTable("unitAdmins");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.UnitProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProgressPercentage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("UnitProgresses");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.UserCourseProgress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProgressPercentage")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("UserCourseProgresses");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
                 {
                     b.HasOne("AstroSafar.Models.Category", "Category")
@@ -389,6 +447,36 @@ namespace AstroSafar.Migrations
                 {
                     b.HasOne("AstroSafar.Models.CourseAdmin", "CourseAdmin")
                         .WithMany("UnitAdmins")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CourseAdmin");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.UnitProgress", b =>
+                {
+                    b.HasOne("AstroSafar.Models.CourseAdmin", "CourseAdmin")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroSafar.Models.UnitAdmin", "UnitAdmin")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CourseAdmin");
+
+                    b.Navigation("UnitAdmin");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.UserCourseProgress", b =>
+                {
+                    b.HasOne("AstroSafar.Models.CourseAdmin", "CourseAdmin")
+                        .WithMany()
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
