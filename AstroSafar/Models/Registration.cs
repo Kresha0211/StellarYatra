@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 namespace AstroSafar.Models
 {
     [Table("Registrations")]
-    public class Registration
+    public class Registration   
     {
         [Key]
         public int Id { get; set; }

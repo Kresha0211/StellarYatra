@@ -24,7 +24,11 @@ namespace AstroSafar.Models
         public DbSet<Enrollment> enrollments { get; set; }
         public DbSet<SecondaryEnroll> secondaryEnrolls { get; set; }
         public DbSet<HigherSecondaryEnroll> higherSecondaryEnrolls { get; set; }
+        public DbSet<UnitProgress> UnitProgresses { get; set; }
        
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Registration>().ToTable("Registrations");
@@ -39,7 +43,13 @@ namespace AstroSafar.Models
             .WithMany(cat => cat.Courses)
             .HasForeignKey(c => c.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
-        }
+            // Prevent Duplicate Enrollments: A user can enroll in a course only once
+            modelBuilder.Entity<Enrollment>()
+                .HasIndex(e => new { e.Email, e.CourseId})
+                .IsUnique();
+        
+
+    }
 
 
         public DbSet<Feedback> Feedbacks { get; set; }

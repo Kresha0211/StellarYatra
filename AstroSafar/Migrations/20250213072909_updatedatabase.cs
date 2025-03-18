@@ -136,7 +136,7 @@ namespace AstroSafar.Migrations
                 column: "CoursesId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_unitAdmins_courseAdmins_CoursesId",
+                 name: "FK_unitAdmins_courseAdmins_CoursesId",
                 table: "unitAdmins",
                 column: "CoursesId",
                 principalTable: "courseAdmins",

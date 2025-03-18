@@ -1,7 +1,7 @@
-﻿
-@model List<AstroSafar.Models.CourseAdmin>
+﻿@*
+ @model List<AstroSafar.Models.CourseAdmin>
 
-<h2 class="mb-4 text-center"> Higher Secondary Courses</h2>
+<h2 class="mb-4 text-center">  Secondary Courses</h2>
 
 
 @if (Model != null && Model.Any())
@@ -20,8 +20,8 @@
                         <em>@course.Description</em><br />
                         <span>Duration: @course.Duration</span><br />
 
-                      
-                        <a asp-controller="Client" asp-action="HigherSecondaryEnroll" asp-route-courseId="@course.Id" class="btn btn-success mt-auto">
+                        <!-- Replace 'View Units' button with 'Enroll' button -->
+                        <a asp-controller="Client" asp-action="SecondaryEnroll" asp-route-courseId="@course.Id" class="btn btn-success mt-auto">
                             Enroll
                         </a>
                     </div>
@@ -34,4 +34,112 @@ else
 {
     <p class="text-center text-danger">No Primary courses available.</p>
 }
+
+ *@
+
+
+@model List<AstroSafar.Models.CourseAdmin>
+
+<h2 class="mb-4 text-center">Secondary Courses</h2>
+
+<!-- 🔍 Search Bar -->
+<input type="text" id="searchInput" class="form-control mb-3" placeholder="Search courses..." onkeyup="debounceFilterCourses()" />
+
+<!-- 🔹 Courses List -->
+@if (Model != null && Model.Any())
+{
+    <div class="row g-4" id="courseContainer">
+        @foreach (var course in Model)
+        {
+            <div class="col-md-4 course-card" data-title="@course.Name.ToLower() @course.Description.ToLower()">
+                <div class="card shadow-lg border-0 h-100">
+                    <!-- Course Image -->
+                    <img src="@Url.Content("~/Images/" + course.ImageURL)" alt="@course.Name" class="course-image" />
+
+                    <!-- Card Body -->
+                    <div class="card-body d-flex flex-column">
+                        <strong class="course-name">@course.Name</strong><br />
+                        <em class="course-desc">@course.Description</em><br />
+                        <span>Duration: @course.Duration</span><br />
+
+                        <a asp-controller="Client" asp-action="SecondaryEnroll" asp-route-courseId="@course.Id" class="btn btn-success mt-auto">
+                            Enroll
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- No Courses Found Message -->
+    <p id="noResults" class="text-center text-danger mt-3" style="display: none;">🚫 No matching courses found.</p>
+}
+else
+{
+    <p class="text-center text-danger">No Secondary courses available.</p>
+}
+
+<style>
+    .course-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+
+    .card {
+        border-radius: 12px;
+    }
+
+    .highlight {
+        background-color: yellow;
+        font-weight: bold;
+    }
+</style>
+
+<!-- 🔹 JavaScript for Filtering with Debounce -->
+<script>
+    let debounceTimer;
+
+    function debounceFilterCourses() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(filterCourses, 300); // Delay for better performance
+    }
+
+    function filterCourses() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let courses = document.querySelectorAll(".course-card");
+        let noResultsMessage = document.getElementById("noResults");
+        let found = false;
+
+        courses.forEach(course => {
+            let courseTitle = course.getAttribute("data-title");
+            let titleElement = course.querySelector(".course-name");
+            let descElement = course.querySelector(".course-desc");
+
+            if (courseTitle.includes(input)) {
+                course.style.display = "block"; // Show matching courses
+                highlightText(titleElement, input);
+                highlightText(descElement, input);
+                found = true;
+            } else {
+                course.style.display = "none"; // Hide non-matching courses
+            }
+        });
+
+        // Show "No Courses Found" message if none are displayed
+        noResultsMessage.style.display = found ? "none" : "block";
+    }
+
+    function highlightText(element, keyword) {
+        if (!keyword) {
+            element.innerHTML = element.textContent; // Reset if no search term
+            return;
+        }
+
+        let regex = new RegExp(`(${keyword})`, "gi");
+        element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
+    }
+</script>
+
 

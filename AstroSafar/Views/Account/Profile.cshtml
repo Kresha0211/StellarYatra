@@ -49,6 +49,13 @@
 <body>
 
     <div class="profile-container">
+        <!-- Success Message -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
         <h2>User Profile</h2>
 
         <!-- Static Profile Picture -->

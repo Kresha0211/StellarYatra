@@ -1,4 +1,4 @@
-﻿
+﻿@* 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,11 +50,19 @@
                 background-color: #e68900;
                 transform: scale(1.05); /* Subtle hover effect */
             }
-
+        /* Footer Styling */
+        footer {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 20px;
+        }
         .cta-button {
             position: relative;
             z-index: 10;
             pointer-events: auto;
+        }
     </style>
 </head>
 <body>
@@ -88,12 +96,6 @@
         const earthTexture = textureLoader.load('https://threejs.org/examples/textures/earth_atmos_2048.jpg');
         const marsTexture = textureLoader.load('https://threejs.org/examples/textures/mars_1k_color.jpg');
 
-        // Create Earth
-        // const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
-        // const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
-        // const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-        // scene.add(earth);
-
         const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
         const earthMaterial = new THREE.MeshStandardMaterial({
             map: earthTexture,
@@ -105,11 +107,6 @@
         const earth = new THREE.Mesh(earthGeometry, earthMaterial);
         scene.add(earth);
 
-        // Create Mars
-        // const marsGeometry = new THREE.SphereGeometry(0.53, 32, 32); // Mars is about 53% the size of Earth
-        // const marsMaterial = new THREE.MeshStandardMaterial({ map: marsTexture });
-        // const mars = new THREE.Mesh(marsGeometry, marsMaterial);
-        // scene.add(mars);
         const marsGeometry = new THREE.SphereGeometry(0.53, 32, 32); // Mars is about 53% the size of Earth
         const marsMaterial = new THREE.MeshStandardMaterial({
             map: marsTexture,
@@ -180,7 +177,337 @@
         });
 
     </script>
+    <!-- FOOTER SECTION -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About Us Section -->
+            <div class="footer-section">
+                <h4>About AstroSafar</h4>
+                <p>AstroSafar is your gateway to space exploration and education, offering expert-led courses on space science, technology, and beyond.</p>
+                <a href="@Url.Action("Gallery", "Home")" class="footer-link">Learn More</a>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("Gallery", "Home")">Services</a></li>
+                    <li><a href="@Url.Action("SubmitFeedback", "SubmitFeedback")">Contact Us</a></li>
+                    <li><a href="@Url.Action("AboutUs", "Home")">About Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Newsletter Subscription -->
+            <div class="footer-section">
+                <h4>Subscribe to Our Newsletter</h4>
+                <p>Stay updated with the latest space discoveries and courses.</p>
+                <input type="email" id="email" placeholder="Enter your email">
+                <button onclick="subscribeNewsletter()">Subscribe</button>
+            </div>
+            <div class="footer-section text-center">
+                <h5>Follow Us</h5>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com" target="_blank" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.facebook.com" target="_blank" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank" class="social-icon">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 AstroSafar | All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- FontAwesome for Social Media Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
+
+    <!-- Newsletter Subscription JavaScript -->
+    <script>
+        function subscribeNewsletter() {
+            let email = document.getElementById("email").value;
+            if (email) {
+                alert("Thank you for subscribing! Stay tuned for space updates. 🚀");
+                document.getElementById("email").value = "";
+            } else {
+                alert("Please enter a valid email address.");
+            }
+        }
+    </script>
+
+    <!-- FOOTER STYLES -->
+    <style>
+        .footer {
+            background-color: #0d1b2a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .footer-section {
+            width: 22%;
+            padding: 10px;
+            text-align: left;
+        }
+
+            .footer-section h4 {
+                font-size: 1.4em;
+                margin-bottom: 10px;
+                color: #ff9800;
+            }
+
+            .footer-section p {
+                font-size: 1em;
+                margin: 5px 0;
+            }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-links li {
+                margin: 5px 0;
+            }
+
+            .footer-links a {
+                color: white;
+                text-decoration: none;
+                font-size: 1em;
+                transition: 0.3s;
+            }
+
+                .footer-links a:hover {
+                    color: #ff9800;
+                }
+
+        /* Newsletter Input */
+        input[type="email"] {
+            width: 80%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+
+            button:hover {
+                background-color: #ffb74d;
+            }
+
+        /* Social Media Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            font-size: 24px;
+            color: deeppink;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            .social-icon:hover {
+                color: #ffcc00;
+            }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+        }
+
+    </style>
+
+
+
+
 </body>
-</html>
+</html> *@
+@{
+    ViewData["Title"] = "Home - Space Learning";
+}
 
+<!-- Hero Section with 3D Space Scene -->
+<header class="hero d-flex align-items-center justify-content-center text-center">
+    <canvas id="spaceCanvas"></canvas>
+    <div class="hero-content text-white">
+        <h1 class="display-4">EXPLORE THE UNIVERSE</h1>
+        <p class="lead">Dive into the wonders of space with interactive courses and real-time data.</p>
+        <a href="#courses-section" class="btn btn-primary btn-lg" id="start-learning-btn">Start Learning</a>
+    </div>
+</header>
 
+<!-- Featured News or Courses -->
+<section id="courses-section" class="featured-section container py-5">
+    <h2 class="text-center mb-4">Latest Discoveries & Courses</h2>
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card">
+                <img src="/images/moon.jpeg" class="card-img-top" alt="Moon Mission">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Moon Exploration</h5>
+                    <p class="card-text">Learn about recent missions to the Moon and upcoming lunar explorations.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card">
+                <img src="/images/mars.jpg" class="card-img-top" alt="Mars Rover">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Mars Missions</h5>
+                    <p class="card-text">Explore the latest findings from Mars rovers and future manned missions.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12 mx-auto">
+            <div class="card">
+                <img src="/images/blackhole.jpg" class="card-img-top" alt="Black Holes">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Black Holes & Beyond</h5>
+                    <p class="card-text">Understand the mysteries of black holes and space-time concepts.</p>
+                    <a href="#explore-courses-section" class="btn btn-dark read-more-btn">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Explore Space Section -->
+<section id="explore-courses-section" class="explore-space text-white text-center py-5">
+    <div class="container">
+        <h2 class="display-5">Discover Space Like Never Before</h2>
+        <p class="lead">Join our courses to explore galaxies, exoplanets, and deep space phenomena.</p>
+        <a href="/Home/EducationLevels" class="btn btn-warning btn-lg">Explore Courses</a>
+    </div>
+</section>
+
+<!-- Smooth Scrolling Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("start-learning-btn").addEventListener("click", function (event) {
+            event.preventDefault();
+            document.querySelector("#courses-section").scrollIntoView({ behavior: "smooth" });
+        });
+        document.querySelectorAll(".read-more-btn").forEach(function (btn) {
+            btn.addEventListener("click", function (event) {
+                event.preventDefault();
+                document.querySelector("#explore-courses-section").scrollIntoView({ behavior: "smooth" });
+            });
+        });
+    });
+</script>
+
+<!-- Three.js Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("spaceCanvas"), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const textureLoader = new THREE.TextureLoader();
+        const earthTexture = textureLoader.load('/images/homeearth.jpeg');
+        const earthGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const earthMaterial = new THREE.MeshBasicMaterial({ map: earthTexture });
+        const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+        scene.add(earth);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            earth.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    });
+</script>
+
+<!-- Styles -->
+<style>
+    body {
+        background-color: #000;
+        color: white;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .hero {
+        position: relative;
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    #spaceCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .card {
+        background: black;
+        color: wheat;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        background: rgba(0, 0, 0, 0.6);
+        padding: 20px;
+        border-radius: 10px;
+    }
+</style>

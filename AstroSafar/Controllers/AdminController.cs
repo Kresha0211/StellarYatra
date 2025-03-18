@@ -276,25 +276,30 @@ namespace AstroSafar.Controllers
 
             return View();
         }
-
-
         [HttpPost]
-        public IActionResult AddUnit(UnitAdmin unit)
+        public IActionResult AddUnit(UnitAdmin unit, IFormFile ImageFile)
         {
-
+            if (ImageFile != null && ImageFile.Length > 0)
             {
-                _context.unitAdmins.Add(unit);
-                _context.SaveChanges();
-                return RedirectToAction("UnitList");
+                // Generate a unique file name
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageFile.CopyTo(stream);
+                }
+
+                // Save image path in the database
+                unit.ImageURL = "/Images/" + fileName;
             }
 
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Console.WriteLine(error.ErrorMessage);
-            }
+            _context.unitAdmins.Add(unit);
+            _context.SaveChanges();
 
-            return View(unit);
+            return RedirectToAction("UnitList");
         }
+
         public IActionResult UnitList()
         {
             var units = _context.unitAdmins
@@ -315,87 +320,55 @@ namespace AstroSafar.Controllers
             return View(units);
         }
 
-        // Edit Unit
-
-        //[HttpGet]
-        //public IActionResult EditUnit(int id)
-        //{
-        //    // Fetch the unit with its associated course for editing
-        //    var unit = _context.unitAdmins
-        //        .Include(u => u.CourseAdmin) // Load the course related to the unit
-        //        .FirstOrDefault(u => u.Id == id);
-
-        //    if (unit == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Fetch courses for the dropdown
-        //    var courses = _context.courseAdmins.Select(c => new { c.Id, c.Name }).ToList();
-        //    ViewBag.Courses = courses;
-
-        //    return View(unit);  
-        //}
         [HttpGet]
         public IActionResult EditUnit(int id)
         {
-            // Fetch the unit with its associated course for editing
-            var unit = _context.unitAdmins
-                .Include(u => u.CourseAdmin) // Load the related course
-                .FirstOrDefault(u => u.Id == id);
+            var unit = _context.unitAdmins.Find(id);
+            if (unit == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Courses = new SelectList(_context.courseAdmins, "Id", "Name");
+            return View(unit);
+        }
 
+
+        [HttpPost]
+        public IActionResult EditUnit(UnitAdmin model, IFormFile ImageFile)
+        {
+            var unit = _context.unitAdmins.Find(model.Id);
             if (unit == null)
             {
                 return NotFound();
             }
 
-            // Fetch courses for the dropdown
-            var courses = _context.courseAdmins
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList();
-
-            ViewBag.Courses = courses; // Assign to ViewBag
-
-            return View(unit);
-        }
-
-        //[HttpPost]
-        //public IActionResult EditUnit(UnitAdmin unit)
-        //{
-        //    // Find the existing unit and update its properties
-        //    var existingUnit = _context.unitAdmins.Find(unit.Id);
-        //    existingUnit.Name = unit.Name;
-        //    existingUnit.VideoUrl = unit.VideoUrl;
-        //    existingUnit.CourseAdmin = unit.CourseAdmin; // Update the course
-
-
-        //    _context.SaveChanges();
-
-        //    return RedirectToAction("UnitList"); 
-        //}
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditUnit(UnitAdmin unit)
-        {
-            var existingUnit = _context.unitAdmins.FirstOrDefault(u => u.Id == unit.Id);
-            if (existingUnit == null)
+            if (ImageFile != null && ImageFile.Length > 0)
             {
-                return NotFound();
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageFile.CopyTo(fileStream);
+                }
+
+                unit.ImageURL = "/Images/" + uniqueFileName;
             }
 
-            // Update properties directly
-            existingUnit.Name = unit.Name;
-            existingUnit.CourseId = unit.CourseId; // Ensure CourseId is updated
+            unit.Name = model.Name;
+            unit.Content = model.Content;
+            unit.VideoUrl = model.VideoUrl;
+            unit.CourseId = model.CourseId;
 
-            _context.Update(existingUnit);
+            _context.Update(unit);
             _context.SaveChanges();
 
-            return RedirectToAction("UnitList"); // Redirect to the units list or another appropriate page
+            TempData["SuccessMessage"] = "Unit updated successfully!";
+            return RedirectToAction("UnitList");
         }
-
 
         // Delete Unit
         [HttpPost]
@@ -415,7 +388,7 @@ namespace AstroSafar.Controllers
         public IActionResult EnrolledUsers(string? categoryFilter = "All")
         {
 
-            var primaryEnrollments = _context.enrollments.ToList();
+            var primaryEnrollments = _context.enrollments.ToList(); 
             var secondaryEnrollments = _context.secondaryEnrolls.ToList();
             var higherSecondaryEnrollments = _context.higherSecondaryEnrolls.ToList();
 

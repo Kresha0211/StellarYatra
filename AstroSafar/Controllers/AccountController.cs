@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
+using AstroSafar.Migrations;
 
 namespace AstroSafar.Controllers
 {
@@ -15,7 +16,8 @@ namespace AstroSafar.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly SpaceLearningDBContext _context;
-        private bool abcd = false;
+        private static bool testval ;
+        private bool  abcd = false;
          public AccountController(SpaceLearningDBContext context, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
@@ -29,28 +31,6 @@ namespace AstroSafar.Controllers
             bool isAuthenticated = User.Identity.IsAuthenticated;
             return Json(new { isAuthenticated });
         }
-        // Profile
-        //public IActionResult Profile()
-        //{
-        //    int? userId = HttpContext.Session.GetInt32("CustomerId");
-
-        //    if (userId == null)
-        //    {
-        //        Debug.WriteLine("User is not logged in. Redirecting to login...");
-        //        return RedirectToAction("Login");
-        //    }
-
-        //    var user = _context.Registrations.Find(userId);
-
-        //    if (user == null)
-        //    {
-        //        Debug.WriteLine($"User with ID {userId} not found in the database.");
-        //        return NotFound();
-        //    }
-
-        //    Debug.WriteLine($"Loading profile for user: {user.Firstname} {user.Lastname}");
-        //    return View(user);
-        //}
 
         public IActionResult Profile()
         {
@@ -71,131 +51,48 @@ namespace AstroSafar.Controllers
 
             return View(user);
         }
-
-
-        //[HttpGet]
-        //public IActionResult EditProfile()
-        //{
-        //    int? userId = HttpContext.Session.GetInt32("CustomerId");
-
-        //    if (userId == null)
-        //    {
-        //        return RedirectToAction("Login");
-        //    }
-
-        //    var user = _context.Registrations.Find(userId);
-
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(user);
-        //}
-
         [HttpGet]
-        public IActionResult EditProfile()
+        public IActionResult EditProfile(int id)
         {
             int? userId = HttpContext.Session.GetInt32("CustomerId");
-
             if (userId == null)
             {
-                Debug.WriteLine("Session expired or user not logged in. Redirecting to login.");
                 return RedirectToAction("Login");
             }
 
             var user = _context.Registrations.Find(userId);
             if (user == null)
             {
-                Debug.WriteLine($"User with ID {userId} not found.");
                 return NotFound();
             }
 
             return View(user);
         }
 
-
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(Registration model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(model);
-        //    }
-
-        //    int? userId = HttpContext.Session.GetInt32("CustomerId");
-
-        //    if (userId == null)
-        //    {
-        //        return RedirectToAction("Login");
-        //    }
-
-        //    var user = await _context.Registrations.FindAsync(userId);
-
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Update user details
-        //    user.Firstname = model.Firstname;
-        //    user.Lastname = model.Lastname;
-        //    user.Email = model.Email;
-        //    user.Phone = model.Phone;
-        //    user.Password = model.Password;
-        //    user.DateOfBirth = model.DateOfBirth;// Consider hashing the password
-
-        //    _context.Registrations.Update(user);
-        //    await _context.SaveChangesAsync();
-
-        //    ViewBag.SuccessMessage = "Profile updated successfully!";
-        //    return RedirectToAction("Profile");
-        //}
         [HttpPost]
-        public async Task<IActionResult> EditProfile(Registration model)
+        public IActionResult EditProfile(Registration model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            int? userId = HttpContext.Session.GetInt32("CustomerId");
-            if (userId == null)
-            {
-                Debug.WriteLine("Session expired. Redirecting to login.");
-                return RedirectToAction("Login");
-            }
-
-            var user = await _context.Registrations.FindAsync(userId);
+            var user = _context.Registrations.Find(model.Id);
             if (user == null)
             {
-                Debug.WriteLine($"User with ID {userId} not found.");
                 return NotFound();
             }
 
-            // Update user details
             user.Firstname = model.Firstname;
             user.Lastname = model.Lastname;
             user.Email = model.Email;
             user.Phone = model.Phone;
-
-            // 🚨 SECURITY: Do NOT store plain-text passwords!
-            // Ideally, update password only if changed
-            if (!string.IsNullOrEmpty(model.Password) && model.Password != user.Password)
-            {
-                user.Password = model.Password; // Consider hashing!
-            }
-
             user.DateOfBirth = model.DateOfBirth;
+            user.Password = model.Password;
 
-            _context.Registrations.Update(user);
-            await _context.SaveChangesAsync();
+            // ✅ Update the session with the new name
+            HttpContext.Session.SetString("CustomerName", $"{user.Firstname}");
 
+            _context.SaveChanges();
             TempData["SuccessMessage"] = "Profile updated successfully!";
-            return RedirectToAction("Profile");
+
+            return RedirectToAction("Profile", new { id = user.Id }); // Redirect to profile page
         }
-
-
 
         // GET: Registration Page
         public IActionResult Register()
@@ -231,20 +128,22 @@ namespace AstroSafar.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(bool isClickedFromExporePage)
+        public IActionResult Login(bool isClickedFromExporePage = false)
         {
            
             TempData["boolVaribale"] = isClickedFromExporePage;
+            testval = isClickedFromExporePage;
             return View();
         }
 
-        [HttpPost]
+        
        
         [HttpPost]
         public IActionResult Login(string email, string password, string returnUrl = null)
         {
             bool abc = (bool)(TempData["boolVaribale"]);
-
+            bool newval = testval;
+            TempData["boolVaribale"] = testval;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
@@ -264,11 +163,12 @@ namespace AstroSafar.Controllers
                 ViewBag.Message = "Incorrect password! Please try again.";
                 return View();
             }
-
+            
             // Set session data
             HttpContext.Session.SetInt32("CustomerId", customer.Id);
             HttpContext.Session.SetString("CustomerName", customer.Firstname);
-         
+            
+
 
 
             // Redirect to returnUrl if available, otherwise go to Dashboard

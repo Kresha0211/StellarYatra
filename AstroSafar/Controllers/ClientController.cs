@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
+
 namespace AstroSafar.Controllers
 {
-   // [Authorize]
+    // [Authorize]
     public class ClientController : Controller
     {
         private readonly SpaceLearningDBContext _context;
@@ -50,8 +51,12 @@ namespace AstroSafar.Controllers
             var units = _context.unitAdmins
                                 .Where(u => u.CourseId == courseId)
                                 .ToList();
+
             return View(units);
         }
+
+        // Needed
+
         [HttpGet]
         public IActionResult Enroll(int courseId)
         {
@@ -65,43 +70,25 @@ namespace AstroSafar.Controllers
             var model = new Enrollment
             {
                 CourseAdmin = course,
-                CourseId = course.Id
+                CourseId = course.Id,
+                //RegistrationId = course.Id
             };
+
 
             return View(model);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Enroll(Enrollment model)
-        //{
-
-
-        //    _context.enrollments.Add(model);
-        //    _context.SaveChanges();
-        //    return RedirectToAction("Units", new { courseId = model.CourseId });
-
-        //}
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Enroll(Enrollment model)
+        public async Task<IActionResult> Enroll(Enrollment model)
         {
-            // Check if the user is already enrolled in the same course
-            var existingEnrollment = _context.enrollments
-                .FirstOrDefault(e => e.Email == model.Email && e.CourseId == model.CourseId);
-
-            if (existingEnrollment != null)
-            {
-                // User is already enrolled, redirect to the Units page
-                return RedirectToAction("Units", new { courseId = model.CourseId });
-            }
-
-            // User is not enrolled yet, proceed with enrollment
             _context.enrollments.Add(model);
             _context.SaveChanges();
-
             return RedirectToAction("Units", new { courseId = model.CourseId });
+
         }
+
+
         [HttpGet]
         public IActionResult SecondaryEnroll(int courseId)
         {
@@ -127,7 +114,7 @@ namespace AstroSafar.Controllers
             return RedirectToAction("Units", new { courseId = model.CourseId });
         }
 
-       
+
 
         [HttpGet]
         public IActionResult HigherSecondaryEnroll(int courseId)
@@ -149,17 +136,62 @@ namespace AstroSafar.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult HigherSecondaryEnroll(AstroSafar.Models.HigherSecondaryEnroll model)
         {
-           
+
             _context.higherSecondaryEnrolls.Add(model);  // Add the model to the database
-            _context.SaveChanges();               
+            _context.SaveChanges();
             return RedirectToAction("Units", new { courseId = model.CourseId });
         }
+        [HttpPost]
+        public IActionResult CompleteUnit(int unitId)
+        {
+            var userEmail = HttpContext.Session.GetString("UserEmail"); // Get user email from session
 
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return Json(new { success = false, message = "User not logged in" });
+            }
 
+            var userProgress = _context.UnitProgresses
+                .FirstOrDefault(p => p.Email == userEmail && p.UnitId == unitId);
+             
+            if (userProgress == null)
+            {
+                userProgress = new UnitProgress
+                {
+                    Email = userEmail,
+                    UnitId = unitId
+                };
+                _context.UnitProgresses.Add(userProgress);
+                _context.SaveChanges();
+            }
 
+            // Get courseId from unit
+            var courseId = _context.unitAdmins
+                .Where(u => u.Id == unitId)
+                .Select(u => u.CourseId)
+                .FirstOrDefault();
 
-       
+            // Count total units in the course
+            var totalUnits = _context.unitAdmins
+                .Where(u => u.CourseId == courseId)
+                .Count();
+
+            // Count completed units
+            var completedUnits = _context.UnitProgresses
+                .Where(p => p.Email == userEmail && _context.unitAdmins
+                    .Any(u => u.Id == p.UnitId && u.CourseId == courseId))
+                .Count();
+
+            // Calculate progress (as a percentage)
+            int overallProgress = (int)((completedUnits / (double)totalUnits) * 100);
+
+            return Json(new { success = true, progress = overallProgress });
+        }
 
 
     }
 }
+
+
+
+

@@ -1,4 +1,5 @@
-﻿@model AstroSafar.Models.Registration
+﻿
+ @model AstroSafar.Models.Registration
 
 @{
     ViewData["Title"] = "Edit Profile";
@@ -13,7 +14,9 @@
     </div>
 }
 
-<form asp-action="Profile" method="post">
+<form asp-action="EditProfile" method="post">
+    <input type="hidden" asp-for="Id" />  @* Ensure ID is sent to the controller *@
+
     <div class="form-group">
         <label asp-for="Firstname"></label>
         <input asp-for="Firstname" class="form-control" required />
@@ -45,7 +48,8 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-action="Profile" class="btn btn-secondary">Cancel</a>
+    <a asp-action="Profile" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
 </form>
+
 
 

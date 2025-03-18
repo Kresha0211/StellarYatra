@@ -1,4 +1,4 @@
-﻿@{
+﻿@* @{
     ViewData["Title"] = "Gallery";
 }
 
@@ -165,3 +165,260 @@
     showSlide(slideIndex);
     autoSlide();
 </script>
+ *@
+
+@{
+    ViewData["Title"] = "Gallery";
+}
+
+<!-- Gallery Title -->
+<h2 class="gallery-title">🚀 Space & Research Gallery</h2>
+
+<!-- Image Gallery -->
+<div class="gallery-container">
+    <div class="gallery-slider">
+        <div class="slide"><img src="~/Images/Space1.jpg" alt="Galaxy"></div>
+        <div class="slide"><img src="~/Images/Space3.jpg" alt="Nebula"></div>
+        <div class="slide"><img src="~/Images/Space4.jpg" alt="Mars Surface"></div>
+        <div class="slide"><img src="~/Images/Space2.jpg" alt="Telescope"></div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+    <button class="next" onclick="moveSlide(1)">&#10095;</button>
+</div>
+
+<!-- Dots Navigation -->
+<div class="dots">
+    <span class="dot" onclick="jumpToSlide(0)"></span>
+    <span class="dot" onclick="jumpToSlide(1)"></span>
+    <span class="dot" onclick="jumpToSlide(2)"></span>
+    <span class="dot" onclick="jumpToSlide(3)"></span>
+</div>
+
+<!-- Scroll Down to About Us -->
+<div class="scroll-down">
+    <a href="#about-section">▼ Scroll Down to Learn More ▼</a>
+</div>
+
+<!-- ABOUT US SECTION -->
+<section id="about-section" class="about-us">
+    <h2>🌌 About AstroSafar</h2>
+    <p>
+        Welcome to <strong>AstroSafar</strong>, your gateway to the cosmos! We are dedicated to making space exploration accessible for students, educators, and enthusiasts.
+        Whether you're a beginner fascinated by stars or an aspiring astrophysicist, our carefully curated courses will take you on a journey beyond Earth.
+    </p>
+
+    <!-- Course Categories -->
+    <div class="course-section">
+        <h3>📚 Our Course Categories</h3>
+
+        <!-- Primary Courses -->
+        <div class="course-category">
+            <h4>🔭 Courses of Primary</h4>
+            <ul>
+                <li>Exploring Our Solar System</li>
+                <li>The Wonders of Stars and Galaxies</li>
+                <li>The Moon: Earth's Companion</li>
+                <li>Black Holes Explained</li>
+                <li>A Cosmic Journey: The Universe for Beginners</li>
+                <li>Gravity and Motion in Space</li>
+            </ul>
+        </div>
+
+        <!-- Secondary Courses -->
+        <div class="course-category">
+            <h4>🚀 Courses of Secondary</h4>
+            <ul>
+                <li>Astrophysics & Space Technology</li>
+                <li>Space Exploration and Technology</li>
+                <li>Understanding the Universe</li>
+                <li>Space and Human Life</li>
+                <li>Deep Space Missions and Spacecraft</li>
+                <li>Space Farming: Growing Food Beyond Earth</li>
+            </ul>
+        </div>
+
+        <!-- Higher Secondary Courses -->
+        <div class="course-category">
+            <h4>🌠 Courses of Higher Secondary</h4>
+            <ul>
+                <li>Advanced Rocketry and Space Science</li>
+                <li>Astrodynamics and Orbital Mechanics</li>
+                <li>Future of Space Travel: Mars & Beyond</li>
+                <li>Quantum Mechanics and the Universe</li>
+                <li>The Multiverse Theory: Are We Alone?</li>
+                <li>Artificial Intelligence in Space Exploration</li>
+            </ul>
+        </div>
+    </div>
+
+    <p class="closing-text">
+        🌍 Join us on this interstellar adventure and uncover the mysteries of the universe.
+        <strong>Enroll today and take your first step towards the stars! 🚀</strong>
+    </p>
+</section>
+
+<!-- CSS for Styling -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #0d1b2a;
+        color: white;
+        text-align: center;
+        margin: 0;
+    }
+
+    .gallery-title {
+        margin-top: 20px;
+        font-size: 2em;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .gallery-container {
+        position: relative;
+        max-width: 90%;
+        height: 450px;
+        margin: 20px auto;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+    }
+
+    .gallery-slider {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        height: 100%;
+    }
+
+    .slide {
+        min-width: 100%;
+        height: 100%;
+    }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+    /* Scroll Down Animation */
+    .scroll-down {
+        margin-top: 20px;
+    }
+
+        .scroll-down a {
+            display: inline-block;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+            .scroll-down a:hover {
+                background-color: #ff9800;
+                color: black;
+            }
+
+    /* About Us Section */
+    .about-us {
+        background-color: #112d4e;
+        padding: 50px 20px;
+        margin-top: 50px;
+    }
+
+        .about-us h2 {
+            font-size: 2.5em;
+        }
+
+        .about-us p {
+            font-size: 1.2em;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+    .course-section {
+        margin-top: 30px;
+    }
+
+    .course-category {
+        margin-top: 20px;
+        background-color: #0d1b2a;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+    }
+
+        .course-category h4 {
+            font-size: 1.5em;
+            color: #ff9800;
+        }
+
+        .course-category ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .course-category li {
+            font-size: 1.2em;
+            padding: 5px;
+        }
+
+    .closing-text {
+        font-size: 1.4em;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<!-- JavaScript for Slideshow -->
+<script>
+    let slideIndex = 0;
+    let slides = document.querySelectorAll(".slide");
+    let dots = document.querySelectorAll(".dot");
+    let autoSlideInterval;
+
+    function showSlide(index) {
+        if (index >= slides.length) { slideIndex = 0; }
+        if (index < 0) { slideIndex = slides.length - 1; }
+
+        document.querySelector(".gallery-slider").style.transform = `translateX(${-slideIndex * 100}%)`;
+
+        dots.forEach(dot => dot.classList.remove("active"));
+        dots[slideIndex].classList.add("active");
+    }
+
+    function moveSlide(step) {
+        slideIndex += step;
+        showSlide(slideIndex);
+        restartAutoSlide();
+    }
+
+    function jumpToSlide(index) {
+        slideIndex = index;
+        showSlide(slideIndex);
+        restartAutoSlide();
+    }
+
+    function autoSlide() {
+        slideIndex++;
+        showSlide(slideIndex);
+        autoSlideInterval = setTimeout(autoSlide, 3000);
+    }
+
+    function restartAutoSlide() {
+        clearTimeout(autoSlideInterval);
+        autoSlideInterval = setTimeout(autoSlide, 3000);
+    }
+
+    // Initialize
+    showSlide(slideIndex);
+    autoSlide();
+</script>
+

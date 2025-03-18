@@ -1,9 +1,12 @@
-﻿@model AstroSafar.Models.UnitAdmin
+﻿
+
+
+ @model AstroSafar.Models.UnitAdmin
 
 <div class="container mt-4">
     <h2 class="mb-3">Add New Unit</h2>
 
-    <form asp-action="AddUnit" method="post">
+    <form asp-action="AddUnit" method="post" enctype="multipart/form-data">
         <!-- Unit Title -->
         <div class="mb-3">
             <label for="Name" class="form-label">Unit Name</label>
@@ -16,11 +19,10 @@
         </div>
 
         <div class="mb-3">
-            <label for="ImageUrl" class="form-label">Upload Unit Image:</label>
-            <input type="file" name="ImageUrl" class="form-control" accept="image/*" />
+            <label for="ImageFile" class="form-label">Upload Unit Image:</label>
+            <input type="file" name="ImageFile" class="form-control" accept="image/*" required />
             <span class="text-danger" asp-validation-for="ImageURL"></span>
         </div>
-
 
         <!-- YouTube Video URL -->
         <div class="mb-3">
@@ -44,4 +46,3 @@
         <button type="submit" class="btn btn-primary">Add Unit</button>
     </form>
 </div>
-

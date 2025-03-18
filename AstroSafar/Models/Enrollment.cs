@@ -9,14 +9,19 @@ namespace AstroSafar.Models
 {
     public class Enrollment
     {
+        //.internal bool IsEnrolled;
+
         [Key]
         public int Id { get; set; }
 
         [Required]
         [ForeignKey("CourseAdmin")]
         public int CourseId { get; set; }
-
         public virtual CourseAdmin CourseAdmin { get; set; }
+
+        //[ForeignKey(nameof(Registration))]
+        //public int? RegistrationId { get; set; }
+        //public virtual Registration Registration { get; set; }
 
         [Required(ErrorMessage = "Please enter your full name")]
         [StringLength(50)]
@@ -41,15 +46,9 @@ namespace AstroSafar.Models
 
         [Required(ErrorMessage = "Please enter your grade (standard).")]
         [Range(1, 6, ErrorMessage = "Standard must be between 1 and 6.")]
-        
-        public int Standard { get; set; }
 
+        public int Standard { get; set; }
 
     }
 }
-
-
-    
-        
-  
     
