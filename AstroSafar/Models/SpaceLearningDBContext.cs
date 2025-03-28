@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using AstroSafar.Migrations;
 
 
 namespace AstroSafar.Models
@@ -18,16 +19,12 @@ namespace AstroSafar.Models
 
         public DbSet<AdminLogin> AdminLogins { get; set; }
         public DbSet<Category> Categories { get; set; }
-        
+
         public DbSet<CourseAdmin> courseAdmins { get; set; }
         public DbSet<UnitAdmin> unitAdmins { get; set; }
         public DbSet<Enrollment> enrollments { get; set; }
         public DbSet<SecondaryEnroll> secondaryEnrolls { get; set; }
         public DbSet<HigherSecondaryEnroll> higherSecondaryEnrolls { get; set; }
-        public DbSet<UnitProgress> UnitProgresses { get; set; }
-       
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,18 +40,15 @@ namespace AstroSafar.Models
             .WithMany(cat => cat.Courses)
             .HasForeignKey(c => c.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
-            // Prevent Duplicate Enrollments: A user can enroll in a course only once
-            modelBuilder.Entity<Enrollment>()
-                .HasIndex(e => new { e.Email, e.CourseId})
-                .IsUnique();
+        }
         
-
-    }
 
 
         public DbSet<Feedback> Feedbacks { get; set; }
         public object CourseAdmins { get; internal set; }
+        public DbSet<UnitProgress> UnitProgresses { get; set; }
+        public DbSet<ExamQuestion> ExamQuestions { get; set; }
+
     }
 
 }
-

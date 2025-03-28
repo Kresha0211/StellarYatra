@@ -5,7 +5,7 @@
 namespace AstroSafar.Migrations
 {
     /// <inheritdoc />
-    public partial class unitprogress : Migration
+    public partial class unitprogressadd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,24 +19,25 @@ namespace AstroSafar.Migrations
                     Email = table.Column<string>(nullable: false),
                     CourseId = table.Column<int>(nullable: false),
                     UnitId = table.Column<int>(nullable: false),
-                    IsCompleted = table.Column<bool>(nullable: false)
+                    IsCompleted = table.Column<bool>(nullable: false),
+                    ProgressPercentage = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UnitProgresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UnitProgresses_courseAdmins_CourseId",
+                        name: "FK_UnitProgresses_CourseAdmins_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "courseAdmins",
+                        principalTable: "CourseAdmins",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict); // ❌ No Cascade Delete
+                        onDelete: ReferentialAction.Restrict); // Prevents cascade delete
 
                     table.ForeignKey(
-                        name: "FK_UnitProgresses_unitAdmins_UnitId",
+                        name: "FK_UnitProgresses_UnitAdmins_UnitId",
                         column: x => x.UnitId,
-                        principalTable: "unitAdmins",
+                        principalTable: "UnitAdmins",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict); // ❌ No Cascade Delete
+                        onDelete: ReferentialAction.Restrict); // Prevents cascade delete
                 });
 
             migrationBuilder.CreateIndex(
@@ -53,8 +54,7 @@ namespace AstroSafar.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "UnitProgresses");
+            migrationBuilder.DropTable(name: "UnitProgresses");
         }
     }
 }

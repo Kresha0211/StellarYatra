@@ -15,7 +15,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/AccessDenied"; // Redirect if access is denied
     });
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
@@ -51,7 +50,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapControllerRoute(
+    name: "admin_exams",
+    pattern: "admin/exam-reports",
+    defaults: new { controller = "Admin", action = "Progress" });
 app.Run();
 
 

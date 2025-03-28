@@ -3,7 +3,9 @@ using AstroSafar.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 
 namespace AstroSafar.Controllers
@@ -55,13 +57,29 @@ namespace AstroSafar.Controllers
             return View(units);
         }
 
-        // Needed
 
         [HttpGet]
         public IActionResult Enroll(int courseId)
         {
-            var course = _context.courseAdmins.Find(courseId);
+            // Get current user's email
+            string userEmail = HttpContext.Session.GetString("UserEmail");
 
+            // If email is available, check for existing enrollment
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                // Use FirstOrDefault to check if the enrollment exists
+                var existingEnrollment = _context.enrollments
+                    .FirstOrDefault(e => e.CourseId == courseId && e.Email == userEmail);
+
+                // If enrollment exists, redirect to Units
+                if (existingEnrollment != null)
+                {
+                    return RedirectToAction("Units", new { courseId });
+                }
+            }
+
+            // If not enrolled, show the enrollment form
+            var course = _context.courseAdmins.Find(courseId);
             if (course == null)
             {
                 return NotFound();
@@ -70,13 +88,13 @@ namespace AstroSafar.Controllers
             var model = new Enrollment
             {
                 CourseAdmin = course,
-                CourseId = course.Id,
-                //RegistrationId = course.Id
+                CourseId = courseId,
+                Email = userEmail ?? ""
             };
-
 
             return View(model);
         }
+        //needed most
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -88,22 +106,44 @@ namespace AstroSafar.Controllers
 
         }
 
-
         [HttpGet]
         public IActionResult SecondaryEnroll(int courseId)
         {
-            var course = _context.courseAdmins.FirstOrDefault(c => c.Id == courseId);
-            if (course == null) return NotFound();
+            // Get user email from session
+            string userEmail = HttpContext.Session.GetString("UserEmail");
+
+            // Check if email exists and if user is already enrolled
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                bool isEnrolled = _context.secondaryEnrolls.Any(e =>
+                    e.CourseId == courseId &&
+                    e.Email == userEmail);
+
+                // If already enrolled, redirect directly to Units
+                if (isEnrolled)
+                {
+                    // Use direct return to ensure redirection happens
+                    return RedirectToAction("Units", "Client", new { courseId });
+                }
+            }
+
+            // Not enrolled, so show enrollment form
+            var course = _context.courseAdmins.Find(courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
 
             var model = new Models.SecondaryEnroll
             {
                 CourseId = courseId,
-                CourseAdmin = course
+                CourseAdmin = course,
+                Email = userEmail ?? ""
             };
 
-            ViewData["Title"] = "Enroll in Secondary Course";
             return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -114,23 +154,43 @@ namespace AstroSafar.Controllers
             return RedirectToAction("Units", new { courseId = model.CourseId });
         }
 
-
-
         [HttpGet]
         public IActionResult HigherSecondaryEnroll(int courseId)
         {
-            var course = _context.courseAdmins.FirstOrDefault(c => c.Id == courseId); // Adjust if using CourseAdmin or another entity
+            // Get user email from session
+            string userEmail = HttpContext.Session.GetString("UserEmail");
+
+            // Check if email exists and if user is already enrolled
+            if (!string.IsNullOrEmpty(userEmail))
+            {
+                bool isEnrolled = _context.higherSecondaryEnrolls.Any(e =>
+                    e.CourseId == courseId &&
+                    e.Email == userEmail);
+
+                // If already enrolled, redirect directly to Units
+                if (isEnrolled)
+                {
+                    // Use direct return to ensure redirection happens
+                    return RedirectToAction("Units", "Client", new { courseId });
+                }
+            }
+
+            // Not enrolled, so show enrollment form
+            var course = _context.courseAdmins.Find(courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
 
             var model = new AstroSafar.Models.HigherSecondaryEnroll
             {
                 CourseId = courseId,
-                CourseAdmin = course // Initialize CourseAdmin to avoid null reference
+                CourseAdmin = course,
+                Email = userEmail ?? ""
             };
 
-            ViewData["Title"] = "Enroll in Course";
             return View(model);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -141,6 +201,8 @@ namespace AstroSafar.Controllers
             _context.SaveChanges();
             return RedirectToAction("Units", new { courseId = model.CourseId });
         }
+
+
         [HttpPost]
         public IActionResult CompleteUnit(int unitId)
         {
@@ -153,7 +215,7 @@ namespace AstroSafar.Controllers
 
             var userProgress = _context.UnitProgresses
                 .FirstOrDefault(p => p.Email == userEmail && p.UnitId == unitId);
-             
+
             if (userProgress == null)
             {
                 userProgress = new UnitProgress
@@ -188,10 +250,246 @@ namespace AstroSafar.Controllers
             return Json(new { success = true, progress = overallProgress });
         }
 
+        // Needed
+
+        [HttpGet]
+        public IActionResult GetUserProgress(int courseId)
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "User not logged in." });
+            }
+
+            var totalUnits = _context.unitAdmins.Count(u => u.CourseId == courseId);
+            var completedUnits = _context.UnitProgresses
+                .Count(up => up.Email == email &&
+                             up.CourseId == courseId &&
+                             up.IsCompleted);
+
+            int progressPercentage = (totalUnits > 0)
+                ? (int)Math.Round((double)(completedUnits * 100) / totalUnits)
+                : 0;
+
+            var completedUnitIds = _context.UnitProgresses
+                .Where(up => up.Email == email &&
+                            up.CourseId == courseId &&
+                            up.IsCompleted)
+                .Select(up => up.UnitId)
+                .ToList();
+
+            return Json(new
+            {
+                success = true,
+                courseProgress = progressPercentage,
+                completedUnits = completedUnits,
+                totalUnits = totalUnits,
+                completedUnitIds = completedUnitIds
+            });
+        }
+        [HttpPost]
+        public IActionResult UpdateProgress([FromBody] UnitProgressRequest request)
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "User not logged in." });
+            }
+
+            // Find or create progress record
+            var progress = _context.UnitProgresses
+                .FirstOrDefault(up => up.Email == email &&
+                                     up.CourseId == request.CourseId &&
+                                     up.UnitId == request.UnitId);
+
+            if (progress == null)
+            {
+                progress = new UnitProgress
+                {
+                    Email = email,
+                    CourseId = request.CourseId,
+                    UnitId = request.UnitId,
+                    IsCompleted = request.IsCompleted,
+                    ProgressPercentage = request.IsCompleted ? 100 : 0
+                };
+                _context.UnitProgresses.Add(progress);
+            }
+            else
+            {
+                progress.IsCompleted = request.IsCompleted;
+                progress.ProgressPercentage = request.IsCompleted ? 100 : 0;
+            }
+
+            _context.SaveChanges();
+
+            // Calculate total and completed units for this course and user
+            var totalUnits = _context.unitAdmins.Count(u => u.CourseId == request.CourseId);
+            var completedUnits = _context.UnitProgresses
+                .Count(up => up.Email == email &&
+                             up.CourseId == request.CourseId &&
+                             up.IsCompleted);
+
+            // Calculate progress percentage
+            int progressPercentage = (totalUnits > 0)
+                ? (int)Math.Round((double)(completedUnits * 100) / totalUnits)
+                : 0;
+
+            // Store progress in session
+            HttpContext.Session.SetInt32($"Progress_{request.CourseId}", progressPercentage);
+
+            return Json(new
+            {
+                success = true,
+                courseProgress = progressPercentage,
+                completedUnits = completedUnits,
+                totalUnits = totalUnits
+            });
+        }
+
+        [HttpGet]
+        public IActionResult GetCompletedUnits()
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "User not logged in." });
+            }
+
+            // Get current course ID from URL or session
+            var currentPath = HttpContext.Request.Path.ToString();
+            var courseMatch = Regex.Match(currentPath, @"/Course/(\d+)");
+            var courseId = courseMatch.Success ? int.Parse(courseMatch.Groups[1].Value) : 0;
+
+            if (courseId == 0)
+            {
+                return Json(new { success = false, message = "Course ID not found." });
+            }
+
+            var completedUnits = _context.UnitProgresses
+                .Where(up => up.Email == email &&
+                           up.CourseId == courseId &&
+                           up.IsCompleted)
+                .Select(up => up.UnitId.ToString())
+                .ToList();
+
+            return Json(new { success = true, completedUnits });
+        }
+        public IActionResult ExamProgress(int courseId)
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var course = _context.courseAdmins.FirstOrDefault(c => c.Id == courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            // Get all units for this course
+            var courseUnits = _context.unitAdmins
+                .Where(u => u.CourseId == courseId)
+                .ToList();
+
+            // Get completed units for this user and course
+            var completedUnits = _context.UnitProgresses
+                .Where(up => up.Email == email &&
+                            up.CourseId == courseId &&
+                            up.IsCompleted)
+                .ToList();
+
+            // Calculate progress
+            int totalUnits = courseUnits.Count;
+            double progressPerUnit = totalUnits > 0 ? 100.0 / totalUnits : 0;
+            int overallProgress = (int)(completedUnits.Count * progressPerUnit);
+            overallProgress = Math.Min(overallProgress, 100);
+
+            // Check if all units are completed
+            bool allUnitsCompleted = totalUnits > 0 && completedUnits.Count == totalUnits;
+
+            ViewBag.CourseId = courseId;
+            ViewBag.CourseName = course.Name;
+            ViewBag.Progress = overallProgress;
+            ViewBag.CompletedUnits = completedUnits.Count;
+            ViewBag.TotalUnits = totalUnits;
+            ViewBag.AllUnitsCompleted = allUnitsCompleted; // New flag for complete status
+
+            return View();
+        }
+        public IActionResult StudentDashboard()
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Get total units enrolled by the student
+            var totalUnits = _context.UnitProgresses.Count(up => up.Email == email);
+            var completedUnits = _context.UnitProgresses.Count(up => up.Email == email && up.IsCompleted);
+
+            // Calculate progress percentage
+            var progressPercentage = (totalUnits > 0) ? (completedUnits * 100) / totalUnits : 0;
+
+            // Fetch all courses student is enrolled in
+            var enrolledCourses = _context.enrollments
+                .Where(e => e.Email == email)
+                .Select(e => e.CourseId)
+                .ToList();
+
+            // Build course progress list
+            var courseProgressList = enrolledCourses.Select(courseId =>
+            {
+                var courseName = _context.courseAdmins
+                    .Where(c => c.Id == courseId)
+                    .Select(c => c.Name)
+                    .FirstOrDefault();
+
+                var courseTotalUnits = _context.unitAdmins.Count(u => u.CourseId == courseId);
+                var courseCompletedUnits = _context.UnitProgresses.Count(up => up.Email == email && up.CourseId == courseId && up.IsCompleted);
+                var progressPercentage = (courseTotalUnits > 0) ? (courseCompletedUnits * 100) / courseTotalUnits : 0;
+
+                // ✅ Check if exam is unlocked
+                bool isExamUnlocked = HttpContext.Session.GetInt32($"UnlockExam_{courseId}") == 1;
+
+                return new CourseProgressViewModel
+                {
+                    CourseName = courseName,
+                    ProgressPercentage = progressPercentage,
+                    // IsExamUnlocked = isExamUnlocked
+                };
+            }).ToList();
+
+            // Pass data to ViewModel
+            var model = new StudentDashboardViewModel
+            {
+                ProgressPercentage = progressPercentage,
+                CourseProgressList = courseProgressList
+            };
+
+            return View(model);
+        }
+
+        public IActionResult ViewExam(int courseId)
+        {
+            // Fetch the exam questions related to the selected course only
+            var questions = _context.ExamQuestions
+                .Where(q => q.CourseId == courseId) // Filter by CourseId
+                .ToList();
+
+            ViewBag.CourseName = _context.courseAdmins.FirstOrDefault(c => c.Id == courseId)?.Name;
+
+            return View(questions);
+        }
+
+
 
     }
 }
-
-
-
-
+    
+    
+        
+    

@@ -19,10 +19,6 @@ namespace AstroSafar.Models
         public int CourseId { get; set; }
         public virtual CourseAdmin CourseAdmin { get; set; }
 
-        //[ForeignKey(nameof(Registration))]
-        //public int? RegistrationId { get; set; }
-        //public virtual Registration Registration { get; set; }
-
         [Required(ErrorMessage = "Please enter your full name")]
         [StringLength(50)]
         public string FullName { get; set; }

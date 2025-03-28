@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstroSafar.Migrations
 {
     [DbContext(typeof(SpaceLearningDBContext))]
-    [Migration("20250305053311_unitprogress")]
-    partial class unitprogress
+    [Migration("20250324100215_updatedprogress")]
+    partial class updatedprogress
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -136,7 +136,7 @@ namespace AstroSafar.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -147,21 +147,12 @@ namespace AstroSafar.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RegistrationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Standard")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("RegistrationId");
-
-                    b.HasIndex("Email", "CourseId", "RegistrationId")
-                        .IsUnique()
-                        .HasFilter("[RegistrationId] IS NOT NULL");
 
                     b.ToTable("enrollments");
                 });
@@ -361,6 +352,9 @@ namespace AstroSafar.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
@@ -370,6 +364,15 @@ namespace AstroSafar.Migrations
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsContentViewed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVideoWatched")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProgressPercentage")
+                        .HasColumnType("int");
 
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
@@ -402,13 +405,7 @@ namespace AstroSafar.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AstroSafar.Models.Registration", "Registration")
-                        .WithMany()
-                        .HasForeignKey("RegistrationId");
-
                     b.Navigation("CourseAdmin");
-
-                    b.Navigation("Registration");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.HigherSecondaryEnroll", b =>

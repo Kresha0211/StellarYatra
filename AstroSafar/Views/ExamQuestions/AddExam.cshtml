@@ -1,0 +1,152 @@
+﻿@* @model AstroSafar.Models.ExamQuestionsViewModel
+
+@{
+    ViewData["Title"] = "Add Multiple Exam Questions";
+}
+
+<h2 class="text-center">Add Multiple Exam Questions</h2>
+
+<form asp-action="AddExam" method="post">
+    <div class="mb-3">
+        <label class="form-label">Select Course:</label>
+        <select asp-for="CourseId" class="form-control" required>
+            @foreach (var course in ViewBag.Courses)
+            {
+                <option value="@course.Id">@course.Name</option>
+            }
+        </select>
+    </div>
+
+    <div id="questionContainer">
+    </div>
+
+    <button type="button" class="btn btn-secondary" onclick="addQuestion()">Add Question</button>
+    <button type="submit" class="btn btn-primary">Save Questions</button>
+</form>
+
+<script>
+    function addQuestion() {
+        let container = document.getElementById("questionContainer");
+        let questionIndex = container.children.length;
+
+        let html = `
+            <div class="mb-3 border p-3">
+                <label>Question:</label>
+                <input type="text" name="Questions[${questionIndex}].QuestionText" class="form-control" required>
+
+                <label>Type:</label>
+                <select name="Questions[${questionIndex}].QuestionType" class="form-control" onchange="toggleOptions(${questionIndex})" required>
+                    <option value="MCQ">MCQ</option>
+                    <option value="TrueFalse">True/False</option>
+                </select>
+
+                <label>Options (comma-separated for MCQ):</label>
+                <input type="text" name="Questions[${questionIndex}].Options" class="form-control" id="options-${questionIndex}" required>
+
+                <label>Correct Answer:</label>
+                <input type="text" name="Questions[${questionIndex}].CorrectAnswer" class="form-control" required>
+            </div>
+        `;
+
+        container.insertAdjacentHTML("beforeend", html);
+    }
+
+    function toggleOptions(index) {
+        let select = document.querySelector(`select[name="Questions[${index}].QuestionType"]`);
+        let optionsInput = document.getElementById(`options-${index}`);
+
+        if (select.value === "TrueFalse") {
+            optionsInput.value = "True,False";
+            optionsInput.setAttribute("readonly", "readonly");
+        } else {
+            optionsInput.removeAttribute("readonly");
+            optionsInput.value = "";
+        }
+    }
+</script>
+ *@
+
+@model AstroSafar.Models.ExamQuestionsViewModel
+
+<div class="container mt-4">
+    <h2>Add Exam Questions</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="AddExam" method="post">
+        <div class="form-group">
+            <label>Select Course:</label>
+            <select asp-for="CourseId" class="form-control">
+                @foreach (var course in ViewBag.Courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </select>
+        </div>
+
+        <div id="question-container">
+            <div class="question-item">
+                <label>Question Text:</label>
+                <input type="text" name="Questions[0].QuestionText" class="form-control" placeholder="Enter question" required />
+
+                <label>Question Type:</label>
+                <select name="Questions[0].QuestionType" class="form-control" required>
+                    <option value="MCQ">MCQ</option>
+                    <option value="TrueFalse">True/False</option>
+                </select>
+
+                <label>Options (Comma Separated):</label>
+                <input type="text" name="Questions[0].Options" class="form-control" placeholder="Option1,Option2,Option3,Option4" />
+
+                <label>Correct Answer:</label>
+                <input type="text" name="Questions[0].CorrectAnswer" class="form-control" placeholder="Enter correct answer" required />
+
+                <hr>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mt-2" onclick="addQuestion()">Add Another Question</button>
+        <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        let questionCount = 1;
+
+        function addQuestion() {
+            const container = document.getElementById("question-container");
+            const newQuestion = `
+                <div class="question-item">
+                    <label>Question Text:</label>
+                    <input type="text" name="Questions[${questionCount}].QuestionText" class="form-control" placeholder="Enter question" required />
+
+                    <label>Question Type:</label>
+                    <select name="Questions[${questionCount}].QuestionType" class="form-control" required>
+                        <option value="MCQ">MCQ</option>
+                        <option value="TrueFalse">True/False</option>
+                    </select>
+
+                    <label>Options (Comma Separated):</label>
+                    <input type="text" name="Questions[${questionCount}].Options" class="form-control" placeholder="Option1,Option2,Option3,Option4" />
+
+                    <label>Correct Answer:</label>
+                    <input type="text" name="Questions[${questionCount}].CorrectAnswer" class="form-control" placeholder="Enter correct answer" required />
+
+                    <hr>
+                </div>
+            `;
+            container.insertAdjacentHTML("beforeend", newQuestion);
+            questionCount++;
+        }
+
+    </script>
+}
+

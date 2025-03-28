@@ -1,0 +1,126 @@
+﻿
+
+<div class="container exam-progress-container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center">📊 Course Progress and Exam Entry</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Progress Display -->
+                    <div class="progress-section mb-4">
+                        <h3>Your Current Progress</h3>
+                        <div class="progress mb-2">
+                            <div id="totalProgress" class="progress-bar bg-success" role="progressbar"
+                                 style="width: @ViewBag.Progress%;">
+                                @ViewBag.Progress%
+                            </div>
+                        </div>
+                        <p>Completed @ViewBag.CompletedUnits out of @ViewBag.TotalUnits units</p>
+                    </div>
+                    <!-- Completion Status -->
+                    @if (ViewBag.AllUnitsCompleted == true)
+                    {
+                        <div class="alert alert-success mb-4">
+                            <i class="bi bi-check-circle-fill"></i> All units completed! You can now take the exam.
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-4">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Complete all @ViewBag.TotalUnits units to unlock the exam.
+                        </div>
+                    }
+
+                    <!-- Exam Guidelines -->
+                    <div class="exam-guidelines mb-4">
+                        <h3>Exam Guidelines</h3>
+                        <ul class="list-group">
+                            <!-- Your existing guidelines -->
+                        </ul>
+                    </div>
+
+                    <!-- Exam Entry Button -->
+                    <div class="text-center mt-4">
+                        @if (ViewBag.AllUnitsCompleted)
+                        {
+                            <a asp-controller="ExamQuestions" asp-action="StartExam" asp-route-courseId="@ViewBag.CourseId"
+                               class="btn btn-success btn-lg">
+                                <i class="bi bi-pencil-square"></i> Start Exam
+                            </a>
+
+                        }
+                        else
+                        {
+                            <button class="btn btn-secondary btn-lg" disabled
+                                    title="Complete all @ViewBag.TotalUnits units to unlock the exam">
+                                <i class="bi bi-lock"></i> Start Exam (Locked)
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .exam-progress-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+
+    .progress {
+        height: 30px;
+        margin-bottom: 20px;
+    }
+
+    .exam-guidelines .list-group-item {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+
+    #startExamBtn {
+        padding: 12px 24px;
+        font-size: 18px;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Retrieve and display progress from localStorage
+        const storedProgress = localStorage.getItem('courseProgress');
+
+        if (storedProgress) {
+            const totalProgressElement = document.getElementById('totalProgress');
+            const progressValue = parseFloat(storedProgress);
+
+            totalProgressElement.style.width = `${progressValue}%`;
+            totalProgressElement.textContent = `${progressValue}%`;
+
+            // Remove the stored progress
+            localStorage.removeItem('courseProgress');
+        }
+
+        // Enable/Disable Start Exam Button based on progress
+        const startExamBtn = document.getElementById('startExamBtn');
+        if (storedProgress && parseFloat(storedProgress) >= 65) {
+            startExamBtn.disabled = false;
+        } else {
+            startExamBtn.disabled = true;
+            startExamBtn.title = 'Complete at least 65% of the course to start the exam';
+        }
+    });
+
+    function startExam() {
+        // Redirect to exam page
+        window.location.href = '/Client/StartExam';
+    }
+
+</script>
+
+
+

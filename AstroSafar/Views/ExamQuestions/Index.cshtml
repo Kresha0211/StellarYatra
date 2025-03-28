@@ -1,0 +1,31 @@
+﻿@model List<AstroSafar.Models.ExamQuestion>
+
+<h2>Manage Exam Questions</h2>
+<a href="@Url.Action("AddExam", "ExamQuestions")" class="btn btn-success">Add New Question</a>
+<br />
+<br />
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Options</th>
+            <th>Answer</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var question in Model)
+        {
+            <tr>
+                <td>@question.QuestionText</td>
+                <td>@question.Options</td>
+                <td>@question.CorrectAnswer</td>
+                <td>
+                    <a href="@Url.Action("EditExam", "ExamQuestions", new { id = question.Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("DeleteExam", "ExamQuestions", new { id = question.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

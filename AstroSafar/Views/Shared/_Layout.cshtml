@@ -1,5 +1,4 @@
 ﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,150 +8,53 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AstroSafar.styles.css" asp-append-version="true" />
-    <style>
-        /* Header Styling */
-        .navbar {
-            background-color: #000; /* Dark Theme */
-        }
-
-        .navbar-brand, .nav-link {
-            color: #fff !important;
-        }
-
-            .nav-link:hover {
-                color: #ff9800 !important;
-            }
-
-            .navbar-brand img {
-                max-height: 40px;
-            }
-
-            .navbar-brand span {
-                font-size: 1.5rem;
-                color: white;
-            }
-
-        .navbar {
-            background-color: black !important; /* Set black background */
-        }
-
-        .navbar-nav .nav-link, .navbar-brand, .navbar-toggler-icon {
-            color: white !important; /* Set white text */
-        }
-
-            .navbar-nav .nav-link:hover {
-                color: #f8f9fa !important; /* Light gray on hover */
-            }
-        /* Footer Styling */
-        footer {
-            background-color: #000;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-            margin-top: 20px;
-        }
-
-    </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/Images/astrologo.jpeg" alt="AstroSafar Logo" height="40" class="me-2">
-                    <span class="fw-bold">AstroSafar</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
-                         <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="AboutUs">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="SelfAssesment">Self Assessment</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Gallery">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="CourseGuideline">Guidelines</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="SubmitFeedback" asp-action="SubmitFeedback">Contact Us</a></li>
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (Context.Session.GetInt32("CustomerId") != null)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link text-white">Welcome, @Context.Session.GetString("CustomerName")</span>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Profile">Profile</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a></li>
-                        }
-                        else
-                        {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
-                        }
+    @if (HttpContextAccessor.HttpContext.Session.GetString("AdminLoggedIn") == "true")
+    {
+        @await Html.PartialAsync("_AdminHeader")
+    }
+    else
+    {
+        @await Html.PartialAsync("_ClientHeader")
+    }
 
-                        <!-- Dashboard Dropdown -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dashboardDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dashboard
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="AdminLogin">Admin Panel</a></li>
-                                <li><a class="dropdown-item" href="/Home/Index">Client Panel</a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- MAIN CONTENT -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    
     <!-- FOOTER SECTION -->
-<footer class="footer">
-    <div class="footer-container">
-        <!-- About Us Section -->
-        <div class="footer-section">
-            <h4>About AstroSafar</h4>
-            <p>AstroSafar is your gateway to space exploration and education, offering expert-led courses on space science, technology, and beyond.</p>
-            <a href="@Url.Action("Gallery", "Home")" class="footer-link">Learn More</a>
-        </div>
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About Us Section -->
+            <div class="footer-section">
+                <h4>About AstroSafar</h4>
+                <p>AstroSafar is your gateway to space exploration and education, offering expert-led courses on space science, technology, and beyond.</p>
+                <a href="@Url.Action("Gallery", "Home")" class="footer-link">Learn More</a>
+            </div>
 
-        <!-- Quick Links -->
-        <div class="footer-section">
-            <h4>Quick Links</h4>
-            <ul class="footer-links">
-                <li><a href="@Url.Action("Index", "Home")">Home</a></li>           
-                <li><a href="@Url.Action("Gallery", "Home")">Services</a></li>
-                <li><a href="@Url.Action("SubmitFeedback", "SubmitFeedback")">Contact Us</a></li>
-                <li><a href="@Url.Action("AboutUs", "Home")">About Us</a></li>
-            </ul>
-        </div>
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("Gallery", "Home")">Services</a></li>
+                    <li><a href="@Url.Action("SubmitFeedback", "SubmitFeedback")">Contact Us</a></li>
+                    <li><a href="@Url.Action("AboutUs", "Home")">About Us</a></li>
+                </ul>
+            </div>
 
-        <!-- Newsletter Subscription -->
-        <div class="footer-section">
-            <h4>Subscribe to Our Newsletter</h4>
-            <p>Stay updated with the latest space discoveries and courses.</p>
-            <input type="email" id="email" placeholder="Enter your email">
-            <button onclick="subscribeNewsletter()">Subscribe</button>
-        </div>
+            <!-- Newsletter Subscription -->
+            <div class="footer-section">
+                <h4>Subscribe to Our Newsletter</h4>
+                <p>Stay updated with the latest space discoveries and courses.</p>
+                <input type="email" id="email" placeholder="Enter your email">
+                <button onclick="subscribeNewsletter()">Subscribe</button>
+            </div>
 
-      @*   <!-- Latest Updates -->
-        <div class="footer-section">
-            <h4>Latest Updates</h4>
-            <p>🚀 New course on "Black Holes & Dark Matter" launched!</p>
-            <p>🌍 Join our upcoming webinar on "Mars Colonization" – Register Now!</p>
-        </div> *@
+
 
             <!-- Social Media Links -->
             <!-- Follow Us Section -->
@@ -176,107 +78,107 @@
                     </a>
                 </div>
             </div>
- </div>
+        </div>
 
-    <!-- Copyright -->
-    <div class="footer-bottom">
-        <p>&copy; 2025 AstroSafar | All Rights Reserved</p>
-    </div>
-</footer>
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 AstroSafar | All Rights Reserved</p>
+        </div>
+    </footer>
 
-<!-- FontAwesome for Social Media Icons -->
+    <!-- FontAwesome for Social Media Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
 
-<!-- Newsletter Subscription JavaScript -->
-<script>
-    function subscribeNewsletter() {
-        let email = document.getElementById("email").value;
-        if (email) {
-            alert("Thank you for subscribing! Stay tuned for space updates. 🚀");
-            document.getElementById("email").value = "";
-        } else {
-            alert("Please enter a valid email address.");
+    <!-- Newsletter Subscription JavaScript -->
+    <script>
+        function subscribeNewsletter() {
+            let email = document.getElementById("email").value;
+            if (email) {
+                alert("Thank you for subscribing! Stay tuned for space updates. 🚀");
+                document.getElementById("email").value = "";
+            } else {
+                alert("Please enter a valid email address.");
+            }
         }
-    }
-</script>
+    </script>
 
-<!-- FOOTER STYLES -->
-<style>
-    .footer {
-        background-color: #0d1b2a;
-        color: white;
-        padding: 40px 0;
-        text-align: center;
-    }
+    <!-- FOOTER STYLES -->
+    <style>
+        .footer {
+            background-color: #0d1b2a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
 
-    .footer-container {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        max-width: 1200px;
-        margin: auto;
-    }
+        .footer-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-    .footer-section {
-        width: 22%;
-        padding: 10px;
-        text-align: left;
-    }
+        .footer-section {
+            width: 22%;
+            padding: 10px;
+            text-align: left;
+        }
 
-    .footer-section h4 {
-        font-size: 1.4em;
-        margin-bottom: 10px;
-        color: #ff9800;
-    }
+            .footer-section h4 {
+                font-size: 1.4em;
+                margin-bottom: 10px;
+                color: #ff9800;
+            }
 
-    .footer-section p {
-        font-size: 1em;
-        margin: 5px 0;
-    }
+            .footer-section p {
+                font-size: 1em;
+                margin: 5px 0;
+            }
 
-    .footer-links {
-        list-style: none;
-        padding: 0;
-    }
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
 
-    .footer-links li {
-        margin: 5px 0;
-    }
+            .footer-links li {
+                margin: 5px 0;
+            }
 
-    .footer-links a {
-        color: white;
-        text-decoration: none;
-        font-size: 1em;
-        transition: 0.3s;
-    }
+            .footer-links a {
+                color: white;
+                text-decoration: none;
+                font-size: 1em;
+                transition: 0.3s;
+            }
 
-    .footer-links a:hover {
-        color: #ff9800;
-    }
+                .footer-links a:hover {
+                    color: #ff9800;
+                }
 
-    /* Newsletter Input */
-    input[type="email"] {
-        width: 80%;
-        padding: 8px;
-        border: none;
-        border-radius: 5px;
-        margin-top: 5px;
-    }
+        /* Newsletter Input */
+        input[type="email"] {
+            width: 80%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
 
-    button {
-        background-color: #ff9800;
-        color: white;
-        padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 5px;
-        transition: 0.3s;
-    }
+        button {
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
 
-    button:hover {
-        background-color: #ffb74d;
-    }
+            button:hover {
+                background-color: #ffb74d;
+            }
 
         /* Social Media Icons */
         .social-icons {
@@ -297,22 +199,56 @@
                 color: #ffcc00;
             }
 
-    /* Footer Bottom */    
-    .footer-bottom {
-        margin-top: 20px;
-        font-size: 0.9em;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        padding-top: 10px;
-    }
+        /* Footer Bottom */
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+        }
 
-</style>
+    </style>
 
-
-
-    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<style>
+    /* Header Styling */
+    .navbar {
+        background-color: #0d1b2a;
+    }
+
+    .navbar-brand, .nav-link {
+        color: #fff !important;
+    }
+
+        .nav-link:hover {
+            color: #ff9800 !important;
+        }
+
+        .navbar-brand img {
+            max-height: 40px;
+        }
+
+        .navbar-brand span {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+    /* Admin Header Styling */
+    .admin-header {
+        background-color: #2c3e50;
+    }
+
+        .admin-header .nav-link {
+            color: #fff !important;
+        }
+
+            .admin-header .nav-link:hover {
+                color: #ff9800 !important;
+            }
+
+</style>

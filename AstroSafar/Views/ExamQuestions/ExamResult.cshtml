@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Exam Result";
+}
+
+<h2 class="text-center">Exam Result</h2>
+
+@if (TempData["Result"] != null)
+{
+    <div class="alert alert-info text-center">
+        <h3>@TempData["Result"]</h3>
+    </div>
+}
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Go to Home</a>

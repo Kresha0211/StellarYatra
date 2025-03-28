@@ -1,0 +1,23 @@
+﻿
+
+ @model AstroSafar.Models.UnitAdmin
+
+<button onclick="markAsDone(@Model.Id)">Mark as Done</button>
+
+<script>
+    function markAsDone(unitId) {
+        fetch('/UnitProgress/MarkAsDone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ unitId: unitId, email: '@User.Identity.Name' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Unit marked as completed! Progress: " + data.progress + "%");
+            } else {
+                alert("Error marking unit as done.");
+            }
+        });
+    }
+</script>

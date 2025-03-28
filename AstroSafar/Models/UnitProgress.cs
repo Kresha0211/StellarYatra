@@ -19,11 +19,12 @@ namespace AstroSafar.Models
         [ForeignKey("UnitAdmin")]
         public int UnitId { get; set; } // Foreign Key to UnitAdmin
 
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted { get; set; } = false;     // Fully completed?
+        public int ProgressPercentage { get; set; } = 0;    // 0-100%
+       
 
-        // Navigation Property
+        // Navigation Properties
         public virtual CourseAdmin CourseAdmin { get; set; }
-
         public virtual UnitAdmin UnitAdmin { get; set; }
     }
 }

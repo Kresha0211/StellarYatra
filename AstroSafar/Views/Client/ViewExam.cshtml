@@ -1,0 +1,28 @@
+﻿@model List<AstroSafar.Models.ExamQuestion>
+
+<div class="container mt-4">
+    <h2>Exam Questions for @ViewBag.CourseName</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">No questions available for this course.</div>
+    }
+    else
+    {
+        @foreach (var question in Model)
+        {
+            <div class="question-item">
+                <p><strong>Question:</strong> @question.QuestionText</p>
+                <p><strong>Type:</strong> @question.QuestionType</p>
+
+                @if (question.QuestionType == "MCQ")
+                {
+                    <p><strong>Options:</strong> @question.Options</p>
+                }
+
+                <p><strong>Correct Answer:</strong> @question.CorrectAnswer</p>
+                <hr />
+            </div>
+        }
+    }
+</div>

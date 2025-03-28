@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary fw-bold">📊 Student Dashboard</h2>
+
+        <div class="text-center my-3">
+            <p class="fs-5"><strong>Your Progress:</strong> <span class="text-success">@ViewBag.Progress%</span> completed</p>
+
+            <div class="progress" style="height: 25px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                     role="progressbar"
+                     style="width: @ViewBag.Progress%;"
+                     aria-valuenow="@ViewBag.Progress"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    @ViewBag.Progress%
+                </div>
+            </div>
+        </div>
+
+        @if (ViewBag.Progress >= 80)
+        {
+            <div class="text-center mt-4">
+                <a href="@Url.Action("TakeFinalExam", "Client")" class="btn btn-lg btn-primary shadow">
+                    🎓 Take Final Exam
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center mt-4">
+                <p>⚡ Keep learning! Complete 80% of the units to unlock the final exam.</p>
+            </div>
+        }
+    </div>
+</div>

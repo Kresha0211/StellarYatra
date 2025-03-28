@@ -1,50 +1,14 @@
-﻿@* 
- @model List<AstroSafar.Models.CourseAdmin>
+﻿@model List<AstroSafar.Models.CourseAdmin>
 
-<h2 class="mb-4 text-center">  Secondary Courses</h2>
+<h2 class="mb-4 text-center fw-bold">Secondary Courses</h2>
 
-
-@if (Model != null && Model.Any())
-{
-    <div class="row g-4">
-        @foreach (var course in Model)
-        {
-            <div class="col-md-4">
-                <div class="card shadow-lg border-0 h-100">
-                    <!-- Course Image -->
-                    <img src="@Url.Content("~/Images/" + course.ImageURL)" alt="@course.Name" class="course-image" />
-
-                    <!-- Card Body -->
-                    <div class="card-body d-flex flex-column">
-                        <strong>@course.Name</strong><br />
-                        <em>@course.Description</em><br />
-                        <span>Duration: @course.Duration</span><br />
-
-                        <!-- Replace 'View Units' button with 'Enroll' button -->
-                        <a asp-controller="Client" asp-action="SecondaryEnroll" asp-route-courseId="@course.Id" class="btn btn-success mt-auto">
-                            Enroll
-                        </a>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-}
-else
-{
-    <p class="text-center text-danger">No Primary courses available.</p>
-}
-
- *@
-
-
-@model List<AstroSafar.Models.CourseAdmin>
-
-<h2 class="mb-4 text-center">Secondary Courses</h2>
-
-<!-- 🔍 Search Bar -->
-<input type="text" id="searchInput" class="form-control mb-3" placeholder="Search courses..." onkeyup="debounceFilterCourses()" />
-
+<!--Search Bar-->
+<div class="input-group mb-3">
+    <span class="input-group-text">
+        <i class="fas fa-search"></i> <!-- Font Awesome Search Icon -->
+    </span>
+    <input type="text" id="searchInput" class="form-control" placeholder="Search courses..." onkeyup="debounceFilterCourses()" />
+</div>
 <!-- 🔹 Courses List -->
 @if (Model != null && Model.Any())
 {
@@ -79,6 +43,31 @@ else
 }
 
 <style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+    }
+
+    h2 {
+        text-align: center;
+        color: #007bff;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
     .course-image {
         width: 100%;
         height: 200px;
@@ -141,4 +130,3 @@ else
         element.innerHTML = element.textContent.replace(regex, '<span class="highlight">$1</span>');
     }
 </script>
-

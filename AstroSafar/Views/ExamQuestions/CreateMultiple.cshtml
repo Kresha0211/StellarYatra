@@ -1,0 +1,66 @@
+﻿@model List<AstroSafar.Models.ExamQuestion>
+
+@{
+    ViewData["Title"] = "Add Multiple Exam Questions";
+}
+
+<h2>Add Multiple Exam Questions</h2>
+
+<form asp-action="CreateMultiple" method="post">
+    <div id="questions-container">
+        <!-- First Question -->
+        <div class="question-box">
+            <label>Question:</label>
+            <input type="text" name="questions[0].QuestionText" required class="form-control" />
+
+            <label>Options (comma separated):</label>
+            <input type="text" name="questions[0].Options" required class="form-control" placeholder="e.g. A,B,C,D" />
+
+            <label>Correct Answer:</label>
+            <input type="text" name="questions[0].CorrectAnswer" required class="form-control" placeholder="A, B, C, or D" />
+
+            <label>Question Type:</label>
+            <select name="questions[0].QuestionType" class="form-control">
+                <option value="MCQ">MCQ</option>
+                <option value="TrueFalse">True/False</option>
+            </select>
+
+            <label>Course ID:</label>
+            <input type="number" name="questions[0].CourseId" required class="form-control" />
+        </div>
+    </div>
+
+    <button type="button" id="add-question" class="btn btn-secondary">➕ Add Another Question</button>
+    <button type="submit" class="btn btn-primary">Submit Questions</button>
+</form>
+
+<script>
+    let questionIndex = 1;
+
+    document.getElementById("add-question").addEventListener("click", function () {
+        let container = document.getElementById("questions-container");
+        let newQuestion = document.createElement("div");
+        newQuestion.classList.add("question-box");
+        newQuestion.innerHTML = `
+            <label>Question:</label>
+            <input type="text" name="questions[\${questionIndex}].QuestionText" required class="form-control" />
+
+            <label>Options (comma separated):</label>
+            <input type="text" name="questions[\${questionIndex}].Options" required class="form-control" placeholder="e.g. A,B,C,D" />
+
+            <label>Correct Answer:</label>
+            <input type="text" name="questions[\${questionIndex}].CorrectAnswer" required class="form-control" placeholder="A, B, C, or D" />
+
+            <label>Question Type:</label>
+            <select name="questions[\${questionIndex}].QuestionType" class="form-control">
+                <option value="MCQ">MCQ</option>
+                <option value="TrueFalse">True/False</option>
+            </select>
+
+            <label>Course ID:</label>
+            <input type="number" name="questions[\${questionIndex}].CourseId" required class="form-control" />
+        `;
+        container.appendChild(newQuestion);
+        questionIndex++;
+    });
+</script>

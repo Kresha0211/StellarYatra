@@ -1,0 +1,12 @@
+﻿@model AstroSafar.Models.StudentDashboardViewModel
+
+<h2>Student Dashboard</h2>
+
+<p>Overall Progress: @Model.ProgressPercentage%</p>
+
+@foreach (var course in Model.CourseProgressList)
+{
+    <h4>@course.CourseName</h4>
+    <progress value="@course.ProgressPercentage" max="100"></progress>
+    <p>@course.ProgressPercentage% completed</p>
+}

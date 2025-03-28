@@ -1,7 +1,4 @@
-﻿
-
-
- @model AstroSafar.Models.UnitAdmin
+﻿ @model AstroSafar.Models.UnitAdmin
 
 <div class="container mt-4">
     <h2 class="mb-3">Add New Unit</h2>
@@ -13,14 +10,17 @@
             <input type="text" id="Name" name="Name" class="form-control" required placeholder="Enter Unit Name">
         </div>
 
-        <div class="mb-3">
-            <label for="Content" class="form-label">Content</label>
-            <input type="text" id="Content" name="Content" class="form-control" required placeholder="Content addition">
+        <div class="form-group">
+            <label asp-for="Content" class="control-label"></label>
+            <textarea asp-for="Content" class="form-control"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label for="ImageFile" class="form-label">Upload Unit Image:</label>
             <input type="file" name="ImageFile" class="form-control" accept="image/*" required />
+            <label for="ImageUrl" class="form-label">Upload Unit Image:</label>
+            <input type="file" name="ImageUrl" class="form-control" accept="Images/*" />
             <span class="text-danger" asp-validation-for="ImageURL"></span>
         </div>
 

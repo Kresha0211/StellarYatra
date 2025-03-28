@@ -1,4 +1,5 @@
-﻿@model AstroSafar.Models.UnitAdmin
+﻿
+@model AstroSafar.Models.UnitAdmin
 @{
     ViewBag.Title = "Edit Unit";
 }
@@ -22,10 +23,10 @@
         <span class="text-danger" asp-validation-for="Name"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Content" class="form-label">Content</label>
-        <input asp-for="Content" class="form-control" required />
-        <span class="text-danger" asp-validation-for="Content"></span>
+    <div class="form-group">
+        <label asp-for="Content" class="control-label"></label>
+        <textarea asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
     <div class="mb-3">

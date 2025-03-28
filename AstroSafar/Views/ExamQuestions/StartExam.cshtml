@@ -1,0 +1,319 @@
+﻿@* 
+  
+
+@* //needed *@
+ @*  @model AstroSafar.Models.ExamQuestionsViewModel
+
+@{
+    ViewData["Title"] = "Exam";
+}
+
+<h2 class="text-center">Exam</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<form method="post" action="@Url.Action("SubmitExam", "ExamQuestions")">
+    <div class="container">
+        @if (Model.Questions != null && Model.Questions.Count > 0)
+        {
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="question-box">
+                    <p><strong>@(i + 1). @Model.Questions[i].QuestionText</strong></p>
+
+                    @if (Model.Questions[i].QuestionType == "MCQ")
+                    {
+                        var options = Model.Questions[i].Options.Split(',');
+                        @foreach (var option in options)
+                        {
+                            <label>
+                                <input type="radio" name="userAnswers[@i].SelectedOption" value="@option.Trim()" required> @option.Trim()
+                            </label>
+                            <br />
+                        }
+                    }
+                    else if (Model.Questions[i].QuestionType == "TrueFalse")
+                    {
+                        <label><input type="radio" name="userAnswers[@i].SelectedOption" value="True" required> True</label>
+                        <label><input type="radio" name="userAnswers[@i].SelectedOption" value="False" required> False</label>
+                    }
+
+                    <input type="hidden" name="userAnswers[@i].QuestionId" value="@i">
+                </div>
+                <hr />
+            }
+        }
+        else
+        {
+            <p class="text-danger">No questions available for this exam.</p>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Exam</button>
+</form>
+ 
+
+
+@model AstroSafar.Models.ExamQuestionsViewModel
+
+@{
+    ViewData["Title"] = "Exam";
+}
+
+<h2 class="text-center">Exam</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model.Course != null)
+{
+    <h4 class="text-center text-primary">Exam for: <b>@Model.Course.Name</b></h4>
+}
+
+<!-- Countdown Timer -->
+<div class="text-center mt-3">
+    <h5>Time Remaining: <span id="timer">60:00</span></h5>
+</div>
+
+<form method="post" action="@Url.Action("SubmitExam", "ExamQuestions")" id="examForm">
+    <div class="container">
+        @if (Model.Questions != null && Model.Questions.Count > 0)
+        {
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="question-box">
+                    <p><strong>@(i + 1). @Model.Questions[i].QuestionText</strong></p>
+
+                    @if (Model.Questions[i].QuestionType == "MCQ")
+                    {
+                        var options = Model.Questions[i].Options.Split(',');
+
+                        @foreach (var option in options)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="userAnswers[@i].SelectedOption" value="@option.Trim()" required id="q-@i-@option.Trim()">
+                                <label class="form-check-label" for="q-@i-@option.Trim()">@option.Trim()</label>
+                            </div>
+                        }
+                    }
+                    else if (Model.Questions[i].QuestionType == "TrueFalse")
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="userAnswers[@i].SelectedOption" value="True" required id="q-@i-true">
+                            <label class="form-check-label" for="q-@i-true">True</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="userAnswers[@i].SelectedOption" value="False" required id="q-@i-false">
+                            <label class="form-check-label" for="q-@i-false">False</label>
+                        </div>
+                    }
+
+                    <button type="button" class="btn btn-warning btn-sm mt-2" onclick="clearSelection(@i)">Clear Selection</button>
+
+                    <input type="hidden" name="userAnswers[@i].QuestionId" value="@Model.Questions[i].QuestionId">
+                </div>
+                <hr />
+            }
+        }
+        else
+        {
+            <p class="text-danger">No questions available for this exam.</p>
+        }
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Exam</button>
+</form>
+
+<!-- JavaScript for Timer and Clear Selection -->
+<script>
+    let timeLeft = 60 * 60; // 60 minutes in seconds
+    const timerElement = document.getElementById("timer");
+
+    function updateTimer() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (timeLeft > 0) {
+            timeLeft--;
+        } else {
+            document.getElementById("examForm").submit();
+        }
+    }
+
+    setInterval(updateTimer, 1000);
+
+    function clearSelection(questionIndex) {
+        let radios = document.getElementsByName(`userAnswers[${questionIndex}].SelectedOption`);
+        radios.forEach(radio => radio.checked = false);
+    }
+</script>
+ *@
+@model AstroSafar.Models.ExamQuestionsViewModel
+
+@{
+    ViewData["Title"] = "Exam";
+}
+
+<h2 class="text-center">Exam</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model.Course != null)
+{
+    <h4 class="text-center text-primary">Exam for: <b>@Model.Course.Name</b></h4>
+}
+
+<!-- Countdown Timer -->
+<div class="text-center mt-3">
+    <h5>Time Remaining: <span id="timer">30:00</span></h5>
+</div>
+
+<form method="post" action="@Url.Action("SubmitExam", "ExamQuestions")" id="examForm">
+    <div class="container">
+        @if (Model.Questions != null && Model.Questions.Count > 0)
+        {
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="question-box mb-4 p-3 border rounded">
+                    <p class="fw-bold mb-3">@(i + 1). @Model.Questions[i].QuestionText</p>
+
+                    @if (Model.Questions[i].QuestionType == "MCQ")
+                    {
+                        var options = Model.Questions[i].Options.Split(',');
+                        var optionLabels = new[] { "A", "B", "C", "D", "E", "F" }; // Extend if needed
+
+                        <div class="options-container">
+                            @for (int j = 0; j < options.Length; j++)
+                            {
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="userAnswers[@i].SelectedOption"
+                                           value="@options[j].Trim()"
+                                           required
+                                           id="q-@i-@j">
+                                    <label class="form-check-label d-flex align-items-center" for="q-@i-@j">
+                                        <span class="fw-bold me-2">@optionLabels[j].)</span>
+                                        <span>@options[j].Trim()</span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else if (Model.Questions[i].QuestionType == "TrueFalse")
+                    {
+                        <div class="options-container">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="userAnswers[@i].SelectedOption"
+                                       value="True"
+                                       required
+                                       id="q-@i-true">
+                                <label class="form-check-label" for="q-@i-true">True</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="userAnswers[@i].SelectedOption"
+                                       value="False"
+                                       required
+                                       id="q-@i-false">
+                                <label class="form-check-label" for="q-@i-false">False</label>
+                            </div>
+                        </div>
+                    }
+
+                    <button type="button" class="btn btn-outline-warning btn-sm mt-2" onclick="clearSelection(@i)">
+                        <i class="bi bi-x-circle"></i> Clear Selection
+                    </button>
+
+                    <input type="hidden" name="userAnswers[@i].QuestionId" value="@Model.Questions[i].QuestionId">
+                </div>
+
+                @if (i < Model.Questions.Count - 1)
+                {
+                    <hr class="my-4" />
+                }
+            }
+        }
+        else
+        {
+            <p class="text-danger">No questions available for this exam.</p>
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-success btn-lg px-5">
+            <i class="bi bi-send-check"></i> Submit Exam
+        </button>
+    </div>
+</form>
+
+    <style>
+        .question-box {
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            .question-box:hover {
+                background-color: #e9ecef;
+            }
+
+        .form-check-input {
+            transform: scale(1.2);
+            margin-right: 10px;
+        }
+
+        .form-check-label {
+            cursor: pointer;
+            padding-left: 5px;
+        }
+
+        .options-container {
+            margin-left: 15px;
+        }
+    </style>
+
+
+
+    <script>
+        // Timer functionality
+        let timeLeft = 30 * 60; // 30 minutes in seconds
+        const timerElement = document.getElementById("timer");
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                document.getElementById("examForm").submit();
+            }
+        }
+
+        // Start timer
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // Clear selection function
+        function clearSelection(questionIndex) {
+            const radios = document.querySelectorAll(`input[name="userAnswers[${questionIndex}].SelectedOption"]`);
+            radios.forEach(radio => radio.checked = false);
+        }
+
+        // Prevent form resubmission
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+

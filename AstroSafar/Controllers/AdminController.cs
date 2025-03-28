@@ -31,20 +31,23 @@ namespace AstroSafar.Controllers
         [HttpPost]
         public IActionResult AdminLogin(AdminLoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var admin = _context.AdminLogins.FirstOrDefault(a => a.Email == model.Email);
-
-                if (admin != null && admin.Password == model.Password)  // For simplicity, no hashing
-                {
-                    return RedirectToAction("AdminDashboard");
-                }
-
-                ViewBag.Error = "Invalid Email or Password";
+                return View(model);
             }
 
+            var admin = _context.AdminLogins.FirstOrDefault(a => a.Email == model.Email);
+
+            if (admin != null && admin.Password == model.Password)  // Consider hashing passwords
+            {
+                HttpContext.Session.SetString("AdminLoggedIn", "true"); // Set session only after successful login
+                return RedirectToAction("AdminDashboard");
+            }
+
+            ViewBag.Error = "Invalid Email or Password";
             return View(model);
         }
+
 
         public IActionResult AdminDashboard()
         {
@@ -56,14 +59,30 @@ namespace AstroSafar.Controllers
                 ViewBag.Message = "No categories available.";
             }
 
-            return View(categories); 
+            ViewBag.TotalUsers = _context.Registrations.Count();
+            ViewBag.TotalCourses = _context.courseAdmins.Count();
+            //ViewBag.TotalCertificates = _context..Count();
+            //ViewBag.TotalRevenue = _context.Payments.Sum(p => p.Amount);
+
+            ViewBag.RecentEnrollments = _context.enrollments
+                .OrderByDescending(e => e.Id)
+                .Take(5)
+                .Select(e => new {
+                    UserName = e.FullName,
+                    CourseName = e.CourseAdmin.Name,
+                    //EnrollmentDate = e.EnrollmentDate
+                }).ToList();
+
+            return View(categories);
         }
+
+
 
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
             return RedirectToAction("Login", "Admin");
-           
+
         }
 
         // Add Category
@@ -84,7 +103,7 @@ namespace AstroSafar.Controllers
                 return RedirectToAction("CategoryList");
             }
 
-          
+
             foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
             {
                 Console.WriteLine(error.ErrorMessage);
@@ -99,7 +118,7 @@ namespace AstroSafar.Controllers
         }
 
         // Edit Category
-       
+
         [HttpGet]
         public IActionResult EditCategory(int id)
         {
@@ -123,7 +142,7 @@ namespace AstroSafar.Controllers
                 }
 
                 category.Name = model.Name;
-                
+
                 _context.Categories.Update(category);
                 _context.SaveChanges();
                 return RedirectToAction("CategoryList");
@@ -239,7 +258,7 @@ namespace AstroSafar.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("CourseList"); 
+            return RedirectToAction("CourseList");
         }
 
         // Delete Course
@@ -258,14 +277,13 @@ namespace AstroSafar.Controllers
             return RedirectToAction("CourseList");
         }
 
-        // Unit
         [HttpGet]
         public IActionResult AddUnit()
         {
             // Fetch courses for the dropdown
             var courses = _context.courseAdmins.Select(c => new { c.Id, c.Name }).ToList();
 
-         
+
             ViewBag.Courses = courses;
 
             var units = _context.unitAdmins
@@ -303,7 +321,7 @@ namespace AstroSafar.Controllers
         public IActionResult UnitList()
         {
             var units = _context.unitAdmins
-           .Include(u => u.CourseAdmin) 
+           .Include(u => u.CourseAdmin)
            .Select(u => new UnitAdmin
            {
                Id = u.Id,
@@ -311,28 +329,45 @@ namespace AstroSafar.Controllers
                Content = u.Content,  // Ensure Content is fetched
                ImageURL = u.ImageURL,
                VideoUrl = u.VideoUrl,
-               CourseAdmin = u.CourseAdmin  
+               CourseAdmin = u.CourseAdmin
            })
            .ToList();
-            ViewBag.Message = "List of Units for the selected Course";  
-            ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin.Name ?? "No Course Selected"; 
+            ViewBag.Message = "List of Units for the selected Course";
+            ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin.Name ?? "No Course Selected";
 
             return View(units);
         }
 
+
+
+        // Edit Unit
         [HttpGet]
         public IActionResult EditUnit(int id)
         {
-            var unit = _context.unitAdmins.Find(id);
+            // Fetch the unit with its associated course for editing
+            var unit = _context.unitAdmins
+                .Include(u => u.CourseAdmin) // Load the related course
+                .FirstOrDefault(u => u.Id == id);
+
             if (unit == null)
             {
                 return NotFound();
             }
-            ViewBag.Courses = new SelectList(_context.courseAdmins, "Id", "Name");
+
+            // Fetch courses for the dropdown
+            var courses = _context.courseAdmins
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList();
+
+            ViewBag.Courses = courses; // Assign to ViewBag
+
             return View(unit);
         }
 
-
+        
         [HttpPost]
         public IActionResult EditUnit(UnitAdmin model, IFormFile ImageFile)
         {
@@ -370,6 +405,7 @@ namespace AstroSafar.Controllers
             return RedirectToAction("UnitList");
         }
 
+
         // Delete Unit
         [HttpPost]
         public IActionResult DeleteUnit(int id)
@@ -388,7 +424,7 @@ namespace AstroSafar.Controllers
         public IActionResult EnrolledUsers(string? categoryFilter = "All")
         {
 
-            var primaryEnrollments = _context.enrollments.ToList(); 
+            var primaryEnrollments = _context.enrollments.ToList();
             var secondaryEnrollments = _context.secondaryEnrolls.ToList();
             var higherSecondaryEnrollments = _context.higherSecondaryEnrolls.ToList();
 
@@ -421,12 +457,12 @@ namespace AstroSafar.Controllers
                 HigherSecondaryEnrolls = higherSecondaryEnrollments
             };
 
-            ViewBag.SelectedCategory = categoryFilter; 
+            ViewBag.SelectedCategory = categoryFilter;
 
             return View(model);
         }
 
-      
+
         public IActionResult EnrollmentDetails(int id, string category)
         {
             object model = null;
@@ -443,6 +479,64 @@ namespace AstroSafar.Controllers
 
             return View(model);
         }
+        [HttpPost]
+        public IActionResult DeleteEnrolledUser(int id)
+        {
+            var user = _context.enrollments.Find(id);
+            if (user != null)
+            {
+                _context.enrollments.Remove(user);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("EnrolledUsers");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteSecondaryEnrolledUser(int id)
+        {
+            var user = _context.secondaryEnrolls.Find(id);
+            if (user != null)
+            {
+                _context.secondaryEnrolls.Remove(user);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("EnrolledUsers");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteHigherSecondaryEnrolledUser(int id)
+        {
+            var user = _context.higherSecondaryEnrolls.Find(id);
+            if (user != null)
+            {
+                _context.higherSecondaryEnrolls.Remove(user);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("EnrolledUsers");
+        }
+
+        public IActionResult UserProgress()
+        {
+            var progressData = (from unitProgress in _context.UnitProgresses
+                                join course in _context.courseAdmins
+                                on unitProgress.CourseId equals course.Id
+                                group unitProgress by new { unitProgress.Email, unitProgress.CourseId } into g
+                                select new
+                                {
+                                    UserName = g.First().Email, // Using email as a placeholder for the name
+                                    Email = g.Key.Email,
+                                    CourseName = g.First().CourseAdmin.Name,
+                                    //EnrollmentDate = g.Min(x => x.Id), // Adjust this to actual enrollment date if available
+                                    TotalUnits = g.Count(),
+                                    CompletedUnits = g.Count(x => x.IsCompleted), // Directly count completed units
+                                    ProgressPercentage = g.Average(x => x.ProgressPercentage)
+                                }).ToList();
+
+            ViewBag.ProgressData = progressData;
+            return View();
+        }
+
+
 
     }
 }
