@@ -15,6 +15,10 @@ namespace AstroSafar.Models
 
         }
 
+        public SpaceLearningDBContext()
+        {
+        }
+
         public DbSet<Registration> Registrations { get; set; }
 
         public DbSet<AdminLogin> AdminLogins { get; set; }
@@ -35,12 +39,15 @@ namespace AstroSafar.Models
                new Category { Id = 3, Name = "Higher Secondary" }
            );
 
+
             modelBuilder.Entity<CourseAdmin>()
             .HasOne(c => c.Category)
             .WithMany(cat => cat.Courses)
             .HasForeignKey(c => c.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
-        }
+             
+    }
+
         
 
 
@@ -48,6 +55,10 @@ namespace AstroSafar.Models
         public object CourseAdmins { get; internal set; }
         public DbSet<UnitProgress> UnitProgresses { get; set; }
         public DbSet<ExamQuestion> ExamQuestions { get; set; }
+        public DbSet<Payment> payments{ get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<ExamResult> ExamResults { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
 
     }
 

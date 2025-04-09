@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Payment Failed";
+}
+
+<h2 class="text-center text-danger">Payment Failed!</h2>
+
+<div class="text-center mt-4">
+    <p>There was an issue with the payment process. Please try again.</p>
+    <a href="@Url.Action("Payment", "Certificate")" class="btn btn-primary">Retry Payment</a>
+</div>

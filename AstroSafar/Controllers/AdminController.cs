@@ -61,13 +61,16 @@ namespace AstroSafar.Controllers
 
             ViewBag.TotalUsers = _context.Registrations.Count();
             ViewBag.TotalCourses = _context.courseAdmins.Count();
-            //ViewBag.TotalCertificates = _context..Count();
-            //ViewBag.TotalRevenue = _context.Payments.Sum(p => p.Amount);
+            ViewBag.TotalCertificates = _context.Certificates.Count();
+            var totalRevenue = _context.Transactions.Where(t => t.Status == "Success").Sum(t => (decimal?)t.Amount) ?? 0;
+            ViewBag.TotalRevenue = totalRevenue;
+
 
             ViewBag.RecentEnrollments = _context.enrollments
                 .OrderByDescending(e => e.Id)
                 .Take(5)
-                .Select(e => new {
+                .Select(e => new
+                {
                     UserName = e.FullName,
                     CourseName = e.CourseAdmin.Name,
                     //EnrollmentDate = e.EnrollmentDate
@@ -75,9 +78,7 @@ namespace AstroSafar.Controllers
 
             return View(categories);
         }
-
-
-
+       
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
@@ -276,6 +277,20 @@ namespace AstroSafar.Controllers
 
             return RedirectToAction("CourseList");
         }
+        //public IActionResult ManageCourses(int? selectedCategory)
+        //{
+        //    // Load categories into ViewBag
+        //    ViewBag.CategoryList = _context.Categories.ToList();
+
+        //    // Fetch courses, filtered if category is selected
+        //    var courses = _context.courseAdmins
+        //        .Include(c => c.Category)
+        //        .Where(c => !selectedCategory.HasValue || c.CategoryId == selectedCategory.Value)
+        //        .ToList();
+
+        //    return View("CourseList", courses); // Make sure view name matches your .cshtml
+        //}
+
 
         [HttpGet]
         public IActionResult AddUnit()
@@ -536,7 +551,56 @@ namespace AstroSafar.Controllers
             return View();
         }
 
+        public IActionResult Transactions()
+        {
+            var transactions = (from t in _context.Transactions
+                                join e in _context.enrollments on t.EnrollmentId equals e.Id into enrollmentGroup
+                                from e in enrollmentGroup.DefaultIfEmpty() // Handle missing enrollments
+                                join u in _context.Registrations on e.Email equals u.Email into userGroup
+                                from u in userGroup.DefaultIfEmpty() // Handle missing users
+                                join c in _context.courseAdmins on e.CourseId equals c.Id into courseGroup
+                                from c in courseGroup.DefaultIfEmpty() // Handle missing courses
+                                select new
+                                {
+                                    TransactionId = t.Id,
+                                    UserName = u != null ? u.Firstname : "Unknown",
+                                    Email = u != null ? u.Email : "No Email",
+                                    CourseName = c != null ? c.Name : "No Course",
+                                    Amount = t.Amount,
+                                    Currency = t.Currency ?? "N/A",
+                                    PaymentDate = t.PaymentDate,
+                                    //Status = t.Status ?? "Pending",
+                                    RazorpayPaymentId = t.RazorpayPaymentId ?? "N/A"
+                                }).ToList();
 
+            ViewBag.TransactionData = transactions;
+            return View();
+        }
+        public IActionResult IssuedCertificates()
+        {
+            var issuedCertificates = (from cert in _context.Certificates
+                                      join enroll in _context.enrollments on cert.EnrollmentId equals enroll.Id into enrollmentGroup
+                                      from enroll in enrollmentGroup.DefaultIfEmpty()
+
+                                      join user in _context.Registrations on enroll.Email equals user.Email into userGroup
+                                      from user in userGroup.DefaultIfEmpty()
+
+                                      join course in _context.courseAdmins on enroll.CourseId equals course.Id into courseGroup
+                                      from course in courseGroup.DefaultIfEmpty()
+
+                                      select new
+                                      {
+                                          CertificateId = cert.Id,
+                                          UserName = user != null ? user.Firstname : "Unknown",
+                                          Email = user != null ? user.Email : "No Email",
+                                          CourseName = course != null ? course.Name : "No Course",
+                                          IssuedOn = cert.IssuedOn,
+                                          CertificateNumber = cert.CertificateNumber ?? "N/A",
+                                      }).ToList();
+
+            ViewBag.IssuedCertificates = issuedCertificates;
+            return View();
+        }
 
     }
 }

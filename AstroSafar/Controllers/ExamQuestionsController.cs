@@ -1,4 +1,56 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+////public IActionResult StartExam(int courseId)
+////{
+////    // Get user's email from session
+////    string userEmail = HttpContext.Session.GetString("UserEmail");
+////    Console.WriteLine("User Email from Session: " + userEmail);
+////    Console.WriteLine("Course ID: " + courseId);
+
+////    if (string.IsNullOrEmpty(userEmail))
+////    {
+////        Console.WriteLine("User email not found in session. Redirecting to Login.");
+////        return RedirectToAction("Login", "Account"); // Redirect if session is missing
+////    }
+
+////    // Find enrolled course using email
+////    var enrolledCourseId = _context.enrollments
+////        .Where(e => e.Email == userEmail)
+////        .Select(e => e.CourseId)
+////        .FirstOrDefault();
+
+////    if (enrolledCourseId == 0)
+////    {
+////        return RedirectToAction("ExamProgress"); // Redirect if no enrolled course found
+////    }
+
+
+
+////    // Fetch exam questions for the selected course
+////    var questions = _context.ExamQuestions
+////        .Where(q => q.CourseId == courseId)
+////        .Select(q => new QuestionInputModel
+////        {
+////            QuestionText = q.QuestionText,
+////            QuestionType = q.QuestionType,
+////            Options = q.Options, // Comma-separated values
+////            CorrectAnswer = ""  // Hide correct answer during exam
+////        }).ToList();
+
+////    // Log the number of questions fetched
+////    Console.WriteLine("Number of questions fetched: " + questions.Count);
+
+////    // Create ViewModel
+////    var examViewModel = new ExamQuestionsViewModel
+////    {
+////        CourseId = courseId,
+////        Questions = questions
+////    };
+
+////    Console.WriteLine("Exam ViewModel created successfully.");
+////    return View(examViewModel);
+////}
+
+using Microsoft.AspNetCore.Mvc;
 using AstroSafar.Models;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +75,7 @@ namespace AstroSafar.Controllers
             return View(questions);
         }
 
-      
+
         // GET: Add Exam
         public IActionResult AddExam()
         {
@@ -71,6 +123,8 @@ namespace AstroSafar.Controllers
         }
 
 
+
+
         [HttpGet]
         public IActionResult StartExam(int courseId)
         {
@@ -86,17 +140,28 @@ namespace AstroSafar.Controllers
             }
 
             // Find enrolled course using email
-            var enrolledCourseId = _context.enrollments
-                .Where(e => e.Email == userEmail)
-                .Select(e => e.CourseId)
+            var enrollment = _context.enrollments
+                .Where(e => e.Email == userEmail && e.CourseId == courseId)
                 .FirstOrDefault();
 
-            if (enrolledCourseId == 0)
+            if (enrollment == null)
             {
                 return RedirectToAction("ExamProgress"); // Redirect if no enrolled course found
             }
 
+            // Check if user has already completed the exam for this course
+            var existingResult = _context.ExamResults
+                .Where(r => r.EnrollmentId == enrollment.Id && r.IsCompleted)
+                .FirstOrDefault();
 
+            TempData["enId"] = enrollment.Id;
+
+            if (existingResult != null)
+            {
+                // User has already completed the exam - redirect to certificate prompt
+                TempData["Message"] = "You have already completed this exam. You cannot retake it.";
+                return RedirectToAction("CertificatePrompt", "Certificate");
+            }
 
             // Fetch exam questions for the selected course
             var questions = _context.ExamQuestions
@@ -119,11 +184,66 @@ namespace AstroSafar.Controllers
                 Questions = questions
             };
 
+
             Console.WriteLine("Exam ViewModel created successfully.");
             return View(examViewModel);
         }
 
 
+
+        [HttpPost]
+        public IActionResult SubmitExam(ExamSubmissionViewModel model)
+        {
+            string userEmail = HttpContext.Session.GetString("UserEmail");
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Find the enrollment
+            var enrollment = _context.enrollments
+                .Where(e => e.Email == userEmail && e.CourseId == model.CourseId)
+                .FirstOrDefault();
+
+            if (enrollment == null)
+            {
+                return RedirectToAction("ExamProgress");
+            }
+
+            // Calculate score if needed
+            int score = CalculateScore(model.UserAnswers);
+
+            // Record exam completion
+            var examResult = new ExamResult
+            {
+                EnrollmentId = enrollment.Id,
+                IsCompleted = true,
+                CompletedAt = DateTime.Now,
+                Score = score,
+                TimeTaken = TimeSpan.FromMinutes(30) - TimeSpan.FromSeconds(model.TimeRemaining)
+            };
+
+            _context.ExamResults.Add(examResult);
+            _context.SaveChanges();
+
+            // Redirect to certificate prompt
+            return RedirectToAction("CertificatePrompt", "Certificate");
+        }
+
+        private int CalculateScore(List<UserAnswer> userAnswers)
+        {
+            int score = 0;
+            foreach (var answer in userAnswers)
+            {
+                // Fetch the question to get correct answer
+                var question = _context.ExamQuestions.Find(answer.QuestionId);
+                if (question != null && question.CorrectAnswer == answer.SelectedOption)
+                {
+                    score++;
+                }
+            }
+            return score;
+        }
 
         // GET: Edit Question
         public async Task<IActionResult> EditExam(int id)

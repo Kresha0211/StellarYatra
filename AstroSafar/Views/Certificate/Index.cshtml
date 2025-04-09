@@ -1,0 +1,29 @@
+﻿@* @model AstroSafar.Models.PaymentEntity
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<h2 class="text-center">Payment Details</h2>
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h4 class="text-center">Payment Information</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Payment ID:</strong> @Model.PaymentId</p>
+            <p><strong>Enrollment ID:</strong> @Model.EnrollmentId</p>
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Amount:</strong> @Model.Amount.ToString("C")</p>
+            <p><strong>Transaction ID:</strong> @Model.TransactionId</p>
+            <p><strong>Payment Date:</strong> @Model.PaymentDate.ToString("f")</p>
+        </div>
+        <div class="card-footer text-center">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Go to Home</a>
+            <a href="@Url.Action("PaymentHistory", "Payment")" class="btn btn-secondary">View Payment History</a>
+        </div>
+    </div>
+</div>
+ *@

@@ -1,4 +1,4 @@
-﻿@model AstroSafar.Models.Category
+﻿@* @model AstroSafar.Models.Category
 
 <h2 class="mb-4">Update Category</h2>
 
@@ -15,4 +15,38 @@
     <!-- Submit Button -->
     <button type="submit" class="btn btn-primary">Update Category</button>
     <a asp-action="CategoryList" class="btn btn-secondary">Cancel</a>
+</form>
+ *@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+ @model AstroSafar.Models.Category
+
+<h2 class="mb-4">Update Category</h2>
+
+<form asp-action="EditCategory" method="post" class="p-4 border rounded shadow-sm bg-light">
+    <!-- Hidden ID Field -->
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Category Name -->
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Category Name:</label>
+        <input asp-for="Name" class="form-control" placeholder="Enter category name" required />
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+
+    <!-- Buttons with Icons -->
+    <div class="d-flex justify-content-between mt-3">
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-pencil-square"></i>
+            Update
+        </button>
+            <!-- Back to List Button -->
+            <a asp-action="CategoryList" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
 </form>

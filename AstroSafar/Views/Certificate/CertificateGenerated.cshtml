@@ -1,0 +1,35 @@
+﻿@model AstroSafar.Models.Certificate
+
+@{
+    ViewData["Title"] = "Certificate";
+}
+<div class="container">
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-info">
+            @ViewBag.Message
+        </div>
+    }
+
+    <h2>Certificate Generated</h2>
+
+    @if (Model?.Enrollment != null && Model.Enrollment.CourseAdmin != null)
+    {
+        <p>
+            🎉 Congratulations <strong>@Model.Enrollment.FullName</strong>!<br />
+            You’ve completed the course: <strong>@Model.Enrollment.CourseAdmin.Name</strong>
+        </p>
+
+        <a asp-controller="Certificate" asp-action="DownloadCertificate" asp-route-id="@Model.Id" class="btn btn-success">
+            ⬇️ Download Certificate
+        </a>
+
+        <a asp-controller="Certificate" asp-action="ViewCertificate" asp-route-id="@Model.Id" class="btn btn-info">
+            👁️ View Certificate
+        </a>
+    }
+    else
+    {
+        <span class="text-danger">Certificate data not available. Please contact support.</span>
+    }
+    </div>

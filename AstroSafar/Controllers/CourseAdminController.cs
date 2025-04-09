@@ -21,5 +21,6 @@ namespace AstroSafar.Controllers
             var courses = _context.courseAdmins.Where(c => c.CategoryId == categoryId).ToList();
             return View(courses);
         }
+
     }
 }

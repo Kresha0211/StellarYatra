@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Certificate Prompt";
+}
+
+<h2 class="text-center">Certificate Request</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info text-center mt-3">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="text-center mt-4">
+    <p>Do you want to receive a certificate for completing the exam?</p>
+    <button class="btn btn-success me-3" onclick="showPaymentMessage()">Yes, I want a certificate</button>
+    <button class="btn btn-danger" onclick="redirectToHome()">No, take me to Home</button>
+</div>
+
+<!-- Payment Message Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Payment Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                To receive your certificate, please proceed to the payment page.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="proceedToPayment()">Proceed to Payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var enId = TempData["enId"] != null ? TempData["enId"].ToString() : "0";
+}
+<script>
+    function showPaymentMessage() {
+        var paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        paymentModal.show();
+    }
+    function proceedToPayment() {
+        window.location.href = '@Url.Action("Payment", "Payment", new { enrollmentId = @enId })';
+    }
+    function redirectToHome() {
+        window.location.href = '@Url.Action("Index", "Home")';
+    }
+</script>

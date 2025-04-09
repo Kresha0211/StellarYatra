@@ -77,6 +77,34 @@ namespace AstroSafar.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.Certificate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CertificateNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDownloaded")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("IssuedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnrollmentId");
+
+                    b.ToTable("Certificates");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
                 {
                     b.Property<int>("Id")
@@ -188,6 +216,36 @@ namespace AstroSafar.Migrations
                     b.ToTable("ExamQuestions");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.ExamResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("TimeTaken")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnrollmentId");
+
+                    b.ToTable("ExamResults");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.Feedback", b =>
                 {
                     b.Property<int>("Id")
@@ -255,6 +313,34 @@ namespace AstroSafar.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("higherSecondaryEnrolls");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("EnrollmentId");
+
+                    b.ToTable("payments");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.Registration", b =>
@@ -341,6 +427,50 @@ namespace AstroSafar.Migrations
                     b.ToTable("secondaryEnrolls");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RazorpayOrderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RazorpayPaymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RazorpaySignature")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnrollmentId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.UnitAdmin", b =>
                 {
                     b.Property<int>("Id")
@@ -408,6 +538,17 @@ namespace AstroSafar.Migrations
                     b.ToTable("UnitProgresses");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.Certificate", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Enrollment", "Enrollment")
+                        .WithMany()
+                        .HasForeignKey("EnrollmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enrollment");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
                 {
                     b.HasOne("AstroSafar.Models.Category", "Category")
@@ -441,6 +582,17 @@ namespace AstroSafar.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.ExamResult", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Enrollment", "Enrollment")
+                        .WithMany()
+                        .HasForeignKey("EnrollmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enrollment");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.HigherSecondaryEnroll", b =>
                 {
                     b.HasOne("AstroSafar.Models.CourseAdmin", "CourseAdmin")
@@ -452,6 +604,17 @@ namespace AstroSafar.Migrations
                     b.Navigation("CourseAdmin");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.Payment", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Enrollment", "Enrollment")
+                        .WithMany()
+                        .HasForeignKey("EnrollmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enrollment");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.SecondaryEnroll", b =>
                 {
                     b.HasOne("AstroSafar.Models.CourseAdmin", "CourseAdmin")
@@ -461,6 +624,17 @@ namespace AstroSafar.Migrations
                         .IsRequired();
 
                     b.Navigation("CourseAdmin");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.Transaction", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Enrollment", "Enrollment")
+                        .WithMany()
+                        .HasForeignKey("EnrollmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Enrollment");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.UnitAdmin", b =>

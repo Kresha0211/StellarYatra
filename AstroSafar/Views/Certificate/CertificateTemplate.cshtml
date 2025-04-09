@@ -1,0 +1,226 @@
+﻿@* @model AstroSafar.Models.Certificate
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Certificate</title>
+    <style>
+        .body{
+            font-family: 'Georgia';
+            text-align: center;
+            padding: 50px;
+            background: #f9f9f9;
+        }
+
+        .certificate {
+            border: 8px double #000;
+            padding: 40px;
+            background: white;
+            width: 800px;
+            margin: auto;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .course {
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <h1>Certificate of Completion</h1>
+        <p>This is to certify that</p>
+        <div class="name">@Model.Enrollment.FullName</div>
+        <p>has successfully completed the course</p>
+        <div class="course">@Model.Enrollment.CourseAdmin.Name</div>
+        <p class="footer">Issued on @Model.IssuedOn.ToString("MMMM dd, yyyy")</p>
+    </div>
+</body>
+</html> *@
+
+
+@model AstroSafar.Models.Certificate
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Certificate of Completion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            padding: 40px;
+            background: #f8f9fa;
+            margin: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="20" cy="20" r="0.5" fill="%23d4af37" opacity="0.5"/><circle cx="80" cy="30" r="0.7" fill="%23d4af37" opacity="0.5"/><circle cx="50" cy="70" r="0.5" fill="%23d4af37" opacity="0.5"/><circle cx="10" cy="50" r="0.7" fill="%23d4af37" opacity="0.5"/><circle cx="90" cy="80" r="0.5" fill="%23d4af37" opacity="0.5"/></svg>');
+        }
+
+        .certificate {
+            border: 20px solid #0a2342;
+            padding: 60px;
+            background: white;
+            width: 800px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0,0,0,0.1);
+        }
+
+            .certificate:before {
+                content: "";
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                right: -10px;
+                bottom: -10px;
+                border: 2px solid #d4af37;
+                pointer-events: none;
+            }
+
+        h1 {
+            font-size: 42px;
+            color: #0a2342;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        .header-line {
+            border-top: 2px solid #d4af37;
+            width: 250px;
+            margin: 0 auto 30px;
+        }
+
+        .name {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 30px 0;
+            color: #0a2342;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .course {
+            font-size: 28px;
+            margin: 25px 0;
+            color: #2c4f80;
+            font-style: italic;
+        }
+
+        .app-description {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .signature-container {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .signature {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 24px;
+            color: #0a2342;
+            height: 60px;
+            margin-bottom: 5px;
+        }
+
+        .stamp {
+            position: absolute;
+            right: 80px;
+            bottom: 80px;
+            opacity: 0.8;
+            width: 120px;
+            height: 120px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="%23d4af37" stroke-width="2"/><text x="50" y="40" text-anchor="middle" font-family="Arial" font-size="10" fill="%23d4af37">OFFICIAL</text><text x="50" y="55" text-anchor="middle" font-family="Arial" font-size="14" fill="%23d4af37" font-weight="bold">ASTROSAFAR</text><text x="50" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="%23d4af37">CERTIFICATION</text></svg>');
+            background-repeat: no-repeat;
+            transform: rotate(15deg);
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .date-container {
+            margin-top: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .space-decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .planet {
+            top: 50px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #d4af37, #b8860b);
+        }
+
+        .certificate-content {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <div class="planet space-decoration"></div>
+        <div class="stamp"></div>
+
+        <div class="certificate-content">
+            <h1>Certificate of Completion</h1>
+            <div class="header-line"></div>
+            <p>This certificate is proudly presented to</p>
+            <div class="name">@Model.Enrollment.FullName</div>
+            <p>for successfully completing the space learning course</p>
+            <div class="course">"@Model.Enrollment.CourseAdmin.Name"</div>
+
+            <div class="app-description">
+                AstroSafar is committed to making space education accessible and engaging.
+                This certificate recognizes the dedication to exploring the cosmos through
+                our interactive learning platform that brings astronomy to life.
+            </div>
+
+            <div class="signature-container">
+                <div class="signature">KVN</div>
+                <p>Team AstroSafar</p>
+                <p class="footer">support@astrosafar.com</p>
+            </div>
+
+            <div class="date-container">
+                Issued on @Model.IssuedOn.ToString("MMMM dd, yyyy")
+            </div>
+        </div>
+    </div>
+</body>
+</html>

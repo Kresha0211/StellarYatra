@@ -4,6 +4,7 @@ using AstroSafar.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Rotativa.AspNetCore;
 
 
 
@@ -27,10 +28,15 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<SpaceLearningDBContext>()   
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<RazorpaySettings>(builder.Configuration.GetSection("Razorpay"));
+
+
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+var env = app.Environment;
+RotativaConfiguration.Setup(env.WebRootPath, "Rotativa/wkhtmltopdf");
 
 if (!app.Environment.IsDevelopment())
 {

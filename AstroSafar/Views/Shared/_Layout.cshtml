@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AstroSafar.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
 </head>
 <body>
     @if (HttpContextAccessor.HttpContext.Session.GetString("AdminLoggedIn") == "true")
@@ -234,7 +236,7 @@
         }
 
         .navbar-brand span {
-            font-size: 1.5rem;
+            font-size: 1rem;
             color: white;
         }
 

@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+<h2>Complete Your Payment</h2>
+<form action="/Certificate/CertificateGenerated/" method="POST">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="@ViewBag.Key"
+            data-amount="@ViewBag.Amount"
+            data-currency="INR"
+            data-order_id="@ViewBag.OrderId"
+            data-name="AstroSafar"
+            data-description="Course Certificate Payment"
+            data-image="/images/logo.png"
+            data-prefill.name="Student Name"
+            data-prefill.email="student@example.com"
+            data-theme.color="#3399cc"
+            data-onpaymentfailure="onPaymentFailure">
+</script>
+    <script>
+        function onPaymentFailure(response) {
+            alert("Payment failed. Please try again.");
+            // Handle failure, such as redirecting the user back to the payment page or displaying an error message
+        }
+    </script>
+    <input type="hidden" name="enrollmentId" value="@ViewBag.EnrollmentId" />
+</form>

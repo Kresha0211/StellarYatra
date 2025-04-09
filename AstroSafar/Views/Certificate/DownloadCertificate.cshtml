@@ -1,0 +1,12 @@
+﻿@{
+    var cert = ViewBag.Certificate;
+}
+
+<div class="certificate-container">
+    <h2>Certificate of Completion</h2>
+    <p>This certifies that <strong>@cert.FullName</strong></p>
+    <p>Has successfully completed the course: <strong>@cert.CourseName</strong></p>
+    <p>Issued on: <strong>@cert.IssuedDate.ToShortDateString()</strong></p>
+
+    <a class="btn btn-primary" href="#">Download PDF</a> <!-- You can integrate PDF logic here -->
+</div>

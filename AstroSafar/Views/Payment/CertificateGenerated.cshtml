@@ -1,0 +1,7 @@
+﻿* @{
+    ViewData["Title"] = "Certificate";
+}
+
+<h2>Certificate Generated</h2>
+<p>Your certificate has been successfully generated. You can now download it.</p>
+<a href="@Url.Action("DownloadCertificate", "Certificate", new { id = ViewBag.EnrollmentId })" class="btn btn-success">Download Certificate</a> 

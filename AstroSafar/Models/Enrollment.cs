@@ -7,6 +7,7 @@ using System.Diagnostics;
 
 namespace AstroSafar.Models
 {
+    [Table("enrollments")]
     public class Enrollment
     {
         //.internal bool IsEnrolled;

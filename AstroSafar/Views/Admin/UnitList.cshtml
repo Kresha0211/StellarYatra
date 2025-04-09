@@ -38,9 +38,15 @@
                 <td>@unit.CourseAdmin.Name</td>
                 <td><a href="@unit.VideoUrl" target="_blank">Watch Video</a></td>
                 <td>
-                    <a class="btn btn-warning" asp-action="EditUnit" asp-route-id="@unit.Id">Edit</a>
+                    <a class="btn btn-warning" asp-action="EditUnit" asp-route-id="@unit.Id">
+                        <i class="bi bi-pencil-square"></i>
+                        Edit
+                    </a>
                     <form asp-action="DeleteUnit" asp-route-id="@unit.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>

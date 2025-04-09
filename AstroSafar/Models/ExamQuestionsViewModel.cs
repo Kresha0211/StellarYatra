@@ -22,6 +22,7 @@ namespace AstroSafar.Models
         public string QuestionType { get; set; } // "MCQ" or "TrueFalse"
         public string Options { get; set; } // Comma-separated for MCQ
         public string CorrectAnswer { get; set; }
+
     }
 
 }

@@ -52,14 +52,26 @@
                 <span class="text-danger" asp-validation-for="ImageURL"></span>
             </div>
             <!-- Submit Button -->
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="d-flex justify-content-between mt-3">
+                <!-- Update Button -->
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-pencil-square"></i> Update
+                </button>
+
+                <!-- Back to List Button -->
+                <a asp-action="CourseList" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
             </div>
+
         </form>
     </div>
 </div>
 
-<!-- Back to List button -->
+@* <!-- Back to List button -->
 <div>
-    <a asp-action="CourseList" class="btn btn-secondary">Back to List</a>
+    <a asp-action="CourseList" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+    </a>
 </div>
+ *@

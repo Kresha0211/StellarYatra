@@ -17,9 +17,15 @@
             <tr>
                 <td>@category.Name</td>
                 <td>
-                    <a class="btn btn-warning" asp-action="EditCategory" asp-route-id="@category.Id">Edit</a>
+                    <a class="btn btn-warning" asp-action="EditCategory" asp-route-id="@category.Id">
+                        <i class="bi bi-pencil-square"></i>
+                        Edit
+                    </a>
                     <form asp-action="DeleteCategory" asp-route-id="@category.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>

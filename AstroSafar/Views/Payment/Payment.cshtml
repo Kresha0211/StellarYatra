@@ -1,0 +1,22 @@
+﻿ @{
+    ViewData["Title"] = "Make Payment";
+}
+
+<h2>Make Payment</h2>
+
+<form id="payment-form" method="post" action="/Payment/PaymentCallback">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"
+            data-key="@ViewBag.Key"
+            data-amount="@ViewBag.Amount"
+            data-currency="INR"
+            data-order_id="@ViewBag.OrderId"
+            data-enrollment_id="@ViewBag.EnrollmentId"
+            data-buttontext="Pay Now"
+            data-name="AstroSafar"
+            data-description="Payment for Certificate"
+            data-theme.color="#F37254">
+    </script>
+
+  
+    <input type="hidden" name="EnrollmentId" value="@ViewBag.EnrollmentId" />
+</form>

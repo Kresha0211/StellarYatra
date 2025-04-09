@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Issued Certificates";
+    var certificates = ViewBag.IssuedCertificates;
+}
+
+<h2>Issued Certificates</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Certificate ID</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Course Name</th>
+            <th>Issued On</th>
+            <th>Certificate Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in certificates)
+        {
+            <tr>
+                <td>@item.CertificateId</td>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td>@item.CourseName</td>
+                <td>@Convert.ToDateTime(item.IssuedOn).ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.CertificateNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>

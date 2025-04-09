@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Enrolled Users";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <h2>Enrolled Users</h2>
 <!-- Filter Options -->
@@ -55,7 +56,10 @@
                 <td>
                     <form asp-action="DeleteEnrolledUser" method="post" onsubmit="return confirm('Are you sure you want to delete this enrollment?');">
                         <input type="hidden" name="id" value="@user.Id" />
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>
@@ -216,7 +220,7 @@
                             data-dob="@user.DateOfBirth.ToShortDateString()"
                             data-standard="@user.Standard"
                             data-address="@user.Address">
-                        View Details
+                        <i class="bi bi-eye"></i> View Details
                     </button>
                 </td>
                 <td>

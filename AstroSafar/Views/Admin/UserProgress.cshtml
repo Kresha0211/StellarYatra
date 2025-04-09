@@ -11,11 +11,10 @@
             <th>User Name</th>
             <th>Email</th>
             <th>Course Name</th>
-@*             <th>Enrollment Date</th>
- *@            <th>Total Units</th>
+           <th>Total Units</th>
             <th>Completed Units</th>
             <th>Progress (%)</th>
-            <th>Admin Action</th>
+          
         </tr>
     </thead>
     <tbody>
@@ -25,13 +24,10 @@
                 <td>@item.UserName</td>
                 <td>@item.Email</td>
                 <td>@item.CourseName</td>
-@*                 <td>@item.EnrollmentDate</td>
- *@                <td>@item.TotalUnits</td>
+             <td>@item.TotalUnits</td>
                 <td>@item.CompletedUnits</td>
                 <td>@string.Format("{0:0.##} %", item.ProgressPercentage)</td>
-                <td>
-                    <button class="btn btn-success">Issue Certificate</button>
-                </td>
+               
             </tr>
         }
     </tbody>
