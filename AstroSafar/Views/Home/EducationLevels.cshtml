@@ -1,4 +1,5 @@
-﻿@{
+﻿@*
+@{
     ViewData["Title"] = "Education Levels";
 }
 <style>
@@ -21,15 +22,6 @@
         position: relative;
         overflow-x: hidden;
     }
-
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-    }
-
-
 
     h1 {
         text-align: center;
@@ -92,37 +84,39 @@
 
     @if (Context.Session.GetInt32("CustomerId") != null)
     {
-
-        <!-- Primary Education -->
+        <!-- Primary Space Education -->
         <div class="category primary" onclick="location.href='@Url.Action("Primary", "Client")'">
-            <h2>📘 Primary Education</h2>
+            <h2>🚀 Primary Space Education</h2>
             <p><strong>Standards:</strong> 1st - 6th</p>
 
-            <p><strong>Focus:</strong> Basic literacy, numeracy, introductory science, and creative activities.</p>
-            <button class="btn-explore">Explore Primary Courses</button>
+            <p><strong>Focus:</strong> Introduction to space, the Solar System, phases of the Moon, basic astronomy, and space exploration pioneers.</p>
+            <button class="btn-explore">Explore Primary Space Courses</button>
         </div>
 
-        <!-- Secondary Education -->
+        <!-- Secondary Space Education -->
         <div class="category secondary" onclick="location.href='@Url.Action("Secondary", "Client")'">
-            <h2>📗 Secondary Education</h2>
+            <h2>🌌 Secondary Space Education</h2>
             <p><strong>Standards:</strong> 7th - 10th</p>
 
-            <p><strong>Focus:</strong> Advanced science, mathematics, technology, and critical thinking skills.</p>
-            <button class="btn-explore">Explore Secondary Courses</button>
+            <p><strong>Focus:</strong> Deep dive into planetary science, galaxies, black holes, space technology, and human space missions.</p>
+            <button class="btn-explore">Explore Secondary Space Courses</button>
         </div>
 
-        <!-- Higher Secondary Education -->
+        <!-- Higher Secondary Space Education -->
         <div class="category higher-secondary" onclick="location.href='@Url.Action("HigherSecondary", "Client")'">
-            <h2>📕 Higher Secondary Education</h2>
+            <h2>🛰️ Higher Secondary Space Education</h2>
             <p><strong>Standards:</strong> 11th and 12th</p>
 
-            <p><strong>Focus:</strong> Specialized subjects, career preparation, and university entrance exams.</p>
-            <button class="btn-explore">Explore Higher Secondary Courses</button>
+            <p><strong>Focus:</strong> Advanced astrophysics, cosmology, exoplanet research, interstellar travel theories, and space exploration innovations.</p>
+            <button class="btn-explore">Explore Higher Secondary Space Courses</button>
         </div>
     }
     else
     {
-        @*
+
+    }
+</div> *@
+@*
     <div class="text-center mt-2">
     <a href="@Url.Action("Login", "Account", new { isClickedFromExporePage = true})"
     class="btn btn-warning fw-bold">
@@ -130,5 +124,227 @@
     </a>
     </div>
     *@
+
+
+
+@{
+    ViewData["Title"] = "Education Levels";
+}
+
+<style>
+    /* Main container styling */
+    .education-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .page-title {
+        text-align: center;
+        color: #0d6efd;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        font-weight: 700;
+        position: relative;
+    }
+
+        .page-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #0d6efd;
+            border-radius: 2px;
+        }
+
+    /* Education level categories */
+    .category {
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .category h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #333;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+            .category h2 img, .category h2 i {
+                margin-right: 10px;
+                font-size: 1.8rem;
+            }
+
+        .category p {
+            margin-bottom: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .category strong {
+            color: #333;
+        }
+
+    /* Primary category styling */
+    .primary {
+        background: linear-gradient(to right, #fff9c4, #fff59d);
+        border-left: 6px solid #ffd600;
+    }
+
+    /* Secondary category styling */
+    .secondary {
+        background: linear-gradient(to right, #bbdefb, #90caf9);
+        border-left: 6px solid #1976d2;
+    }
+
+    /* Higher Secondary category styling */
+    .higher-secondary {
+        background: linear-gradient(to right, #ffcdd2, #ef9a9a);
+        border-left: 6px solid #e53935;
+    }
+
+    /* Button styling */
+    .btn-explore {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+    }
+
+        .btn-explore:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    /* Responsive styling */
+    @@media (max-width: 768px) {
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .category {
+            padding: 1.5rem;
+        }
+
+            .category h2 {
+                font-size: 1.5rem;
+            }
+    }
+
+    /* Icon styling for education levels */
+    .icon-container {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        margin-right: 12px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Standards badge styling */
+    .standards-badge {
+        display: inline-block;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .primary .standards-badge {
+        border-left: 3px solid #ffd600;
+    }
+
+    .secondary .standards-badge {
+        border-left: 3px solid #1976d2;
+    }
+
+    .higher-secondary .standards-badge {
+        border-left: 3px solid #e53935;
+    }
+
+    /* Focus section styling */
+    .focus-section {
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+    }
+</style>
+
+<div class="education-container">
+    <h1 class="page-title">Education Levels</h1>
+
+    @if (Context.Session.GetInt32("CustomerId") != null)
+    {
+        <!-- Primary Space Education -->
+        <div class="category primary" onclick="location.href='@Url.Action("Primary", "Client")'">
+            <h2><span class="icon-container">🚀</span> Primary Space Education</h2>
+            <div class="standards-badge"><strong>Standards:</strong> 1st - 6th</div>
+
+            <div class="focus-section">
+                <p><strong>Focus:</strong> Introduction to space, the Solar System, phases of the Moon, basic astronomy, and space exploration pioneers.</p>
+            </div>
+            <button class="btn-explore">Explore Primary Space Courses</button>
+        </div>
+
+        <!-- Secondary Space Education -->
+        <div class="category secondary" onclick="location.href='@Url.Action("Secondary", "Client")'">
+            <h2><span class="icon-container">🌌</span> Secondary Space Education</h2>
+            <div class="standards-badge"><strong>Standards:</strong> 7th - 10th</div>
+
+            <div class="focus-section">
+                <p><strong>Focus:</strong> Deep dive into planetary science, galaxies, black holes, space technology, and human space missions.</p>
+            </div>
+            <button class="btn-explore">Explore Secondary Space Courses</button>
+        </div>
+
+        <!-- Higher Secondary Space Education -->
+        <div class="category higher-secondary" onclick="location.href='@Url.Action("HigherSecondary", "Client")'">
+            <h2><span class="icon-container">🛰️</span> Higher Secondary Space Education</h2>
+            <div class="standards-badge"><strong>Standards:</strong> 11th and 12th</div>
+
+            <div class="focus-section">
+                <p><strong>Focus:</strong> Advanced astrophysics, cosmology, exoplanet research, interstellar travel theories, and space exploration innovations.</p>
+            </div>
+            <button class="btn-explore">Explore Higher Secondary Space Courses</button>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mt-2">
+            <a href="@Url.Action("Login", "Account", new { isClickedFromExporePage = true})"
+               class="btn-explore">
+                🔑 Log In Now
+            </a>
+        </div>
     }
 </div>

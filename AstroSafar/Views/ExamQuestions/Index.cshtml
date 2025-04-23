@@ -1,31 +1,182 @@
 ﻿@model List<AstroSafar.Models.ExamQuestion>
 
-<h2>Manage Exam Questions</h2>
-<a href="@Url.Action("AddExam", "ExamQuestions")" class="btn btn-success">Add New Question</a>
-<br />
-<br />
+<style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+        --heading-color: #007bff;
+        --success-green: #28a745;
+    }
 
+    h2 {
+        color: var(--heading-color);
+        margin-bottom: 1.5rem;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .custom-grey-link {
+        background-color: #e6e6e6;
+        color: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        transition: all 0.3s;
+    }
+
+        .custom-grey-link:hover {
+            background-color: #d9d9d9;
+            color: #333;
+        }
+</style>
+
+<h2>Manage Exam Questions</h2>
+
+<!-- Add New Question Button -->
+<div class="mb-4">
+    <a href="@Url.Action("AddExam", "ExamQuestions")" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New Question
+    </a>
+</div>
+
+<!-- Question Table -->
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Question</th>
             <th>Options</th>
             <th>Answer</th>
-            
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var question in Model)
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var question in Model)
+            {
+                <tr>
+                    <td>@question.QuestionText</td>
+                    <td>@question.Options</td>
+                    <td>@question.CorrectAnswer</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="@Url.Action("EditExam", "ExamQuestions", new { id = question.Id })" class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form asp-action="DeleteExam" asp-controller="ExamQuestions" method="post" onsubmit="return confirm('Are you sure you want to delete this question?');" style="display: inline;">
+                                <input type="hidden" name="id" value="@question.Id" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@question.QuestionText</td>
-                <td>@question.Options</td>
-                <td>@question.CorrectAnswer</td>
-                <td>
-                    <a href="@Url.Action("EditExam", "ExamQuestions", new { id = question.Id })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("DeleteExam", "ExamQuestions", new { id = question.Id })" class="btn btn-danger">Delete</a>
-                </td>
+                <td colspan="4" class="text-center">No questions available.</td>
             </tr>
         }
     </tbody>
+
 </table>
+
+
+
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">« Prev</a>
+                </li>
+            }
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+
+                // Always show first page
+                if (currentPage > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = 1 })">1</a>
+                    </li>
+
+                    if (currentPage > 3)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+
+                // Show current - 1
+                if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1 })">@((int)currentPage - 1)</a>
+                    </li>
+                }
+
+                // Current page
+                <li class="page-item active">
+                    <span class="page-link">@currentPage</span>
+                </li>
+
+                // Show current + 1
+                if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1 })">@((int)currentPage + 1)</a>
+                    </li>
+                }
+
+                // Ellipsis before last
+                if (currentPage < totalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                }
+
+                // Last page
+                if (currentPage < totalPages - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = totalPages })">@totalPages</a>
+                    </li>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">Next »</a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+</div>

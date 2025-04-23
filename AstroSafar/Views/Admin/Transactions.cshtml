@@ -3,10 +3,62 @@
     var transactions = ViewBag.TransactionData;
 }
 
-<h2 class="mb-4">Transactions</h2>
+<style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+        --heading-color: #007bff;
+        --success-green: #28a745;
+        --warning-orange: #fd7e14;
+    }
 
-<table class="table table-striped table-bordered">
-    <thead class="thead-dark">
+    h2 {
+        color: var(--heading-color);
+        margin-bottom: 1.5rem;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .amount-positive {
+        color: var(--success-green);
+        font-weight: bold;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .status-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: var(--success-green);
+    }
+
+    .status-pending {
+        background-color: rgba(253, 126, 20, 0.1);
+        color: var(--warning-orange);
+    }
+</style>
+
+<h2>Transactions</h2>
+
+<table class="table table-bordered">
+    <thead>
         <tr>
             <th>Transaction ID</th>
             <th>User Name</th>
@@ -15,24 +67,107 @@
             <th>Amount</th>
             <th>Currency</th>
             <th>Payment Date</th>
-
             <th>Payment ID</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in transactions)
+        @if (transactions != null && transactions.Count > 0)
+        {
+            @foreach (var item in transactions)
+            {
+                <tr>
+                    <td>@(item.TransactionId?.ToString() ?? "N/A")</td>
+                    <td>@(item.UserName ?? "Unknown")</td>
+                    <td>@(item.Email ?? "No Email")</td>
+                    <td>@(item.CourseName ?? "No Course")</td>
+                    <td class="amount-positive">@(item.Amount.ToString("C") ?? "N/A")</td>
+                    <td>@(item.Currency ?? "N/A")</td>
+                    <td>@(item.PaymentDate != null ? item.PaymentDate.ToString("yyyy-MM-dd HH:mm") : "N/A")</td>
+                    <td>@(item.RazorpayPaymentId ?? "N/A")</td>
+
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@(item.TransactionId ?? 0)</td>
-                <td>@(item.UserName ?? "Unknown")</td>
-                <td>@(item.Email ?? "No Email")</td>
-                <td>@(item.CourseName ?? "No Course")</td>
-                <td>@(item.Amount.ToString("C") ?? "N/A")</td>
-                <td>@(item.Currency ?? "N/A")</td>
-                <td>@(item.PaymentDate != null ? item.PaymentDate.ToString("yyyy-MM-dd HH:mm") : "N/A")</td>
-
-                <td>@(item.RazorpayPaymentId ?? "N/A")</td>
+                <td colspan="9" class="text-center">No transactions found</td>
             </tr>
         }
     </tbody>
 </table>
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Transactions", new { page = ViewBag.CurrentPage - 1 })">« Prev</a>
+                </li>
+            }
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+
+                // Always show first page
+                if (currentPage > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Transactions", new { page = 1 })">1</a>
+                    </li>
+
+                    if (currentPage > 3)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+
+                // Show current - 1
+                if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Transactions", new { page = currentPage - 1 })">@((int)currentPage - 1)</a>
+                    </li>
+                }
+
+                // Current page
+                <li class="page-item active">
+                    <span class="page-link">@currentPage</span>
+                </li>
+
+                // Show current + 1
+                if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Transactions", new { page = currentPage + 1 })">@((int)currentPage + 1)</a>
+                    </li>
+                }
+
+                // Ellipsis before last
+                if (currentPage < totalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                }
+
+                // Last page
+                if (currentPage < totalPages - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Transactions", new { page = totalPages })">@totalPages</a>
+                    </li>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Transactions", new { page = ViewBag.CurrentPage + 1 })">Next »</a>
+                </li>
+            }
+
+        </ul>
+    </nav>
+</div>

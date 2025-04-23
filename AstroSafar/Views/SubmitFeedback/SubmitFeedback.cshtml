@@ -4,7 +4,6 @@
     ViewData["Title"] = "Contact Us";
 }
 
-
 <div class="container mt-5">
     <div class="text-center">
         <h2 class="text-primary fw-bold">Contact For Any Query</h2>
@@ -42,7 +41,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Your Email</label>
-                            <input asp-for="Email" class="form-control" type="email" placeholder="Enter your email" required>
+                            <input asp-for="Email" class="form-control border bg-white text-dark" type="email" placeholder="Enter your email" required>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
@@ -70,6 +69,25 @@
 
 
 <style>
+    /*   body {
+            background: url('~/images/space-background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .card {
+            border-radius: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+        .card-title {
+            font-weight: bold;
+        } */
+
     .text-primary {
         color: #007bff;
     }
@@ -265,4 +283,5 @@
     body::before {
         animation: twinkle 8s ease-in-out infinite;
     }
+
 </style>

@@ -222,7 +222,7 @@
     <div class="registration-container">
         <div class="logo">AstroSafar</div>
         <div class="tagline">Begin your journey through the cosmos of knowledge</div>
-        
+
         @if (TempData["ErrorMessage"] != null)
         {
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -234,23 +234,35 @@
         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "registrationForm", @class = "needs-validation", novalidate = "novalidate" }))
         {
             @Html.AntiForgeryToken()
-            
+
             <div class="row g-3 mb-3">
                 <div class="col-md-6">
                     <div class="form-group">
                         @Html.LabelFor(model => model.Firstname, new { @class = "form-label" })
-                        @Html.TextBoxFor(model => model.Firstname, new { @class = "form-control", required = "required", placeholder = "Enter your first name" })
-                        <div class="invalid-feedback">Please enter your first name.</div>
+                        @Html.TextBoxFor(model => model.Firstname, new
+                            {
+                                @class = "form-control",
+                                required = "required",
+                                placeholder = "Enter your first name",
+                                pattern = "[A-Za-z\\s]+",
+                                oninput = "this.value = this.value.replace(/[^A-Za-z\\s]/g,'')"
+                            })
+                        <div class="invalid-feedback">Please enter a valid first name (letters only)</div>
                         @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
                     </div>
-                   
-
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         @Html.LabelFor(model => model.Lastname, new { @class = "form-label" })
-                        @Html.TextBoxFor(model => model.Lastname, new { @class = "form-control", required = "required", placeholder = "Enter your last name" })
-                        <div class="invalid-feedback">Please enter your last name.</div>
+                        @Html.TextBoxFor(model => model.Lastname, new
+                            {
+                                @class = "form-control",
+                                required = "required",
+                                placeholder = "Enter your last name",
+                                pattern = "[A-Za-z\\s]+",
+                                oninput = "this.value = this.value.replace(/[^A-Za-z\\s]/g,'')"
+                            })
+                        <div class="invalid-feedback">Please enter a valid last name (letters only)</div>
                         @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -260,9 +272,15 @@
                 @Html.LabelFor(model => model.Email, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", required = "required", placeholder = "youremail@example.com" })
+                    @Html.TextBoxFor(model => model.Email, new
+                        {
+                            @class = "form-control border bg-white text-dark",
+                            type = "email",
+                            required = "required",
+                            placeholder = "youremail@example.com"
+                        })
                 </div>
-                <div class="invalid-feedback">Please enter a valid email address.</div>
+                <div class="invalid-feedback">Please enter a valid email address</div>
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
 
@@ -270,9 +288,18 @@
                 @Html.LabelFor(model => model.Phone, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                    @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", type = "tel", pattern = "[0-9]{10}", maxlength = "10", required = "required", placeholder = "10-digit mobile number" })
+                    @Html.TextBoxFor(model => model.Phone, new
+                        {
+                            @class = "form-control",
+                            type = "tel",
+                            pattern = "\\d{10}",
+                            maxlength = "10",
+                            required = "required",
+                            placeholder = "10-digit mobile number",
+                            oninput = "this.value = this.value.replace(/[^\\d]/g,'')"
+                        })
                 </div>
-                <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                <div class="invalid-feedback">Please enter a valid 10-digit phone number</div>
                 @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
             </div>
 
@@ -280,12 +307,21 @@
                 @Html.LabelFor(model => model.Password, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "passwordInput", required = "required", placeholder = "Choose a strong password" })
-                    <button class="input-group-text toggle-password" type="button" id="togglePassword"><i class="fa fa-eye"></i></button>
+                    @Html.PasswordFor(model => model.Password, new
+                        {
+                            @class = "form-control",
+                            id = "passwordInput",
+                            required = "required",
+                            placeholder = "Choose a strong password",
+                            pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{6,}$"
+                        })
+                    <button class="input-group-text toggle-password" type="button" onclick="togglePassword('passwordInput')">
+                        <i class="fa fa-eye"></i>
+                    </button>
                 </div>
-                <div class="password-strength" id="passwordStrength"></div>
-                <div class="password-feedback" id="passwordFeedback"></div>
-                <div class="invalid-feedback">Password is required.</div>
+                <div class="invalid-feedback">
+                    Password must contain: 6+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+                </div>
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </div>
 
@@ -293,10 +329,18 @@
                 @Html.LabelFor(model => model.ConfirmPassword, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control", id = "confirmPasswordInput", required = "required", placeholder = "Confirm your password" })
-                    <button class="input-group-text toggle-password" type="button" id="toggleConfirmPassword"><i class="fa fa-eye"></i></button>
+                    @Html.PasswordFor(model => model.ConfirmPassword, new
+                        {
+                            @class = "form-control",
+                            id = "confirmPasswordInput",
+                            required = "required",
+                            placeholder = "Confirm your password"
+                        })
+                    <button class="input-group-text toggle-password" type="button" onclick="togglePassword('confirmPasswordInput')">
+                        <i class="fa fa-eye"></i>
+                    </button>
                 </div>
-                <div class="invalid-feedback">Please confirm your password.</div>
+                <div class="invalid-feedback">Passwords must match</div>
                 @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
             </div>
 
@@ -304,14 +348,21 @@
                 @Html.LabelFor(model => model.DateOfBirth, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                    @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control", type = "date", required = "required", id = "dobInput" })
+                    @Html.TextBoxFor(model => model.DateOfBirth, new
+                        {
+                            @class = "form-control",
+                            type = "date",
+                            required = "required",
+                            id = "dobInput",
+                            max = DateTime.Now.ToString("yyyy-MM-dd")
+                        })
                 </div>
-                <div class="invalid-feedback">Please enter your date of birth.</div>
+                <div class="invalid-feedback">Please enter a valid date (not in future)</div>
                 @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
             </div>
 
             <button type="submit" class="btn btn-primary w-100">LAUNCH YOUR JOURNEY</button>
-            
+
             <div class="text-center mt-4">
                 Already an explorer? <a asp-action="Login" asp-controller="Account">Sign In</a>
             </div>
@@ -319,80 +370,47 @@
     </div>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById('registrationForm');
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
 
-        form.addEventListener('submit', function (event) {
-            let valid = true;
-
-            // Firstname & Lastname Validation (No numbers allowed)
-            const namePattern = /^[A-Za-z\s]+$/;
-            const firstName = document.getElementById("Firstname");
-            const lastName = document.getElementById("Lastname");
-
-            if (!namePattern.test(firstName.value)) {
-                firstName.setCustomValidity("First name should only contain letters.");
-                valid = false;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
             } else {
-                firstName.setCustomValidity("");
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
             }
+        }
 
-            if (!namePattern.test(lastName.value)) {
-                lastName.setCustomValidity("Last name should only contain letters.");
-                valid = false;
-            } else {
-                lastName.setCustomValidity("");
-            }
+        // Form validation
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('registrationForm');
 
+            // Password match validation
+            const password = document.getElementById('passwordInput');
+            const confirmPassword = document.getElementById('confirmPasswordInput');
 
-            // Phone Number Validation (Exactly 10 digits)
-            const phone = document.getElementById("Phone");
-            if (!/^\d{10}$/.test(phone.value)) {
-                phone.setCustomValidity("Phone number must be exactly 10 digits.");
-                valid = false;
-            } else {
-                phone.setCustomValidity("");
-            }
+            confirmPassword.addEventListener('input', function () {
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity("Passwords must match");
+                } else {
+                    confirmPassword.setCustomValidity("");
+                }
+            });
 
-            // Password Validation (At least 6 characters, 1 uppercase, 1 lowercase, 1 special character)
-            const password = document.getElementById("passwordInput");
-            const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$/;
-            if (!passwordPattern.test(password.value)) {
-                password.setCustomValidity("Password must be at least 6 characters and contain 1 uppercase, 1 lowercase, and 1 special character.");
-                valid = false;
-            } else {
-                password.setCustomValidity("");
-            }
-
-            // Confirm Password Validation (Must match password)
-            const confirmPassword = document.getElementById("confirmPasswordInput");
-            if (password.value !== confirmPassword.value) {
-                confirmPassword.setCustomValidity("Passwords do not match.");
-                valid = false;
-            } else {
-                confirmPassword.setCustomValidity("");
-            }
-
-            // DOB Validation (Cannot be a future date)
-            const dob = document.getElementById("dobInput");
-            const today = new Date().toISOString().split('T')[0];
-            if (dob.value > today) {
-                dob.setCustomValidity("Date of Birth cannot be in the future.");
-                valid = false;
-            } else {
-                dob.setCustomValidity("");
-            }
-
-            if (!valid) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-
-            form.classList.add("was-validated");
+            // Form submission
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
-

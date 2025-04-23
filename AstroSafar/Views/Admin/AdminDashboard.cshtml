@@ -3,207 +3,192 @@
 }
 <style>
     :root {
-        --space-light: #f0f5ff;
-        --deep-sky: #e6f0ff;
-        --nebula-purple-light: #c5b3dd;
-        --cosmic-blue-light: #6699cc;
-        --star-color: #4d94ff;
-        --meteor-orange-light: #ff9966;
-        --moon-silver: #e6e6e6;
-        --planet-ring-light: rgba(102, 153, 204, 0.15);
-        --heading-color: #007bff;
+        --light-bg: #f4f8fc;
+        --accent: #007bff;
+        --shadow: rgba(0, 0, 0, 0.07);
+        --card-bg: #ffffff;
+        --title: #2c3e50;
+        --subtitle: #95a5a6;
     }
 
     h2 {
         color: #007bff;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 20px;
     }
+
 
     body {
-        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
-        color: #333;
-        font-family: 'Exo 2', sans-serif;
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
+        background-color: var(--light-bg);
+        font-family: 'Segoe UI', sans-serif;
+        color: var(--title);
+    }
+
+    .dashboard-container {
+        padding: 2rem;
+    }
+
+    .card-custom {
+        background: var(--card-bg);
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px var(--shadow);
+        padding: 20px;
+        text-align: center;
+    }
+
+        .card-custom h5 {
+            font-size: 24px;
+            color: var(--accent);
+        }
+
+        .card-custom p {
+            margin-top: 8px;
+            color: var(--subtitle);
+        }
+
+    .section-title {
+        margin: 40px 0 20px;
+        font-weight: bold;
+        color: var(--accent);
+    }
+
+    .map-placeholder {
+        height: 300px;
+        background: linear-gradient(to right, #e6f0ff, #ffffff);
+        border-radius: 12px;
+        text-align: center;
+        line-height: 300px;
+        color: #777;
+        font-size: 1.2rem;
+        box-shadow: 0 8px 20px var(--shadow);
     }
 </style>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
 
-    <div class="container mt-4">
-        <h2 class="text-primary">Admin Dashboard</h2>
+<div class="container dashboard-container">
 
-        <!-- Stats Cards -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card text-white bg-info mb-3">
-                    <div class="card-body text-center">
-                        <h5>@ViewBag.TotalUsers</h5>
-                        <p>Total Users Enrolled</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-body text-center">
-                        <h5>@ViewBag.TotalCourses</h5>
-                        <p>Total Courses Available</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-warning mb-3">
-                    <div class="card-body text-center">
-                        <h5>@ViewBag.TotalCertificates</h5>
-                        <p>Certificates Issued</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-danger mb-3">
-                    <div class="card-body text-center">
-                        <h5>₹ @ViewBag.TotalRevenue</h5>
-                        <p>Total Revenue</p>
-                    </div>
-                </div>
+    <h2 class="text-center mb-4">🚀 Admin Dashboard</h2>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card-custom">
+                <h5>@ViewBag.TotalUsers</h5>
+                <p>Register Users</p>
             </div>
         </div>
-
-        <!-- Charts -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card p-3">
-                    <h4>User Growth Over Time</h4>
-                    <canvas id="userChart"></canvas>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card p-3">
-                    <h4>Course Enrollments</h4>
-                    <canvas id="courseChart"></canvas>
-                </div>
+        <div class="col-md-3">
+            <div class="card-custom">
+                <h5>@ViewBag.TotalCourses</h5>
+                <p>Courses Available</p>
             </div>
         </div>
-
-        <!-- Recent Enrollments Table -->
-        <div class="card p-3 mt-4">
-            <h4>Recent Enrollments</h4>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>User Name</th>
-                        <th>Course Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var enrollment in ViewBag.RecentEnrollments)
-                    {
-                        <tr>
-                            <td>@enrollment.UserName</td>
-                            <td>@enrollment.CourseName</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div class="col-md-3">
+            <div class="card-custom">
+                <h5>@ViewBag.TotalCertificates</h5>
+                <p>Certificates Issued</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-custom">
+                <h5>@ViewBag.TotalBookBuyers</h5>
+                <p>Book Issued</p>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        var ctx1 = document.getElementById('userChart').getContext('2d');
-        var userChart = new Chart(ctx1, {
-            type: 'line',
-            data: {
-                labels: @Html.Raw(Json.Serialize(ViewBag.UserGrowthMonths)),
-                datasets: [{
-                    label: 'User Growth',
-                    data: @Html.Raw(Json.Serialize(ViewBag.UserGrowthCounts)),
-                    borderColor: '#2575fc',
-                    backgroundColor: 'rgba(37, 117, 252, 0.1)',
-                    borderWidth: 2,
-                    fill: true
-                }]
-            },
-            options: { responsive: true }
-        });
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize the map
+        var map = L.map('spaceMap').setView([20.5937, 78.9629], 2); // Default to India-centered world view
 
-        var ctx2 = document.getElementById('courseChart').getContext('2d');
-        var courseChart = new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(Json.Serialize(ViewBag.CourseNames)),
-                datasets: [{
-                    label: 'Enrollments per Course',
-                    data: @Html.Raw(Json.Serialize(ViewBag.CourseEnrollments)),
-                    backgroundColor: '#6a11cb',
-                    borderColor: '#6a11cb',
-                    borderWidth: 1
-                }]
-            },
-            options: { responsive: true }
-        });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Load User Growth Data
-            $.ajax({
-                url: '/Admin/GetUserGrowthData',
-                method: 'GET',
-                success: function (data) {
-                    var ctx1 = document.getElementById('userChart').getContext('2d');
-                    new Chart(ctx1, {
-                        type: 'line',
-                        data: {
-                            labels: data.months,
-                            datasets: [{
-                                label: 'User Growth',
-                                data: data.counts,
-                                borderColor: '#2575fc',
-                                backgroundColor: 'rgba(37, 117, 252, 0.1)',
-                                borderWidth: 2,
-                                fill: true
-                            }]
-                        },
-                        options: { responsive: true }
-                    });
-                }
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Load location data
+        fetch('/Admin/GetSpaceLocations')
+            .then(response => response.json())
+            .then(locations => {
+                locations.forEach(loc => {
+                    L.marker([loc.Latitude, loc.Longitude])
+                        .addTo(map)
+                        .bindPopup(`<strong>${loc.Name}</strong>`);
+                });
             });
+    });
+</script>
 
-            // Load Course Enrollments Data
-            $.ajax({
-                url: '/Admin/GetCourseEnrollmentsData',
-                method: 'GET',
-                success: function (data) {
-                    var ctx2 = document.getElementById('courseChart').getContext('2d');
-                    new Chart(ctx2, {
-                        type: 'bar',
-                        data: {
-                            labels: data.courses,
-                            datasets: [{
-                                label: 'Enrollments per Course',
-                                data: data.enrollments,
-                                backgroundColor: '#6a11cb',
-                                borderColor: '#6a11cb',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: { responsive: true }
-                    });
-                }
+
+<h4 class="section-title">📚 Recent Enrollments</h4>
+<div class="card p-3">
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>User Name</th>
+                <th>Course</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enrollment in ViewBag.RecentEnrollments)
+            {
+                <tr>
+                    <td>@enrollment.UserName</td>
+                    <td>@enrollment.CourseName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<!-- Load Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="card p-4 mt-4 shadow rounded" style="max-width: 600px; margin: auto;">
+    <h4 class="text-xl font-semibold mb-3 text-center">📊 Enrollments by Category</h4>
+    <canvas id="categoryChart" width="400" height="400"></canvas>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/Admin/GetEnrollmentDistribution")
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById("categoryChart").getContext("2d");
+                new Chart(ctx, {
+                    type: "doughnut",
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: "Enrollments",
+                            data: data.counts,
+                            backgroundColor: ["#4d94ff", "#00c897", "#ff9f40"],
+                            borderColor: "#fff",
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: "bottom"
+                            },
+                            title: {
+                                display: true,
+                                text: "Enrollments by Course Category"
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error loading chart data:", error);
             });
-        });
-    </script>
-
-
-</body>
-</html>
-
-
+    });
+</script>

@@ -1,0 +1,30 @@
+﻿@{
+    var pm = ViewBag.PaymentMethod as string;
+    ViewData["Title"] = "Order Confirmed";
+}
+
+<div class="container my-5">
+    <div class="text-center">
+        <img src="https://img.icons8.com/color/96/ok--v1.png" alt="Success" />
+        <h2 class="mt-3">Thank you for your order!</h2>
+    </div>
+
+    @if (pm == "COD")
+    {
+        <div class="alert alert-warning mt-4">
+            You have chosen <strong>Cash on Delivery</strong>. <br />
+            Please keep ₹@TempData["OrderTotal"] (or exact amount) ready at delivery.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success mt-4">
+            Your payment via <strong>@pm</strong> was successful! 🎉
+        </div>
+    }
+
+    <div class="mt-4 d-flex justify-content-center gap-2">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Continue Shopping</a>
+        <a asp-action="Orders" class="btn btn-outline-secondary">View My Orders</a>
+    </div>
+</div>

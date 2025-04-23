@@ -1,0 +1,52 @@
+﻿@model AstroSafar.Models.OrderSummaryViewModel
+@{
+    ViewData["Title"] = "Order Summary";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">Order Summary</h2>
+
+    <!-- Shipping Info -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5>Shipping Information</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Name:</strong> @Model.ShippingDetails.FullName</p>
+            <p><strong>Phone:</strong> @Model.ShippingDetails.PhoneNumber</p>
+            <p>
+                <strong>Address:</strong>
+                @Model.ShippingDetails.AddressLine1,
+                @Model.ShippingDetails.AddressLine2<br />
+                @Model.ShippingDetails.City, @Model.ShippingDetails.State - @Model.ShippingDetails.ZipCode
+            </p>
+        </div>
+    </div>
+
+    <!-- Cart Items + Prices -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5>Your Items</h5>
+        </div>
+        <div class="card-body">
+            @foreach (var item in Model.CartItems)
+            {
+                <div class="d-flex justify-content-between border-bottom py-2">
+                    <div>
+                        <strong>@item.ProductName</strong> (x@item.Quantity)
+                    </div>
+                    <div>₹@item.TotalPrice.ToString("0.00")</div>
+                </div>
+            }
+            <hr />
+            <div class="d-flex justify-content-between fw-bold">
+                <span>Total:</span>
+                <span>₹@Model.CartItems.Sum(i => i.TotalPrice).ToString("0.00")</span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="ProceedToPayment" method="post">
+        <button type="submit" class="btn btn-success btn-lg w-100">Proceed to Payment</button>
+    </form>
+</div>

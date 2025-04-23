@@ -1,4 +1,4 @@
-  @model List<AstroSafar.Models.CourseAdmin>
+@model List<AstroSafar.Models.CourseAdmin>
 
 <h2 class="mb-4 text-center fw-bold">Higher Secondary Courses</h2>
 
@@ -44,46 +44,167 @@ else
 
 <style>
     :root {
-        --space-light: #f0f5ff;
-        --deep-sky: #e6f0ff;
-        --nebula-purple-light: #c5b3dd;
-        --cosmic-blue-light: #6699cc;
-        --star-color: #4d94ff;
-        --meteor-orange-light: #ff9966;
-        --moon-silver: #e6e6e6;
-        --planet-ring-light: rgba(102, 153, 204, 0.15);
-    }
-
-    h2 {
-        text-align: center;
-        color: #007bff;
+        --space-bg: #f2f7ff;
+        --card-bg: #ffffff;
+        --primary-blue: #3a7bd5;
+        --cosmic-green: #28a745;
+        --glow-effect: rgba(58, 123, 213, 0.15);
+        --card-radius: 16px;
+        --text-dark: #222;
+        --text-light: #777;
+        --highlight-color: #fff8d8;
     }
 
     body {
-        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
-        color: #333;
-        font-family: 'Exo 2', sans-serif;
+        background: var(--space-bg);
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-dark);
+        display: flex;
+        flex-direction: column;
         min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+
+
+    .main-content {
+        flex: 1;
+        padding: 2rem 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    footer {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 1.5rem 0;
+        margin-top: auto;
+    }
+
+    h2 {
+        color: var(--primary-blue);
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .input-group {
+        max-width: 650px;
+        margin: 0 auto 2rem;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .input-group-text {
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+    }
+
+    .course-card {
+        transition: all 0.35s ease-in-out;
+        will-change: transform;
+        margin-bottom: 1.5rem;
+    }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--glow-effect);
+        }
+
+    .card {
+        border: none;
+        border-radius: var(--card-radius);
+        background: var(--card-bg);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition: box-shadow 0.3s;
     }
 
     .course-image {
         width: 100%;
         height: 200px;
         object-fit: cover;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
+        border-top-left-radius: var(--card-radius);
+        border-top-right-radius: var(--card-radius);
     }
 
-    .card {
-        border-radius: 12px;
+    .card-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
     }
+
+    .course-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--primary-blue);
+    }
+
+        .course-name i {
+            color: #ffd700;
+        }
+
+    .course-desc {
+        font-size: 0.95rem;
+        color: var(--text-light);
+        flex-grow: 1;
+        margin-bottom: 1rem;
+    }
+
+    .text-muted {
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .btn-success {
+        background-color: var(--cosmic-green) !important;
+        border: none;
+        font-weight: 600;
+        transition: background 0.3s ease;
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 8px;
+    }
+
+        .btn-success:hover {
+            background-color: #218838 !important;
+        }
 
     .highlight {
-        background-color: yellow;
-        font-weight: bold;
+        background-color: var(--highlight-color);
+        font-weight: 600;
+        padding: 0 5px;
+        border-radius: 4px;
     }
+
+    .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .footer-links a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
 </style>
 
 <!-- 🔹 JavaScript for Search Filtering -->

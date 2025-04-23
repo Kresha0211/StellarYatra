@@ -11,10 +11,11 @@
             <th>User Name</th>
             <th>Email</th>
             <th>Course Name</th>
-           <th>Total Units</th>
+            <th>Total Units</th>
             <th>Completed Units</th>
             <th>Progress (%)</th>
-          
+            <th>Score</th> <!-- ✅ New column -->
+
         </tr>
     </thead>
     <tbody>
@@ -24,11 +25,136 @@
                 <td>@item.UserName</td>
                 <td>@item.Email</td>
                 <td>@item.CourseName</td>
-             <td>@item.TotalUnits</td>
+                <td>@item.TotalUnits</td>
                 <td>@item.CompletedUnits</td>
                 <td>@string.Format("{0:0.##} %", item.ProgressPercentage)</td>
-               
+                <td>@item.Score</td> <!-- ✅ New data cell -->
+
             </tr>
         }
     </tbody>
 </table>
+
+
+
+
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("UserProgress", new { page = ViewBag.CurrentPage - 1 })">« Prev</a>
+                </li>
+            }
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+
+                // Always show first page
+                if (currentPage > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("UserProgress", new { page = 1 })">1</a>
+                    </li>
+
+                    if (currentPage > 3)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+
+                // Show current - 1
+                if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("UserProgress", new { page = currentPage - 1 })">@((int)currentPage - 1)</a>
+                    </li>
+                }
+
+                // Current page
+                <li class="page-item active">
+                    <span class="page-link">@currentPage</span>
+                </li>
+
+                // Show current + 1
+                if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("UserProgress", new { page = currentPage + 1 })">@((int)currentPage + 1)</a>
+                    </li>
+                }
+
+                // Ellipsis before last
+                if (currentPage < totalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                }
+
+                // Last page
+                if (currentPage < totalPages - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("UserProgress", new { page = totalPages })">@totalPages</a>
+                    </li>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("UserProgress", new { page = ViewBag.CurrentPage + 1 })">Next »</a>
+                </li>
+            }
+
+            <style>
+                :root {
+                    --space-light: #f0f5ff;
+                    --deep-sky: #e6f0ff;
+                    --nebula-purple-light: #c5b3dd;
+                    --cosmic-blue-light: #6699cc;
+                    --star-color: #4d94ff;
+                    --meteor-orange-light: #ff9966;
+                    --moon-silver: #e6e6e6;
+                    --planet-ring-light: rgba(102, 153, 204, 0.15);
+                    --heading-color: #007bff;
+                }
+
+                h2 {
+                    color: var(--heading-color);
+                    margin-bottom: 1.5rem;
+                }
+
+                body {
+                    background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+                    color: #333;
+                    font-family: 'Exo 2', sans-serif;
+                    min-height: 100vh;
+                    position: relative;
+                    overflow-x: hidden;
+                }
+
+                .progress-bar-container {
+                    width: 100%;
+                    background-color: var(--moon-silver);
+                    border-radius: 5px;
+                    margin-top: 5px;
+                }
+
+                .progress-bar {
+                    height: 20px;
+                    border-radius: 5px;
+                    background: linear-gradient(90deg, var(--cosmic-blue-light), var(--star-color));
+                    text-align: center;
+                    color: white;
+                    font-weight: bold;
+                    line-height: 20px;
+                    font-size: 12px;
+                }
+            </style>
+        </ul>
+    </nav>
+</div>

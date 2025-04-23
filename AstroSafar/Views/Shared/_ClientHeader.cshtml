@@ -1,5 +1,5 @@
 ﻿<header>
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark client-header">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
                 <img src="~/Images/astrologo.jpg" alt="AstroSafar Logo" height="40" class="me-2">
@@ -32,24 +32,22 @@
                 </ul>
             </div>
         </div>
-                </ul>
+        
 
-                <ul class="navbar-nav">
-                    @if (Context.Session.GetInt32("CustomerId") != null)
-                    {
-                        <li class="nav-item">
-                            <span class="nav-link text-white">Welcome, @Context.Session.GetString("CustomerName")</span>
-                        </li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Profile">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a></li>
-                    }
-                    else
-                    {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
-                    }
-                </ul>
-            </div>
-        </div>
+        <ul class="navbar-nav">
+            @if (Context.Session.GetInt32("CustomerId") != null)
+            {
+                <li class="nav-item">
+                    <span class="nav-link text-white">Welcome, @Context.Session.GetString("CustomerName")</span>
+                </li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Profile">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a></li>
+            }
+            else
+            {
+                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+            }
+        </ul>
     </nav>
 </header>

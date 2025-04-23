@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Rotativa.AspNetCore;
+using AstroSafar.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 
 
@@ -15,8 +17,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login"; // Redirect to login page if not authenticated
         options.AccessDeniedPath = "/Account/AccessDenied"; // Redirect if access is denied
     });
-
+builder.Services.AddSignalR(); // Add this
 builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<SpaceLearningDBContext>(options =>
@@ -35,6 +39,8 @@ builder.Services.Configure<RazorpaySettings>(builder.Configuration.GetSection("R
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+app.MapHub<ChatHub>("/chathub"); // ✅ This maps your SignalR Hub
+
 var env = app.Environment;
 RotativaConfiguration.Setup(env.WebRootPath, "Rotativa/wkhtmltopdf");
 
@@ -60,6 +66,7 @@ app.MapControllerRoute(
     name: "admin_exams",
     pattern: "admin/exam-reports",
     defaults: new { controller = "Admin", action = "Progress" });
+
 app.Run();
 
 

@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Gallery";
 }
 
@@ -214,6 +215,70 @@
             border-radius: 10px;
             display: inline-block;
         }
+
+        :root {
+            --text-accent: #2c3e50;
+            --text-dark: #34495e;
+            --meteor-orange-light: #e67e22;
+            --cosmic-blue-light: #3498db;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 50%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .close-modal:hover {
+                color: black;
+            }
+
+        .modal-buttons {
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            padding: 8px 16px;
+            margin: 0 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .explore-button {
+            background-color: var(--cosmic-blue-light);
+            color: white;
+            border: none;
+        }
+
+        .cancel-button {
+            background-color: #e0e0e0;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -305,6 +370,73 @@
         </p>
     </section>
 
+    <!-- BOOK STORE SECTION -->
+    <section class="about-us" style="margin-top: 50px;">
+        <h2>📚 Space & Astronomy Books</h2>
+        <p>Expand your cosmic knowledge with these recommended books</p>
+
+        <div class="course-section">
+            <div class="course-category" style="text-align: left;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    <!-- Book 1 -->
+                    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <img src="~/Images/cosmos.jpeg" alt="Cosmos" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+                        <h4 style="margin: 10px 0 5px; color: var(--text-accent);">Cosmos</h4>
+                        <p style="color: var(--text-dark); margin: 0 0 10px; font-size: 0.9em;">by Carl Sagan</p>
+                        <div style="color: var(--meteor-orange-light); margin-bottom: 10px;">★★★★☆</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: bold; color: var(--text-accent);">₹1000</span>
+                            <a href="#" onclick="showModal('Cosmos'); return false;" style="background: var(--cosmic-blue-light); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; text-decoration: none;">
+                                Add to Cart
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Book 2 -->
+                    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <img src="~/Images/hurry2.jpeg" alt="Astrophysics for People in a Hurry" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+                        <h4 style="margin: 10px 0 5px; color: var(--text-accent);">Astrophysics for People in a Hurry</h4>
+                        <p style="color: var(--text-dark); margin: 0 0 10px; font-size: 0.9em;">by Neil deGrasse Tyson</p>
+                        <div style="color: var(--meteor-orange-light); margin-bottom: 10px;">★★★★★</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: bold; color: var(--text-accent);">₹1500</span>
+                            <a href="#" onclick="showModal('Astrophysics for People in a Hurry'); return false;" style="background: var(--cosmic-blue-light); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; text-decoration: none;">
+                                Add to Cart
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Book 3 -->
+                    <div style="background: white; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <img src="~/Images/martain2.jpeg" alt="The Martian" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+                        <h4 style="margin: 10px 0 5px; color: var(--text-accent);">The Martian</h4>
+                        <p style="color: var(--text-dark); margin: 0 0 10px; font-size: 0.9em;">by Andy Weir</p>
+                        <div style="color: var(--meteor-orange-light); margin-bottom: 10px;">★★★★★</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-weight: bold; color: var(--text-accent);">₹2000</span>
+                            <a href="#" onclick="showModal('The Martian'); return false;" style="background: var(--cosmic-blue-light); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; text-decoration: none;">
+                                Add to Cart
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Popup -->
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Explore Book</h3>
+            <p>Would you like to explore this book further before adding to cart?</p>
+            <div class="modal-buttons">
+                <button class="modal-button explore-button" onclick="redirectToExplore()">Explore Book</button>
+                <button class="modal-button cancel-button" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let slideIndex = 0;
         let slides = document.querySelectorAll(".slide");
@@ -342,6 +474,37 @@
         function restartAutoSlide() {
             clearTimeout(autoSlideInterval);
             autoSlideInterval = setTimeout(autoSlide, 3000);
+        }
+
+        // Current selected book
+        let currentBook = '';
+
+        // Show modal function
+        function showModal(bookTitle) {
+            currentBook = bookTitle;
+            document.getElementById('modalTitle').textContent = `Explore ${bookTitle}`;
+            document.getElementById('bookModal').style.display = 'block';
+        }
+
+        // Close modal function
+        function closeModal() {
+            document.getElementById('bookModal').style.display = 'none';
+        }
+
+        // Redirect to explore page function
+        function redirectToExplore() {
+            // Close the modal first
+            closeModal();
+            // Redirect to the store/explore page
+            window.location.href = '/store/explore';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function (event) {
+            const modal = document.getElementById('bookModal');
+            if (event.target == modal) {
+                closeModal();
+            }
         }
 
         // Initialize

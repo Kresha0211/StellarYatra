@@ -1,4 +1,5 @@
-﻿//using AstroSafar.Data;
+﻿
+using AstroSafar.Migrations;
 using AstroSafar.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace AstroSafar.Controllers
         {
             return View();
         }
-       
+
         public IActionResult CourseGuideline()
         {
             return View();
@@ -49,9 +50,10 @@ namespace AstroSafar.Controllers
 
             if (customerId == null)
             {
-                TempData["ErrorMessage"] = "You must be logged in to access this page.";
-                return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("EducationLevels", "Home") });
+                TempData["RedirectAfterLogin"] = "EducationLevels";
+                return RedirectToAction("Login", "Account");
             }
+
             return View();
         }
 
@@ -61,6 +63,10 @@ namespace AstroSafar.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Chat()
+        {
+            return View();
+        }
     }
 }
-

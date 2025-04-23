@@ -1,71 +1,65 @@
-﻿@* @model AstroSafar.Models.Certificate
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Certificate</title>
-    <style>
-        .body{
-            font-family: 'Georgia';
-            text-align: center;
-            padding: 50px;
-            background: #f9f9f9;
-        }
-
-        .certificate {
-            border: 8px double #000;
-            padding: 40px;
-            background: white;
-            width: 800px;
-            margin: auto;
-        }
-
-        .name {
-            font-size: 28px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .course {
-            font-size: 24px;
-            margin-bottom: 40px;
-        }
-
-        .footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-    <div class="certificate">
-        <h1>Certificate of Completion</h1>
-        <p>This is to certify that</p>
-        <div class="name">@Model.Enrollment.FullName</div>
-        <p>has successfully completed the course</p>
-        <div class="course">@Model.Enrollment.CourseAdmin.Name</div>
-        <p class="footer">Issued on @Model.IssuedOn.ToString("MMMM dd, yyyy")</p>
-    </div>
-</body>
-</html> *@
-
-
-@model AstroSafar.Models.Certificate
+﻿@model AstroSafar.Models.Certificate
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <title>Certificate of Completion</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
-    <style>
+<style>
         body {
             font-family: 'Playfair Display', serif;
             text-align: center;
-            padding: 40px;
-            background: #f8f9fa;
+            padding: 0;
             margin: 0;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="20" cy="20" r="0.5" fill="%23d4af37" opacity="0.5"/><circle cx="80" cy="30" r="0.7" fill="%23d4af37" opacity="0.5"/><circle cx="50" cy="70" r="0.5" fill="%23d4af37" opacity="0.5"/><circle cx="10" cy="50" r="0.7" fill="%23d4af37" opacity="0.5"/><circle cx="90" cy="80" r="0.5" fill="%23d4af37" opacity="0.5"/></svg>');
+        }
+
+       /*  header {
+            background-color: #0a2342;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+ */
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .certificate-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-color: #f5f7fa; /* optional */
         }
 
         .certificate {
@@ -73,21 +67,22 @@
             padding: 60px;
             background: white;
             width: 800px;
-            margin: 0 auto;
+            max-width: 100%;
             position: relative;
             box-shadow: 0 0 25px rgba(0,0,0,0.1);
+            margin: 20px 0;
         }
 
-            .certificate:before {
-                content: "";
-                position: absolute;
-                top: -10px;
-                left: -10px;
-                right: -10px;
-                bottom: -10px;
-                border: 2px solid #d4af37;
-                pointer-events: none;
-            }
+        .certificate:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid #d4af37;
+            pointer-events: none;
+        }
 
         h1 {
             font-size: 42px;
@@ -158,10 +153,29 @@
         }
 
         .footer {
-            margin-top: 10px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            color: #777;
+            background-color: #0a2342;
+            color: white;
+            padding: 1rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
         }
 
         .date-container {
@@ -171,28 +185,35 @@
             color: #555;
         }
 
-        .space-decoration {
-            position: absolute;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        .planet {
-            top: 50px;
-            right: 50px;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #d4af37, #b8860b);
-        }
-
-        .certificate-content {
-            position: relative;
-            z-index: 1;
+        @@media (max-width: 768px) {
+            .certificate {
+                padding: 30px;
+                border-width: 10px;
+            }
+            
+            h1 {
+                font-size: 32px;
+            }
+            
+            .name {
+                font-size: 28px;
+            }
+            
+            .course {
+                font-size: 22px;
+            }
+            
+            .stamp {
+                right: 30px;
+                bottom: 30px;
+                width: 80px;
+                height: 80px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="certificate-container">
     <div class="certificate">
         <div class="planet space-decoration"></div>
         <div class="stamp"></div>
@@ -221,6 +242,7 @@
                 Issued on @Model.IssuedOn.ToString("MMMM dd, yyyy")
             </div>
         </div>
+    </div>
     </div>
 </body>
 </html>

@@ -1,0 +1,298 @@
+﻿@* @{
+    ViewData["Title"] = "Order Success";
+}
+
+<!-- Bootstrap Icons and Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    :root {
+        --space-bg: #f2f7ff;
+        --card-bg: #ffffff;
+        --primary-blue: #3a7bd5;
+        --cosmic-green: #28a745;
+        --glow-effect: rgba(58, 123, 213, 0.15);
+        --card-radius: 16px;
+        --text-dark: #222;
+        --text-light: #777;
+    }
+
+    body {
+        background: var(--space-bg);
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-dark);
+    }
+
+    .success-container {
+        background: white;
+        border-radius: var(--card-radius);
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        color: var(--cosmic-green);
+        margin-bottom: 1.5rem;
+        animation: bounce 1s infinite alternate;
+    }
+
+    @@keyframes bounce {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(-15px);
+        }
+    }
+
+    h2 {
+        color: var(--primary-blue);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        color: var(--text-light);
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-blue) !important;
+        border: none;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(58, 123, 213, 0.3);
+        }
+
+    .order-details {
+        background: #f8f9fa;
+        border-radius: var(--card-radius);
+        padding: 1.5rem;
+        margin-top: 2rem;
+        text-align: left;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .detail-value {
+        color: var(--primary-blue);
+    }
+
+    .delivery-note {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: #f0f8ff;
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-blue);
+    }
+</style>
+
+<div class="success-container text-center">
+    <div class="success-icon">
+        <i class="bi bi-check-circle-fill"></i>
+    </div>
+
+    <h2>🎉 Order Placed Successfully!</h2>
+
+    <p class="lead">
+        Thank you for shopping with AstroSafar. Your books will be delivered soon.
+        <i class="bi bi-truck ms-2"></i>
+    </p>
+
+    <!-- Order Details Section -->
+    <div class="order-details">
+        <div class="detail-item">
+            <span class="detail-label">Order Number:</span>
+            <span class="detail-value">#ASTRO-@(DateTime.Now.ToString("yyyyMMddHHmmss"))</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Estimated Delivery:</span>
+            <span class="detail-value">@DateTime.Now.AddDays(3).ToString("dd MMM yyyy")</span>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("Explore", "Store")" class="btn btn-primary">
+            <i class="bi bi-house-door-fill me-2"></i>Continue Browsing
+        </a>
+    </div>
+</div> *@
+
+@{
+    ViewData["Title"] = "Order Success";
+}
+
+<!-- Bootstrap Icons and Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    :root {
+        --space-bg: #f2f7ff;
+        --card-bg: #ffffff;
+        --primary-blue: #3a7bd5;
+        --cosmic-green: #28a745;
+        --glow-effect: rgba(58, 123, 213, 0.15);
+        --card-radius: 16px;
+        --text-dark: #222;
+        --text-light: #777;
+    }
+
+    body {
+        background: var(--space-bg);
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-dark);
+    }
+
+    .success-container {
+        background: white;
+        border-radius: var(--card-radius);
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+
+    .success-icon {
+        font-size: 4rem;
+        color: var(--cosmic-green);
+        margin-bottom: 1.5rem;
+        animation: bounce 1s infinite alternate;
+    }
+
+    @@keyframes bounce {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(-15px);
+        }
+    }
+
+    h2 {
+        color: var(--primary-blue);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        color: var(--text-light);
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-blue) !important;
+        border: none;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(58, 123, 213, 0.3);
+    }
+
+    .order-details {
+        background: #f8f9fa;
+        border-radius: var(--card-radius);
+        padding: 1.5rem;
+        margin-top: 2rem;
+        text-align: left;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--text-dark);
+    }
+
+    .detail-value {
+        color: var(--primary-blue);
+    }
+
+    .delivery-note {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: #f0f8ff;
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-blue);
+    }
+</style>
+
+<div class="container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="success-container text-center">
+        <div class="success-icon">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+
+        <h2>🎉 Order Placed Successfully!</h2>
+
+        <p class="lead">
+            Thank you for shopping with AstroSafar. Your books will be delivered soon.
+            <i class="bi bi-truck ms-2"></i>
+        </p>
+
+        <!-- Order Details Section -->
+        <div class="order-details">
+            <div class="detail-item">
+                <span class="detail-label">Order Number:</span>
+                <span class="detail-value">#ASTRO-@(DateTime.Now.ToString("yyyyMMddHHmmss"))</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Estimated Delivery:</span>
+                <span class="detail-value">@DateTime.Now.AddDays(3).ToString("dd MMM yyyy")</span>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="@Url.Action("Explore", "Store")" class="btn btn-primary">
+                <i class="bi bi-house-door-fill me-2"></i>Continue Browsing
+            </a>
+        </div>
+    </div>
+</div>

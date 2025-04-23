@@ -1,18 +1,17 @@
 ﻿@model AstroSafar.Models.AdminLoginViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 @{
     Layout = null;
     ViewData["Title"] = "Admin Login";
 }
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | AstroSafar</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AstroSafar</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -27,6 +26,8 @@
             --meteor-orange-light: #ff9966;
             --moon-silver: #e6e6e6;
             --planet-ring-light: rgba(102, 153, 204, 0.15);
+            --error-red: #e74c3c;
+            --success-green: #2ecc71;
         }
 
         body {
@@ -36,6 +37,9 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            padding-top: 0;
+            display: flex;
+            flex-direction: column;
         }
 
             body::before {
@@ -45,46 +49,36 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-image: radial-gradient(2px 2px at 40px 70px, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 20px 100px, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), radial-gradient(1px 1px at 90px 40px, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), radial-gradient(1px 1px at 130px 80px, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0)), radial-gradient(1px 1px at 160px 120px, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+                background-image: radial-gradient(2px 2px at 40px 70px, rgba(0, 0, 0, 0.3), transparent), radial-gradient(2px 2px at 20px 100px, rgba(0, 0, 0, 0.3), transparent), radial-gradient(1px 1px at 90px 40px, rgba(0, 0, 0, 0.3), transparent), radial-gradient(1px 1px at 130px 80px, rgba(0, 0, 0, 0.25), transparent), radial-gradient(1px 1px at 160px 120px, rgba(0, 0, 0, 0.25), transparent);
                 background-repeat: repeat;
                 background-size: 200px 200px;
                 opacity: 0.3;
                 z-index: -1;
+                animation: twinkle 8s ease-in-out infinite;
             }
 
-        .planet {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(1px);
+        @@keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
-        .planet-1 {
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle at 30% 40%, #a3c2f5, #d1e1fa);
-            top: 10%;
-            right: -60px;
-            box-shadow: 0 0 40px rgba(77, 148, 255, 0.2);
-        }
-
-        .planet-2 {
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle at 30% 40%, #e5c1d5, #f2e1ec);
-            bottom: 5%;
-            left: -30px;
-            box-shadow: 0 0 30px rgba(255, 153, 102, 0.2);
-        }
-
-        .planet-ring {
-            position: absolute;
-            width: 240px;
-            height: 50px;
-            border-radius: 50%;
-            border: 8px solid var(--planet-ring-light);
-            top: 60px;
-            right: -90px;
-            transform: rotate(-20deg);
+        .login-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 16px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(100, 100, 100, 0.15);
+            border: 1px solid rgba(200, 200, 200, 0.3);
+            position: relative;
+            z-index: 10;
+            flex: 1;
         }
 
         .logo {
@@ -103,23 +97,13 @@
             margin-bottom: 2rem;
         }
 
-        .login-container {
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 30px;
-            border-radius: 16px;
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(100, 100, 100, 0.15);
-            border: 1px solid rgba(200, 200, 200, 0.3);
-            position: relative;
-            z-index: 10;
-        }
-
         .form-label {
             font-weight: 600;
             color: #444;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .form-control {
@@ -128,7 +112,7 @@
             border: 1px solid rgba(102, 153, 204, 0.3);
             border-radius: 8px;
             transition: all 0.3s ease;
-            padding: 10px 15px;
+            padding: 12px 15px;
         }
 
             .form-control:focus {
@@ -138,17 +122,17 @@
                 box-shadow: 0 0 0 0.25rem rgba(77, 148, 255, 0.25);
             }
 
-        .input-group-text {
-            background-color: rgba(230, 240, 255, 0.7);
-            border-color: rgba(102, 153, 204, 0.3);
-            color: #444;
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            z-index: 4;
         }
 
-        .toggle-password {
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            color: #555;
+        .input-with-icon {
+            padding-left: 40px !important;
         }
 
         .btn-primary {
@@ -159,10 +143,8 @@
             letter-spacing: 1px;
             padding: 12px;
             border-radius: 8px;
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
-            color: #333;
+            color: white;
         }
 
             .btn-primary:hover {
@@ -175,63 +157,405 @@
                 transform: translateY(0);
             }
 
-        .text-danger {
-            color: #e74c3c !important;
+        .validation-error {
+            color: var(--error-red);
             font-size: 0.85rem;
             margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        a {
-            color: var(--cosmic-blue-light);
-            text-decoration: none;
-            transition: all 0.3s ease;
+        .is-invalid {
+            border-color: var(--error-red) !important;
         }
 
-            a:hover {
-                color: #4d5b9e;
-                text-shadow: 0 0 8px rgba(77, 148, 255, 0.5);
+        .admin-login-header {
+            background-color: #0d1b2a;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .admin-login-header .navbar-brand {
+                font-family: 'Orbitron', sans-serif;
+                font-weight: 700;
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
-        /* Password strength indicator */
-        .password-strength {
-            height: 5px;
-            margin-top: 5px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
+                .admin-login-header .navbar-brand img {
+                    height: 40px;
+                }
+
+        /* Password toggle eye */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            z-index: 5;
         }
 
-        .password-feedback {
+        /* Password validation rules */
+        .password-rules {
+            margin-top: 5px;
             font-size: 0.8rem;
-            margin-top: 5px;
-            color: #555;
+            color: #666;
         }
 
-        body::before {
-            animation: twinkle 8s ease-in-out infinite;
+            .password-rules ul {
+                padding-left: 20px;
+                margin-bottom: 0;
+            }
+
+            .password-rules li {
+                margin-bottom: 3px;
+            }
+
+            .password-rules .valid {
+                color: var(--success-green);
+            }
+
+            .password-rules .invalid {
+                color: #666;
+            }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #0d1b2a;
+            color: white;
+            padding: 40px 0 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        @@media (max-width: 768px) {
+            .login-container {
+                margin: 30px auto;
+                padding: 25px;
+                width: 90%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="d-flex justify-content-center align-items-center vh-100">
+    <!-- Custom Header for Admin Login -->
+    <header class="admin-login-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/Images/astrologo.jpg" alt="AstroSafar Logo">
+                    <span>AstroSafar Admin</span>
+                </a>
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-home me-1"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-5">
         <div class="login-container">
-            <h2>Admin Login</h2>
+            <div class="text-center mb-4">
+                <h2 class="logo">Admin Portal</h2>
+                <p class="tagline">Access the cosmic control panel</p>
+            </div>
+
             @if (!string.IsNullOrEmpty(ViewBag.Error))
             {
-                <div class="alert alert-danger">@ViewBag.Error</div>
+                <div class="alert alert-danger d-flex align-items-center">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <div>@ViewBag.Error</div>
+                </div>
             }
-            <form method="post" action="/Admin/AdminLogin">
+
+            <form method="post" action="/Admin/AdminLogin" id="loginForm">
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="text" asp-for="Email" class="form-control" required>
+                    @Html.LabelFor(model => model.Email, new { @class = "form-label" })
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control border bg-white text-dark", type = "email", required = "required", placeholder = "youremail@example.com" })
+                    </div>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
+
                 <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" asp-for="Password" class="form-control" required>
+                    @Html.LabelFor(model => model.Password, new { @class = "form-label" })
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "passwordInput", required = "required", placeholder = "Enter your password" })
+                        <button class="input-group-text toggle-password" type="button" id="togglePassword"><i class="fa fa-eye"></i></button>
+                    </div>
+                    <div class="invalid-feedback">Password is required.</div>
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                </button>
+
+                <div class="text-center mt-3">
+                    <a href="#" class="text-decoration-none">
+                        <i class="fas fa-question-circle me-1"></i> Forgot Password?
+                    </a>
+                </div>
             </form>
         </div>
     </div>
-</body>
+    <!-- FOOTER SECTION -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- About Us Section -->
+            <div class="footer-section">
+                <h4>About AstroSafar</h4>
+                <p>AstroSafar is your gateway to space exploration and education, offering expert-led courses on space science, technology, and beyond.</p>
+                <a href="@Url.Action("Gallery", "Home")" class="footer-link">Learn More</a>
+            </div>
 
+            <!-- Quick Links -->
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("Gallery", "Home")">Services</a></li>
+                    <li><a href="@Url.Action("SubmitFeedback", "SubmitFeedback")">Contact Us</a></li>
+                    <li><a href="@Url.Action("AboutUs", "Home")">About Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Newsletter Subscription -->
+            <div class="footer-section">
+                <h4>Subscribe to Our Newsletter</h4>
+                <p>Stay updated with the latest space discoveries and courses.</p>
+                <input type="email" id="email" placeholder="Enter your email">
+                <button onclick="subscribeNewsletter()">Subscribe</button>
+            </div>
+
+
+
+            <!-- Social Media Links -->
+            <!-- Follow Us Section -->
+            <div class="footer-section text-center">
+                <h5>Follow Us</h5>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com" target="_blank" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.facebook.com" target="_blank" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://www.linkedin.com" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank" class="social-icon">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 AstroSafar | All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- FontAwesome for Social Media Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
+
+    <!-- Newsletter Subscription JavaScript -->
+    <script>
+        function subscribeNewsletter() {
+            let email = document.getElementById("email").value;
+            if (email) {
+                alert("Thank you for subscribing! Stay tuned for space updates. 🚀");
+                document.getElementById("email").value = "";
+            } else {
+                alert("Please enter a valid email address.");
+            }
+        }
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            let passwordInput = document.getElementById('passwordInput');
+            let type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            this.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+        });
+    </script>
+
+    <!-- FOOTER STYLES -->
+    <style>
+        .footer {
+            background-color: #0d1b2a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .footer-section {
+            width: 22%;
+            padding: 10px;
+            text-align: left;
+        }
+
+            .footer-section h4 {
+                font-size: 1.4em;
+                margin-bottom: 10px;
+                color: #ff9800;
+            }
+
+            .footer-section p {
+                font-size: 1em;
+                margin: 5px 0;
+            }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-links li {
+                margin: 5px 0;
+            }
+
+            .footer-links a {
+                color: white;
+                text-decoration: none;
+                font-size: 1em;
+                transition: 0.3s;
+            }
+
+                .footer-links a:hover {
+                    color: #ff9800;
+                }
+
+        /* Newsletter Input */
+        input[type="email"] {
+            width: 80%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+
+            button:hover {
+                background-color: #ffb74d;
+            }
+
+        /* Social Media Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            font-size: 24px;
+            color: deeppink;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            .social-icon:hover {
+                color: #ffcc00;
+            }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+        }
+
+        .footer {
+            background-color: #0d1b2a;
+            color: white;
+            padding: 40px 0 20px 0; /* Adjusted bottom padding */
+            text-align: center;
+            margin-bottom: 0; /* Ensure no margin at bottom */
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Make sure the footer stays at the bottom */
+        .footer {
+            margin-top: auto;
+        }
+
+        h5 {
+            color: #ff9800; /* Using your dark blue-grey variable */
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-accent); /* Orange accent underline
+            */
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+
+        .social-icon {
+            font-size: 24px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+            .social-icon:hover {
+                color: #ffcc00;
+            }
+
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
+        }
+
+    </style>
+
+</body>
 </html>

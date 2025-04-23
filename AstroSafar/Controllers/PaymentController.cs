@@ -85,26 +85,6 @@ namespace AstroSafar.Controllers
 
             return enrollment.Id;
         }
-        //public IActionResult Payment(int enrollmentId)
-        //{
-        //    var options = new Dictionary<string, object>
-        //    {
-        //        { "amount", 49900 }, // Amount in paise (499 INR)
-        //        { "currency", "INR" },
-        //        { "receipt", "receipt_" + enrollmentId },
-        //        { "payment_capture", "1" }
-        //    };
-
-        //    RazorpayClient client = new RazorpayClient(_razorpaySettings.Key, _razorpaySettings.Secret);
-        //    Order order = client.Order.Create(options);
-
-        //    ViewBag.OrderId = order["id"];
-        //    ViewBag.Key = _razorpaySettings.Key;
-        //    ViewBag.Amount = options["amount"];
-        //    ViewBag.EnrollmentId = enrollmentId;
-
-        //    return View(); // ✅ This will load Payment.cshtml
-        //}
 
         public IActionResult Payment(int enrollmentId)
         {
@@ -208,75 +188,6 @@ namespace AstroSafar.Controllers
                 });
             }
         }
-
-        //[HttpPost]
-        //public IActionResult PaymentCallback(string razorpay_payment_id, string razorpay_order_id, string razorpay_signature, int enrollmentId)
-        //{
-        //    try
-        //    {
-        //        // ✅ (Optional) Verify Razorpay signature here using their SDK
-
-        //        // ✅ Step 1: Save payment record
-        //        var payment = new Transaction
-        //        {
-        //            EnrollmentId = enrollmentId,
-        //            Amount = 499, // ₹499
-        //            RazorpayPaymentId = razorpay_payment_id,
-        //            RazorpayOrderId = razorpay_order_id,
-        //            RazorpaySignature = razorpay_signature,
-        //            PaymentDate = DateTime.Now,
-        //            Currency = "INR"
-        //        };
-
-        //        _context.Transactions.Add(payment);
-        //        _context.SaveChanges();
-
-        //        // ✅ Step 2: Check if certificate already exists
-        //        var existing = _context.Certificates.FirstOrDefault(c => c.EnrollmentId == enrollmentId);
-        //        if (existing == null)
-        //        {
-        //            // 🔁 Step 3: Generate a unique certificate number
-        //            int lastId = _context.Certificates.Any()
-        //                ? _context.Certificates.Max(c => c.Id)
-        //                : 0;
-
-        //            string certNumber = $"ASTRO-{DateTime.Now.Year}-{(lastId + 1).ToString("D4")}";
-
-        //            // 🟢 Step 4: Create new certificate
-        //            var certificate = new Certificate
-        //            {
-        //                EnrollmentId = enrollmentId,
-        //                IssuedOn = DateTime.Now,
-        //                CertificateNumber = certNumber,
-        //                IsDownloaded = false
-        //            };
-
-        //            _context.Certificates.Add(certificate);
-        //            _context.SaveChanges();
-        //        }
-
-        //        // ✅ Step 5: Redirect to Certificate View
-        //        return RedirectToAction("CertificateGenerated", "Certificate", new { enrollmentId });
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return View("Error", new ErrorViewModel
-        //        {
-        //            Message = ex.InnerException?.Message ?? ex.Message
-        //        });
-        //    }
-        //}
-
-
-
-        //public IActionResult CertificateGenerated(int id)
-        //{
-        //    ViewBag.EnrollmentId = id;
-        //    return View();
-        //}
-
         private void SavePaymentDetails(Transaction payment)
         {
             _context.Transactions.Add(payment);

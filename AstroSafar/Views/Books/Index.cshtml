@@ -1,0 +1,270 @@
+﻿@model IEnumerable<AstroSafar.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+        --heading-color: #007bff;
+        --success-green: #28a745;
+    }
+
+    h2 {
+        color: var(--heading-color);
+        margin-bottom: 1.5rem;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .category-badge {
+        background-color: var(--planet-ring-light);
+        color: var(--cosmic-blue-light);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
+        display: inline-block;
+        margin: 0.2rem;
+        border: 1px solid var(--cosmic-blue-light);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+        .table th {
+            background-color: var(--cosmic-blue-light);
+            color: white;
+        }
+
+        .table img {
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+        }
+
+            .table img:hover {
+                transform: scale(1.1);
+            }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--cosmic-blue-light);
+        border-color: var(--cosmic-blue-light);
+    }
+
+    .pagination .page-link {
+        color: var(--cosmic-blue-light);
+    }
+</style>
+
+<h2><i class="fas fa-book"></i> All Books</h2>
+
+<!-- Filter Options (if you want to add later) -->
+<!-- <form method="get" asp-action="Index" class="mb-4">
+    <label for="filter">Filter:</label>
+    <input type="text" id="filter" name="filter" class="form-control w-25 d-inline mx-2" placeholder="Search books..." />
+    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+</form> -->
+
+<div class="mb-4">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Add New Book
+    </a>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th><i class="fas fa-book-open"></i> Title</th>
+            <th><i class="fas fa-user-edit"></i> Author</th>
+            <th><i class="fas fa-user-edit"></i> Description</th>
+            <th><i class="fas fa-rupee-sign"></i> Price</th>
+            <th><i class="fas fa-image"></i> Image</th>
+            <th><i class="fas fa-cogs"></i> Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Description</td>
+                    <td>₹@book.Price</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(book.ImageUrl))
+                        {
+                            <img src="@book.ImageUrl" alt="@book.Title" width="80" class="img-thumbnail" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">No image</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a asp-action="Details" asp-route-id="@book.BookId" class="btn btn-info btn-sm">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@book.BookId" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                                <input type="hidden" name="id" value="@book.BookId" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No books available.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination (if you implement pagination later) -->
+<!--
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+@if (ViewBag.CurrentPage > 1)
+{
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">
+                                <i class="fas fa-chevron-left"></i> Prev
+                            </a>
+                        </li>
+}
+
+@for (int i = 1; i <= ViewBag.TotalPages; i++)
+{
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                        </li>
+}
+
+@if (ViewBag.CurrentPage < ViewBag.TotalPages)
+{
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+}
+        </ul>
+    </nav>
+</div>
+-->
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+</div>
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1 })">
+                        <i class="fas fa-chevron-left"></i> Prev
+                    </a>
+                </li>
+            }
+
+            @{
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+
+                // Always show first page
+                if (currentPage > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = 1 })">1</a>
+                    </li>
+
+                    if (currentPage > 3)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+
+                // Show current - 1
+                if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage - 1 })">@((int)currentPage - 1)</a>
+                    </li>
+                }
+
+                // Current page
+                <li class="page-item active">
+                    <span class="page-link">@currentPage</span>
+                </li>
+
+                // Show current + 1
+                if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = currentPage + 1 })">@((int)currentPage + 1)</a>
+                    </li>
+                }
+
+                // Ellipsis before last
+                if (currentPage < totalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                }
+
+                // Last page
+                if (currentPage < totalPages - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { page = totalPages })">@totalPages</a>
+                    </li>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1 })">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

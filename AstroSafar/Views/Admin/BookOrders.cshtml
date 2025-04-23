@@ -1,0 +1,248 @@
+﻿@model List<AstroSafar.Models.BookOrder>
+
+@{
+    ViewData["Title"] = "Book Orders";
+}
+
+<style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+        --heading-color: #007bff;
+        --success-green: #28a745;
+    }
+
+    h2 {
+        color: var(--heading-color);
+        margin-bottom: 1.5rem;
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .card-header {
+        background-color: var(--cosmic-blue-light);
+        color: white;
+        font-weight: bold;
+        padding: 1rem 1.5rem;
+    }
+
+    .table {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        .table thead {
+            background-color: var(--cosmic-blue-light);
+            color: white;
+        }
+
+        .table th {
+            border: none;
+            padding: 1rem;
+        }
+
+        .table td {
+            vertical-align: middle;
+            padding: 0.75rem 1rem;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(102, 153, 204, 0.05);
+    }
+
+    .custom-grey-link {
+        background-color: #e6e6e6;
+        color: #333;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        transition: all 0.3s;
+        display: inline-block;
+        margin-top: 1.5rem;
+    }
+
+        .custom-grey-link:hover {
+            background-color: #d9d9d9;
+            color: #333;
+            text-decoration: none;
+        }
+
+    .delivery-details {
+        background-color: var(--planet-ring-light);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .total-amount {
+        font-size: 1.25rem;
+        color: var(--heading-color);
+    }
+</style>
+
+<h2 class="text-center my-4">📦 All Book Orders</h2>
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var order in Model)
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <strong>Order ID:</strong> @order.BookOrderId &nbsp; |
+                <strong>Date:</strong> @order.OrderDate.ToString("dd-MM-yyyy hh:mm tt")
+            </div>
+            <div class="card-body">
+                <h5 class="mb-3">📖 Ordered Books:</h5>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Price (₹)</th>
+                            <th>Quantity</th>
+                            <th>Subtotal (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.BookOrderDetails)
+                        {
+                            <tr>
+                                <td>@item.Book?.Title</td>
+                                <td>@item.Book?.Price</td>
+                                <td>@item.Quantity</td>
+                                <td>@(item.Quantity * item.Book?.Price ?? 0)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="delivery-details mt-4">
+                    <h5>📍 Delivery Details:</h5>
+                    <p>
+                        <strong>Name:</strong> @order.FullName<br />
+                        <strong>Address:</strong> @order.AddressLine1, @order.AddressLine2<br />
+                        <strong>City:</strong> @order.City, <strong>State:</strong> @order.State, <strong>ZIP:</strong> @order.ZipCode<br />
+                        <strong>Phone:</strong> @order.PhoneNumber
+                    </p>
+
+                    <p>
+                        <strong>Payment Method:</strong> @order.PaymentMethod <br />
+                        <strong>Payment ID:</strong> @(string.IsNullOrEmpty(order.PaymentId) ? "N/A" : order.PaymentId)
+                    </p>
+                </div>
+
+                <h5 class="text-end total-amount">💰 <strong>Total:</strong> ₹@order.TotalAmount</h5>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">
+        No book orders found.
+    </div>
+}
+
+<div class="text-center">
+    <a asp-action="Index" asp-controller="Home" class="custom-grey-link">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("BookOrders", new { page = ViewBag.CurrentPage - 1 })">« Prev</a>
+                </li>
+            }
+
+            @{
+                int currentPage = ViewBag.CurrentPage;
+                int totalPages = ViewBag.TotalPages;
+
+                // Always show first page
+                if (currentPage > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("BookOrders", new { page = 1 })">1</a>
+                    </li>
+
+                    if (currentPage > 3)
+                    {
+                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                    }
+                }
+
+                // Show current - 1
+                if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("BookOrders", new { page = currentPage - 1 })">@((int)currentPage - 1)</a>
+                    </li>
+                }
+
+                // Current page
+                <li class="page-item active">
+                    <span class="page-link">@currentPage</span>
+                </li>
+
+                // Show current + 1
+                if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("BookOrders", new { page = currentPage + 1 })">@((int)currentPage + 1)</a>
+                    </li>
+                }
+
+                // Ellipsis before last
+                if (currentPage < totalPages - 2)
+                {
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
+                }
+
+                // Last page
+                if (currentPage < totalPages - 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("BookOrders", new { page = totalPages })">@totalPages</a>
+                    </li>
+                }
+            }
+
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("BookOrders", new { page = ViewBag.CurrentPage + 1 })">Next »</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

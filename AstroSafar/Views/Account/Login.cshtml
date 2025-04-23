@@ -1,4 +1,7 @@
 
+
+
+
  @model AstroSafar.Models.Registration
 
 @{
@@ -9,7 +12,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | AstroSafar</title>
@@ -193,32 +195,37 @@
                 text-shadow: 0 0 8px rgba(77, 148, 255, 0.5);
             }
 
-
-        input[type="email"] {
-            width: 100% !important;
-            display: block !important;
-            color: black !important;
-            background-color: white !important;
-            border: 1px solid #ccc !important;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            border-radius: 0.25rem;
-        /* Password strength indicator */
-        .password-strength {
-            height: 5px;
-            margin-top: 5px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
+        .form-check-input {
+            background-color: rgba(240, 245, 255, 0.6);
+            border: 1px solid rgba(102, 153, 204, 0.3);
         }
 
-        .password-feedback {
-            font-size: 0.8rem;
-            margin-top: 5px;
+            .form-check-input:checked {
+                background-color: var(--cosmic-blue-light);
+                border-color: var(--cosmic-blue-light);
+            }
+
+            .form-check-input:focus {
+                box-shadow: 0 0 0 0.25rem rgba(77, 148, 255, 0.25);
+            }
+
+        .form-check-label {
             color: #555;
+            font-size: 0.9rem;
         }
 
         body::before {
             animation: twinkle 8s ease-in-out infinite;
+        }
+
+        @@keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
         }
     </style>
 </head>
@@ -238,19 +245,19 @@
                 @Html.LabelFor(model => model.Email, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", type = "email", required = "required", placeholder = "youremail@example.com" })
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control border bg-white text-dark", type = "email", required = "required", placeholder = "youremail@example.com" })
                 </div>
                 <div class="invalid-feedback">Please enter a valid email address.</div>
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-            </div> <div class="mb-3">
+            </div>
+
+            <div class="mb-3">
                 @Html.LabelFor(model => model.Password, new { @class = "form-label" })
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "passwordInput", required = "required", placeholder = "Choose a strong password" })
+                    @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "passwordInput", required = "required", placeholder = "Enter your password" })
                     <button class="input-group-text toggle-password" type="button" id="togglePassword"><i class="fa fa-eye"></i></button>
                 </div>
-                <div class="password-strength" id="passwordStrength"></div>
-                <div class="password-feedback" id="passwordFeedback"></div>
                 <div class="invalid-feedback">Password is required.</div>
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </div>
@@ -258,12 +265,17 @@
             <div class="text-center mt-4">
                 <input type="submit" value="Login" class="btn btn-primary" />
             </div>
+            <div class="text-center mt-3">
+                <a href="#" class="text-decoration-none">
+                    <i class="fas fa-question-circle me-1"></i> Forgot Password?
+                </a>
+            </div>
+            <div class="footer-text">
+                <div class="text-center mt-4">
+                    Don't have an account? <a href="@Url.Action("Register", "Account")">Sign Up</a>
+                </div>
+            </div>
         </form>
-</div>
-        <div class="footer-text">
-            <div class="text-center mt-4">
-            Don't have an account? <a href="@Url.Action("Register", "Account")">Sign Up</a>
-        </div>
     </div>
 
     <script>
@@ -272,10 +284,31 @@
             let passwordInput = document.getElementById('passwordInput');
             let type = passwordInput.type === 'password' ? 'text' : 'password';
             passwordInput.type = type;
-            this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;'; // Change eye icon
+            this.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+        });
+
+        // Check for saved credentials on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            if (localStorage.getItem('rememberMe') === 'true') {
+                document.getElementById('rememberMe').checked = true;
+                const savedEmail = localStorage.getItem('savedEmail');
+                if (savedEmail) {
+                    document.querySelector('input[name="Email"]').value = savedEmail;
+                }
+            }
+        });
+
+        // Save credentials if "Remember me" is checked
+        document.querySelector('form').addEventListener('submit', function () {
+            const rememberMe = document.getElementById('rememberMe').checked;
+            localStorage.setItem('rememberMe', rememberMe);
+
+            if (rememberMe) {
+                localStorage.setItem('savedEmail', document.querySelector('input[name="Email"]').value);
+            } else {
+                localStorage.removeItem('savedEmail');
+            }
         });
     </script>
 </body>
 </html>
- 
-

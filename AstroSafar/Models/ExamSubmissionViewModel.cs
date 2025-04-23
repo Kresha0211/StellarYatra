@@ -3,6 +3,8 @@
     public class ExamSubmissionViewModel
     {
         public int CourseId { get; set; }
+        public int EnrollmentId { get; set; }
+
         public List<UserAnswer> UserAnswers { get; set; }
         public int TimeRemaining { get; set; } // in seconds
     }

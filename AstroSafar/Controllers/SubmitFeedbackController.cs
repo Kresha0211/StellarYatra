@@ -1,15 +1,22 @@
-﻿using AstroSafar.Models;
+﻿using AstroSafar.Hubs;
+using AstroSafar.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstroSafar.Controllers
 {
     public class SubmitFeedbackController : Controller
     {
         private readonly SpaceLearningDBContext _context;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public SubmitFeedbackController(SpaceLearningDBContext context)
+
+        public SubmitFeedbackController(SpaceLearningDBContext context, IHubContext<ChatHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
+
         }
 
         public IActionResult SubmitFeedback()

@@ -1,4 +1,4 @@
-﻿ @model AstroSafar.Models.HigherSecondaryEnroll
+﻿@model AstroSafar.Models.HigherSecondaryEnroll
 @{
     ViewData["Title"] = "Enroll in Course";
 }
@@ -91,6 +91,7 @@
         margin-top: 0.3rem;
     }
 </style>
+
 <div class="enrollment-container">
     <div class="course-header">
         <h2 class="course-title">@ViewData["Title"]</h2>
@@ -98,15 +99,20 @@
         <p class="course-description">@Model.CourseAdmin.Description</p>
     </div>
 
-    <form asp-action="HigherSecondaryEnroll" method="post">
+    <form asp-action="HigherSecondaryEnroll" method="post" id="enrollmentForm">
         <!-- Full Name -->
         <div class="mb-3">
             <label asp-for="FullName" class="form-label">Full Name</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-user"></i></span>
-                <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                <input asp-for="FullName" class="form-control"
+                       placeholder="Enter your full name"
+                       pattern="[A-Za-z\s]+"
+                       oninput="this.value = this.value.replace(/[^A-Za-z\s]/g,'')"
+                       required />
             </div>
             <span asp-validation-for="FullName" class="text-danger"></span>
+            <div class="invalid-feedback">Please enter a valid name (letters only)</div>
         </div>
 
         <!-- Email -->
@@ -114,11 +120,10 @@
             <label asp-for="Email" class="form-label">Email</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" />
+                <input asp-for="Email" type="email" class="form-control border bg-white text-dark" placeholder="Enter your email" readonly />
             </div>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-
         <!-- Gender -->
         <div class="mb-3">
             <label class="form-label">Gender</label><br />
@@ -147,7 +152,6 @@
             <div class="invalid-feedback">Please enter your date of birth.</div>
             @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
         </div>
-
         <!-- Standard -->
         <div class="mb-3">
             <label asp-for="Standard" class="form-label">Standard</label>
@@ -178,38 +182,31 @@
     </form>
 </div>
 
-
 <!-- Validation Summary -->
 <div asp-validation-summary="ModelOnly" class="cosmic-alert"></div>
-    </div>
-</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const dobInput = document.getElementById("DateOfBirth");
+            // Prevent future dates in datepicker
+            const dobInput = document.getElementById("dobInput");
             if (dobInput) {
-                // Prevent future dates
                 const today = new Date().toISOString().split("T")[0];
                 dobInput.setAttribute("max", today);
 
-                const currentYear = new Date().getFullYear();
-                dobInput.value = `${currentYear}-01-01`; // Default to January 1st of the current year
+
             }
 
-            // Optional: Add subtle stars animation
-            const enrollmentPod = document.querySelector('.enrollment-pod');
-            for (let i = 0; i < 30; i++) {
-                let star = document.createElement('div');
-                star.className = 'animated-star';
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.animationDuration = `${5 + Math.random() * 10}s`;
-                star.style.animationDelay = `${Math.random() * 5}s`;
-                enrollmentPod.appendChild(star);
-            }
-
+            // Form validation
+            const form = document.getElementById('enrollmentForm');
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
         });
     </script>
 }

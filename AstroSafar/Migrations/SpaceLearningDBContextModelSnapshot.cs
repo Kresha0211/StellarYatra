@@ -43,6 +43,152 @@ namespace AstroSafar.Migrations
                     b.ToTable("AdminLogins");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.Book", b =>
+                {
+                    b.Property<int>("BookId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookId"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BookId");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.BookOrder", b =>
+                {
+                    b.Property<int>("BookOrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookOrderId"));
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("BookOrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BookOrders");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.BookOrderDetail", b =>
+                {
+                    b.Property<int>("OrderDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderDetailId"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderDetailId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("BookOrderId");
+
+                    b.ToTable("BookOrderDetails");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.CartItem", b =>
+                {
+                    b.Property<int>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartItemId"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CartItems");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -538,6 +684,78 @@ namespace AstroSafar.Migrations
                     b.ToTable("UnitProgresses");
                 });
 
+            modelBuilder.Entity("AstroSafar.Models.Wishlist", b =>
+                {
+                    b.Property<int>("WishlistId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WishlistId"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WishlistId");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Wishlists");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.BookOrder", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Registration", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.BookOrderDetail", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Book", "Book")
+                        .WithMany("BookOrderDetails")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroSafar.Models.BookOrder", "BookOrder")
+                        .WithMany("BookOrderDetails")
+                        .HasForeignKey("BookOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("BookOrder");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.CartItem", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Book", "Book")
+                        .WithMany("CartItems")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroSafar.Models.Registration", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AstroSafar.Models.Certificate", b =>
                 {
                     b.HasOne("AstroSafar.Models.Enrollment", "Enrollment")
@@ -665,6 +883,39 @@ namespace AstroSafar.Migrations
                     b.Navigation("CourseAdmin");
 
                     b.Navigation("UnitAdmin");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.Wishlist", b =>
+                {
+                    b.HasOne("AstroSafar.Models.Book", "Book")
+                        .WithMany("Wishlists")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AstroSafar.Models.Registration", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.Book", b =>
+                {
+                    b.Navigation("BookOrderDetails");
+
+                    b.Navigation("CartItems");
+
+                    b.Navigation("Wishlists");
+                });
+
+            modelBuilder.Entity("AstroSafar.Models.BookOrder", b =>
+                {
+                    b.Navigation("BookOrderDetails");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.Category", b =>

@@ -1,28 +1,77 @@
-
-
 @model IEnumerable<AstroSafar.Models.UnitAdmin>
 
 <h2>Units</h2>
 
-<a class="btn btn-primary" asp-action="AddUnit">Add New Unit</a>
+<style>
+    :root {
+        --space-light: #f0f5ff;
+        --deep-sky: #e6f0ff;
+        --nebula-purple-light: #c5b3dd;
+        --cosmic-blue-light: #6699cc;
+        --star-color: #4d94ff;
+        --meteor-orange-light: #ff9966;
+        --moon-silver: #e6e6e6;
+        --planet-ring-light: rgba(102, 153, 204, 0.15);
+        --heading-color: #007bff;
+    }
 
-<table class="table">
-    <thead>
+    h2 {
+        color: var(--heading-color);
+    }
+
+    body {
+        background: linear-gradient(135deg, var(--space-light) 0%, var(--deep-sky) 100%);
+        color: #333;
+        font-family: 'Exo 2', sans-serif;
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    .filter-form {
+        margin-bottom: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+</style>
+
+<a class="btn btn-primary mb-3" asp-action="AddUnit">
+    <i class="fas fa-plus-circle"></i> Add New Unit
+</a>
+
+<!-- Course Filter Dropdown -->
+<form method="get" asp-action="UnitList" class="filter-form">
+    <label for="courseFilter">Select Course:</label>
+    <select id="courseFilter" name="courseFilter" class="form-select w-25 d-inline mx-2" onchange="this.form.submit()">
+        <option value="0" selected="@(ViewBag.SelectedCourse == null || ViewBag.SelectedCourse == 0 ? "selected" : null)">Show All</option>
+        @foreach (var course in ViewBag.Courses)
+        {
+            <option value="@course.Id" selected="@(ViewBag.SelectedCourse == course.Id ? "selected" : null)">
+                @course.Name
+            </option>
+        }
+    </select>
+</form>
+
+<!-- Units Table -->
+<table class="table table-striped table-bordered">
+    <thead class="table-light">
         <tr>
-            <th>ID</th>
             <th>Unit Name</th>
             <th>Content</th>
-            <th>ImageUrl</th>
+            <th>Image</th>
             <th>Course Name</th>
             <th>Video URL</th>
-
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var unit in Model)
         {
             <tr>
-                <td>@unit.Id</td>
                 <td>@unit.Name</td>
                 <td>@unit.Content</td>
                 <td>
@@ -36,21 +85,35 @@
                     }
                 </td>
                 <td>@unit.CourseAdmin.Name</td>
-                <td><a href="@unit.VideoUrl" target="_blank">Watch Video</a></td>
                 <td>
-                    <a class="btn btn-warning" asp-action="EditUnit" asp-route-id="@unit.Id">
-                        <i class="bi bi-pencil-square"></i>
-                        Edit
-                    </a>
-                    <form asp-action="DeleteUnit" asp-route-id="@unit.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="bi bi-trash"></i>
-                            Delete
-                        </button>
-                    </form>
+                    @if (!string.IsNullOrWhiteSpace(unit.VideoUrl))
+                    {
+                        <a href="@unit.VideoUrl" target="_blank">
+                            <i class="fas fa-video"></i> Watch Video
+                        </a>
+                    }
+                    else
+                    {
+                        <span>No Video</span>
+                    }
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a class="btn btn-warning btn-sm" asp-action="EditUnit" asp-route-id="@unit.Id">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form asp-action="DeleteUnit" asp-route-id="@unit.Id" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<a asp-action="CourseList">Course List</a>
+
+<a asp-action="CourseList" class="btn btn-secondary mt-3">
+    <i class="fas fa-arrow-left"></i> Back to Course List
+</a>

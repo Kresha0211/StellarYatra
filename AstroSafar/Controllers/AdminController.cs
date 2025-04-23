@@ -62,10 +62,13 @@ namespace AstroSafar.Controllers
             ViewBag.TotalUsers = _context.Registrations.Count();
             ViewBag.TotalCourses = _context.courseAdmins.Count();
             ViewBag.TotalCertificates = _context.Certificates.Count();
-            var totalRevenue = _context.Transactions.Where(t => t.Status == "Success").Sum(t => (decimal?)t.Amount) ?? 0;
-            ViewBag.TotalRevenue = totalRevenue;
 
 
+            var totalBookBuyers = _context.BookOrders
+       .Select(o => o.UserId)
+       .Distinct()
+       .Count();
+            ViewBag.TotalBookBuyers = totalBookBuyers;
             ViewBag.RecentEnrollments = _context.enrollments
                 .OrderByDescending(e => e.Id)
                 .Take(5)
@@ -76,9 +79,11 @@ namespace AstroSafar.Controllers
                     //EnrollmentDate = e.EnrollmentDate
                 }).ToList();
 
+
+
             return View(categories);
+
         }
-       
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
@@ -221,14 +226,60 @@ namespace AstroSafar.Controllers
 
             return View(course);
         }
-        public IActionResult CourseList()
+        //public IActionResult CourseList()
+        //{
+        //    // Fetch courses along with their categories
+        //    var courses = _context.courseAdmins
+        //        .Include(c => c.Category) // Ensure Category navigation property is included
+        //        .ToList();
+
+        //    return View(courses);
+        //}
+
+        //public IActionResult CourseList(string categoryFilter = "All")
+        //{
+        //    // Fetch courses along with their categories
+        //    var courses = _context.courseAdmins
+        //        .Include(c => c.Category)
+        //        .AsQueryable();
+
+        //    // Apply filter if not showing all
+        //    if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter != "All")
+        //    {
+        //        courses = courses.Where(c => c.Category.Name == categoryFilter);
+        //    }
+
+        //    // Pass selected category to the view
+        //    ViewBag.SelectedCategory = categoryFilter;
+
+        //    return View(courses.ToList());
+        //}
+
+        public IActionResult CourseList(int categoryFilter = 0, int page = 1, int pageSize = 5)
         {
-            // Fetch courses along with their categories
             var courses = _context.courseAdmins
-                .Include(c => c.Category) // Ensure Category navigation property is included
+                .Include(c => c.Category)
+                .AsQueryable();
+
+            if (categoryFilter != 0)
+            {
+                courses = courses.Where(c => c.CategoryId == categoryFilter);
+            }
+
+            var totalCourses = courses.Count();
+            var totalPages = (int)Math.Ceiling((double)totalCourses / pageSize);
+
+            var paginatedCourses = courses
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
-            return View(courses);
+            ViewBag.Categories = _context.Categories.ToList();
+            ViewBag.SelectedCategory = categoryFilter;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedCourses);
         }
 
 
@@ -277,20 +328,6 @@ namespace AstroSafar.Controllers
 
             return RedirectToAction("CourseList");
         }
-        //public IActionResult ManageCourses(int? selectedCategory)
-        //{
-        //    // Load categories into ViewBag
-        //    ViewBag.CategoryList = _context.Categories.ToList();
-
-        //    // Fetch courses, filtered if category is selected
-        //    var courses = _context.courseAdmins
-        //        .Include(c => c.Category)
-        //        .Where(c => !selectedCategory.HasValue || c.CategoryId == selectedCategory.Value)
-        //        .ToList();
-
-        //    return View("CourseList", courses); // Make sure view name matches your .cshtml
-        //}
-
 
         [HttpGet]
         public IActionResult AddUnit()
@@ -333,25 +370,58 @@ namespace AstroSafar.Controllers
             return RedirectToAction("UnitList");
         }
 
-        public IActionResult UnitList()
+        //public IActionResult UnitList()
+        //{
+        //    var units = _context.unitAdmins
+        //   .Include(u => u.CourseAdmin)
+        //   .Select(u => new UnitAdmin
+        //   {
+        //       Id = u.Id,
+        //       Name = u.Name,
+        //       Content = u.Content,  // Ensure Content is fetched
+        //       ImageURL = u.ImageURL,
+        //       VideoUrl = u.VideoUrl,
+        //       CourseAdmin = u.CourseAdmin
+        //   })
+        //   .ToList();
+        //    ViewBag.Message = "List of Units for the selected Course";
+        //    ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin.Name ?? "No Course Selected";
+
+        //    return View(units);
+        //}
+
+        public IActionResult UnitList(int? courseFilter)
         {
-            var units = _context.unitAdmins
-           .Include(u => u.CourseAdmin)
-           .Select(u => new UnitAdmin
-           {
-               Id = u.Id,
-               Name = u.Name,
-               Content = u.Content,  // Ensure Content is fetched
-               ImageURL = u.ImageURL,
-               VideoUrl = u.VideoUrl,
-               CourseAdmin = u.CourseAdmin
-           })
-           .ToList();
+            // Fetch all courses for the dropdown
+            ViewBag.Courses = _context.courseAdmins
+                                      .OrderBy(c => c.Name) // Optional: Alphabetical order
+                                      .ToList();
+
+            // Fetch and filter units
+            var query = _context.unitAdmins.Include(u => u.CourseAdmin).AsQueryable();
+
+            if (courseFilter.HasValue && courseFilter.Value != 0)
+            {
+                query = query.Where(u => u.CourseAdmin.Id == courseFilter.Value);
+            }
+
+            var units = query.Select(u => new UnitAdmin
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Content = u.Content,
+                ImageURL = u.ImageURL,
+                VideoUrl = u.VideoUrl,
+                CourseAdmin = u.CourseAdmin
+            }).ToList();
+
             ViewBag.Message = "List of Units for the selected Course";
-            ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin.Name ?? "No Course Selected";
+            ViewBag.CourseName = units.FirstOrDefault()?.CourseAdmin?.Name ?? "No Course Selected";
+            ViewBag.SelectedCourse = courseFilter;
 
             return View(units);
         }
+
 
 
 
@@ -382,7 +452,7 @@ namespace AstroSafar.Controllers
             return View(unit);
         }
 
-        
+
         [HttpPost]
         public IActionResult EditUnit(UnitAdmin model, IFormFile ImageFile)
         {
@@ -436,31 +506,50 @@ namespace AstroSafar.Controllers
 
             return RedirectToAction("UnitList");
         }
+
         public IActionResult EnrolledUsers(string? categoryFilter = "All")
         {
+            var primaryEnrollments = _context.enrollments
+                .Include(e => e.CourseAdmin)
+                    .ThenInclude(c => c.Category)
+                .ToList();
 
-            var primaryEnrollments = _context.enrollments.ToList();
-            var secondaryEnrollments = _context.secondaryEnrolls.ToList();
-            var higherSecondaryEnrollments = _context.higherSecondaryEnrolls.ToList();
+            var secondaryEnrollments = _context.secondaryEnrolls
+                .Include(e => e.CourseAdmin)
+                    .ThenInclude(c => c.Category)
+                .ToList();
 
-            // Filter based on the selected category
+            var higherSecondaryEnrollments = _context.higherSecondaryEnrolls
+                .Include(e => e.CourseAdmin)
+                    .ThenInclude(c => c.Category)
+                .ToList();
+
             if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter != "All")
             {
                 switch (categoryFilter)
                 {
                     case "Primary":
-                        secondaryEnrollments.Clear();
-                        higherSecondaryEnrollments.Clear();
+                        primaryEnrollments = primaryEnrollments
+                            .Where(e => e.CourseAdmin.Category.Name == "Primary")
+                            .ToList();
+                        secondaryEnrollments = new List<SecondaryEnroll>();
+                        higherSecondaryEnrollments = new List<HigherSecondaryEnroll>();
                         break;
 
                     case "Secondary":
-                        primaryEnrollments.Clear();
-                        higherSecondaryEnrollments.Clear();
+                        secondaryEnrollments = secondaryEnrollments
+                            .Where(e => e.CourseAdmin.Category.Name == "Secondary")
+                            .ToList();
+                        primaryEnrollments = new List<Enrollment>();
+                        higherSecondaryEnrollments = new List<HigherSecondaryEnroll>();
                         break;
 
-                    case "HigherSecondary":
-                        primaryEnrollments.Clear();
-                        secondaryEnrollments.Clear();
+                    case "Higher Secondary":
+                        higherSecondaryEnrollments = higherSecondaryEnrollments
+                            .Where(e => e.CourseAdmin.Category.Name == "Higher Secondary")
+                            .ToList();
+                        primaryEnrollments = new List<Enrollment>();
+                        secondaryEnrollments = new List<SecondaryEnroll>();
                         break;
                 }
             }
@@ -473,7 +562,6 @@ namespace AstroSafar.Controllers
             };
 
             ViewBag.SelectedCategory = categoryFilter;
-
             return View(model);
         }
 
@@ -530,77 +618,172 @@ namespace AstroSafar.Controllers
             return RedirectToAction("EnrolledUsers");
         }
 
-        public IActionResult UserProgress()
-        {
-            var progressData = (from unitProgress in _context.UnitProgresses
-                                join course in _context.courseAdmins
-                                on unitProgress.CourseId equals course.Id
-                                group unitProgress by new { unitProgress.Email, unitProgress.CourseId } into g
-                                select new
-                                {
-                                    UserName = g.First().Email, // Using email as a placeholder for the name
-                                    Email = g.Key.Email,
-                                    CourseName = g.First().CourseAdmin.Name,
-                                    //EnrollmentDate = g.Min(x => x.Id), // Adjust this to actual enrollment date if available
-                                    TotalUnits = g.Count(),
-                                    CompletedUnits = g.Count(x => x.IsCompleted), // Directly count completed units
-                                    ProgressPercentage = g.Average(x => x.ProgressPercentage)
-                                }).ToList();
 
-            ViewBag.ProgressData = progressData;
+        public IActionResult UserProgress(int page = 1, int pageSize = 5)
+        {
+            var unitProgressList = (from unitProgress in _context.UnitProgresses
+                                    join course in _context.courseAdmins
+                                        on unitProgress.CourseId equals course.Id
+                                    select new
+                                    {
+                                        unitProgress.Email,
+                                        unitProgress.CourseId,
+                                        unitProgress.IsCompleted,
+                                        unitProgress.ProgressPercentage,
+                                        CourseName = course.Name
+                                    }).ToList();
+
+            var groupedProgress = unitProgressList
+                .GroupBy(x => new { x.Email, x.CourseId })
+                .Select(g =>
+                {
+                    var email = g.Key.Email;
+                    var courseId = g.Key.CourseId;
+
+                    var score = (from er in _context.ExamResults
+                                 join en in _context.enrollments
+                                     on er.EnrollmentId equals en.Id
+                                 where en.Email == email && en.CourseId == courseId
+                                 select er.Score).FirstOrDefault();
+
+                    return new
+                    {
+                        UserName = email,
+                        Email = email,
+                        CourseName = g.First().CourseName,
+                        TotalUnits = g.Count(),
+                        CompletedUnits = g.Count(x => x.IsCompleted),
+                        ProgressPercentage = g.Average(x => x.ProgressPercentage),
+                        Score = score
+                    };
+                }).ToList();
+
+            var totalItems = groupedProgress.Count;
+            var pagedProgress = groupedProgress
+                                .Skip((page - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToList();
+
+            ViewBag.ProgressData = pagedProgress;
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
             return View();
         }
 
-        public IActionResult Transactions()
-        {
-            var transactions = (from t in _context.Transactions
-                                join e in _context.enrollments on t.EnrollmentId equals e.Id into enrollmentGroup
-                                from e in enrollmentGroup.DefaultIfEmpty() // Handle missing enrollments
-                                join u in _context.Registrations on e.Email equals u.Email into userGroup
-                                from u in userGroup.DefaultIfEmpty() // Handle missing users
-                                join c in _context.courseAdmins on e.CourseId equals c.Id into courseGroup
-                                from c in courseGroup.DefaultIfEmpty() // Handle missing courses
-                                select new
-                                {
-                                    TransactionId = t.Id,
-                                    UserName = u != null ? u.Firstname : "Unknown",
-                                    Email = u != null ? u.Email : "No Email",
-                                    CourseName = c != null ? c.Name : "No Course",
-                                    Amount = t.Amount,
-                                    Currency = t.Currency ?? "N/A",
-                                    PaymentDate = t.PaymentDate,
-                                    //Status = t.Status ?? "Pending",
-                                    RazorpayPaymentId = t.RazorpayPaymentId ?? "N/A"
-                                }).ToList();
 
-            ViewBag.TransactionData = transactions;
+        public IActionResult Transactions(int page = 1, int pageSize = 5)
+        {
+            var allTransactions = (from t in _context.Transactions
+                                   join e in _context.enrollments on t.EnrollmentId equals e.Id into enrollmentGroup
+                                   from e in enrollmentGroup.DefaultIfEmpty()
+                                   join u in _context.Registrations on e.Email equals u.Email into userGroup
+                                   from u in userGroup.DefaultIfEmpty()
+                                   join c in _context.courseAdmins on e.CourseId equals c.Id into courseGroup
+                                   from c in courseGroup.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       TransactionId = t.Id,
+                                       UserName = u != null ? u.Firstname : "Unknown",
+                                       Email = u != null ? u.Email : "No Email",
+                                       CourseName = c != null ? c.Name : "No Course",
+                                       Amount = t.Amount,
+                                       Currency = t.Currency ?? "N/A",
+                                       PaymentDate = t.PaymentDate,
+                                       RazorpayPaymentId = t.RazorpayPaymentId ?? "N/A"
+                                   }).ToList();
+
+            int total = allTransactions.Count();
+            int totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+            var paginatedTransactions = allTransactions
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.TransactionData = paginatedTransactions;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
             return View();
         }
-        public IActionResult IssuedCertificates()
+
+
+        public IActionResult IssuedCertificates(int page = 1, int pageSize = 5)
         {
-            var issuedCertificates = (from cert in _context.Certificates
-                                      join enroll in _context.enrollments on cert.EnrollmentId equals enroll.Id into enrollmentGroup
-                                      from enroll in enrollmentGroup.DefaultIfEmpty()
+            var allCertificates = (from cert in _context.Certificates
+                                   join enroll in _context.enrollments on cert.EnrollmentId equals enroll.Id into enrollmentGroup
+                                   from enroll in enrollmentGroup.DefaultIfEmpty()
+                                   join user in _context.Registrations on enroll.Email equals user.Email into userGroup
+                                   from user in userGroup.DefaultIfEmpty()
+                                   join course in _context.courseAdmins on enroll.CourseId equals course.Id into courseGroup
+                                   from course in courseGroup.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       CertificateId = cert.Id,
+                                       UserName = user != null ? user.Firstname : "Unknown",
+                                       Email = user != null ? user.Email : "No Email",
+                                       CourseName = course != null ? course.Name : "No Course",
+                                       IssuedOn = cert.IssuedOn,
+                                       CertificateNumber = cert.CertificateNumber ?? "N/A",
+                                   }).ToList();
 
-                                      join user in _context.Registrations on enroll.Email equals user.Email into userGroup
-                                      from user in userGroup.DefaultIfEmpty()
+            int totalCertificates = allCertificates.Count();
+            int totalPages = (int)Math.Ceiling((double)totalCertificates / pageSize);
 
-                                      join course in _context.courseAdmins on enroll.CourseId equals course.Id into courseGroup
-                                      from course in courseGroup.DefaultIfEmpty()
+            var pagedCertificates = allCertificates
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
-                                      select new
-                                      {
-                                          CertificateId = cert.Id,
-                                          UserName = user != null ? user.Firstname : "Unknown",
-                                          Email = user != null ? user.Email : "No Email",
-                                          CourseName = course != null ? course.Name : "No Course",
-                                          IssuedOn = cert.IssuedOn,
-                                          CertificateNumber = cert.CertificateNumber ?? "N/A",
-                                      }).ToList();
+            ViewBag.IssuedCertificates = pagedCertificates;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
 
-            ViewBag.IssuedCertificates = issuedCertificates;
             return View();
         }
+
+
+        [HttpGet]
+        public JsonResult GetEnrollmentDistribution()
+        {
+            var primary = _context.enrollments.Count();
+            var secondary = _context.secondaryEnrolls.Count();
+            var higherSecondary = _context.higherSecondaryEnrolls.Count();
+
+            var result = new
+            {
+                labels = new[] { "Primary", "Secondary", "Higher Secondary" },
+                counts = new[] { primary, secondary, higherSecondary }
+            };
+
+            return Json(result);
+        }
+        public IActionResult BookOrders(int page = 1, int pageSize = 2)
+        {
+            // Get total count for pagination
+            int total = _context.BookOrders.Count();
+            int totalPages = (int)Math.Ceiling((double)total / pageSize);
+
+            // Get paginated data
+            var orders = _context.BookOrders
+                .Include(o => o.User)
+                .Include(o => o.BookOrderDetails)
+                    .ThenInclude(d => d.Book)
+                .OrderByDescending(o => o.OrderDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Set pagination data for the view
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(orders);
+        }
+
 
     }
 }

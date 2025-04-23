@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics;
 using Azure.Core;
+using System.Globalization;
 
 namespace AstroSafar.Controllers
 {
@@ -24,12 +25,7 @@ namespace AstroSafar.Controllers
             _signInManager = signInManager;
         }
 
-        [HttpGet]
-        public IActionResult CheckUserAuthentication()
-        {
-            bool isAuthenticated = User.Identity.IsAuthenticated;
-            return Json(new { isAuthenticated });
-        }
+        
 
         public IActionResult Profile()
         {
@@ -133,13 +129,47 @@ namespace AstroSafar.Controllers
             return View();
         }
 
-        // Needed
+        [HttpPost]
+        public IActionResult Login(string email, string password)
+        {
+            // validate user...
+            var customer = _context.Registrations.FirstOrDefault(c => c.Email == email);
+            if (customer == null || customer.Password != password)
+            {
+                ViewBag.Message = "Invalid credentials";
+                return View();
+            }
+
+            // ✅ Set session
+            HttpContext.Session.SetInt32("CustomerId", customer.Id);
+            HttpContext.Session.SetString("UserEmail", customer.Email);
+            HttpContext.Session.SetInt32("UserId", customer.Id);
+            HttpContext.Session.SetString("CustomerName", customer.Firstname); // or user.Username
+
+
+
+            // ✅ Redirect properly
+            if (TempData["RedirectAfterLogin"] != null)
+            {
+                string redirectTo = TempData["RedirectAfterLogin"].ToString();
+
+                if (redirectTo == "ExploreBooks")
+                    return RedirectToAction("Explore", "Store");
+
+                if (redirectTo == "EducationLevels")
+                    return RedirectToAction("EducationLevels", "Home");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
 
         //[HttpPost]
         //public IActionResult Login(string email, string password, string returnUrl = null)
         //{
-        //    bool abc = (bool)(TempData["boolVaribale"]);
-
+        //    // Check if TempData has a value before casting
+        //    bool abc = TempData["boolVaribale"] != null && (bool)TempData["boolVaribale"];
 
         //    if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         //    {
@@ -147,7 +177,7 @@ namespace AstroSafar.Controllers
         //        return View();
         //    }
 
-        //    var customer = _context.Registrations.FirstOrDefault(c => c.Email == email && c.Password == password);
+        //    var customer = _context.Registrations.FirstOrDefault(c => c.Email == email);
         //    if (customer == null)
         //    {
         //        ViewBag.Message = "Email not found! Please check your email or register.";
@@ -163,73 +193,26 @@ namespace AstroSafar.Controllers
         //    // Set session data
         //    HttpContext.Session.SetInt32("CustomerId", customer.Id);
         //    HttpContext.Session.SetString("CustomerName", customer.Firstname);
-        //    HttpContext.Session.SetString("UserEmail",customer.Email = email);
-        //   // HttpContext.Session.SetInt32($"UnlockExam_{request.CourseId}", 1);  // 1 means exam unlocked
+        //    HttpContext.Session.SetString("UserEmail", customer.Email);
 
-
-
-        //    // Redirect to returnUrl if available, otherwise go to Dashboard
+        //    // Redirect to returnUrl if available and valid
         //    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
         //    {
         //        return Redirect(returnUrl);
         //    }
 
-        //    if (abc)
-        //    {
-        //        return RedirectToAction("EducationLevels", "Home");
-
-        //    }
-        //    else
-        //    {
-        //        return RedirectToAction("Index", "Home");
-
-        //    }
+        //    // If TempData flag is true, redirect to EducationLevels, otherwise to Home
+        //    return abc ? RedirectToAction("EducationLevels", "Home") : RedirectToAction("Index", "Home");
         //}
 
-        [HttpPost]
-        public IActionResult Login(string email, string password, string returnUrl = null)
-        {
-            // Check if TempData has a value before casting
-            bool abc = TempData["boolVaribale"] != null && (bool)TempData["boolVaribale"];
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-            {
-                ViewBag.Message = "Email and password are required.";
-                return View();
-            }
-
-            var customer = _context.Registrations.FirstOrDefault(c => c.Email == email);
-            if (customer == null)
-            {
-                ViewBag.Message = "Email not found! Please check your email or register.";
-                return View();
-            }
-
-            if (customer.Password != password)
-            {
-                ViewBag.Message = "Incorrect password! Please try again.";
-                return View();
-            }
-
-            // Set session data
-            HttpContext.Session.SetInt32("CustomerId", customer.Id);
-            HttpContext.Session.SetString("CustomerName", customer.Firstname);
-            HttpContext.Session.SetString("UserEmail", customer.Email);
-
-            // Redirect to returnUrl if available and valid
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            // If TempData flag is true, redirect to EducationLevels, otherwise to Home
-            return abc ? RedirectToAction("EducationLevels", "Home") : RedirectToAction("Index", "Home");
-        }
 
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
+
     }
 }

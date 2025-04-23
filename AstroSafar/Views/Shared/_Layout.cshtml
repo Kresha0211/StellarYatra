@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AstroSafar.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
 </head>
 <body>
     @if (HttpContextAccessor.HttpContext.Session.GetString("AdminLoggedIn") == "true")
@@ -56,10 +55,7 @@
                 <button onclick="subscribeNewsletter()">Subscribe</button>
             </div>
 
-
-
             <!-- Social Media Links -->
-            <!-- Follow Us Section -->
             <div class="footer-section text-center">
                 <h5>Follow Us</h5>
                 <div class="social-icons">
@@ -88,8 +84,31 @@
         </div>
     </footer>
 
+    <!-- Floating Chatbot Button -->
+    <div id="chatbot-toggle" class="chatbot-toggle">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <!-- Chatbot Box -->
+    <div id="chatbot-box" class="chatbot-box">
+        <div class="chatbot-header">
+            AstroSafar Bot 🚀
+            <span class="chatbot-close-btn">&times;</span>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages"></div>
+        <div class="chatbot-input-container">
+            <input type="text" id="chatbot-input" class="chatbot-input" placeholder="Ask something..." />
+            <button id="chatbot-send" class="chatbot-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- FontAwesome for Social Media Icons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
+
+    <!-- SignalR for Chatbot -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.12/signalr.min.js"></script>
 
     <!-- Newsletter Subscription JavaScript -->
     <script>
@@ -104,8 +123,223 @@
         }
     </script>
 
-    <!-- FOOTER STYLES -->
+    <!-- Chatbot Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById("chatbot-toggle");
+            const chatbotBox = document.getElementById("chatbot-box");
+            const input = document.getElementById("chatbot-input");
+            const messages = document.getElementById("chatbot-messages");
+            const sendBtn = document.getElementById("chatbot-send");
+            const closeBtn = document.querySelector(".chatbot-close-btn");
+
+            // Initialize connection
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            // Start the connection
+            async function startConnection() {
+                try {
+                    await connection.start();
+                    console.log("SignalR Connected.");
+                    appendSystemMessage("Hello! I'm AstroBot. How can I help you today? 🚀");
+                } catch (err) {
+                    console.log(err);
+                    appendSystemMessage("Chatbot is currently unavailable. Please try again later.");
+                    setTimeout(startConnection, 5000);
+                }
+            }
+
+            // Handle received messages
+            connection.on("ReceiveResponse", (reply) => {
+                appendMessage("AstroBot", reply);
+            });
+
+            // Handle connection closed
+            connection.onclose(async () => {
+                appendSystemMessage("Connection lost. Trying to reconnect...");
+                await startConnection();
+            });
+
+            // Toggle chatbot visibility
+            toggleBtn.addEventListener("click", () => {
+                chatbotBox.style.display = chatbotBox.style.display === "flex" ? "none" : "flex";
+                if (chatbotBox.style.display === "flex") {
+                    input.focus();
+                }
+            });
+
+            // Close button
+            closeBtn.addEventListener("click", () => {
+                chatbotBox.style.display = "none";
+            });
+
+            // Send message on Enter key or Send button click
+            function sendMessage() {
+                const userMessage = input.value.trim();
+                if (userMessage) {
+                    appendMessage("You", userMessage);
+                    connection.invoke("GetResponse", userMessage)
+                        .catch(err => {
+                            console.error(err);
+                            appendSystemMessage("Error sending message. Please try again.");
+                        });
+                    input.value = "";
+                }
+            }
+
+            input.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            sendBtn.addEventListener("click", sendMessage);
+
+            // Helper functions
+            function appendMessage(sender, message) {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = sender === "You" ? "user-message" : "bot-message";
+                msgDiv.innerHTML = `<strong>${sender}:</strong> ${message}`;
+                messages.appendChild(msgDiv);
+                messages.scrollTop = messages.scrollHeight;
+            }
+
+            function appendSystemMessage(message) {
+                const msgDiv = document.createElement("div");
+                msgDiv.className = "system-message";
+                msgDiv.textContent = message;
+                messages.appendChild(msgDiv);
+                messages.scrollTop = messages.scrollHeight;
+            }
+
+            // Start the connection when page loads
+            startConnection();
+        });
+    </script>
+
+    <!-- Chatbot Styles -->
     <style>
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #4d5b9e;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            font-size: 24px;
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
+
+            .chatbot-toggle:hover {
+                transform: scale(1.1);
+                background-color: #3a4a7e;
+            }
+
+        .chatbot-box {
+            position: fixed;
+            bottom: 90px;
+            right: 25px;
+            width: 350px;
+            height: 450px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9998;
+        }
+
+        .chatbot-header {
+            background-color: #4d5b9e;
+            color: white;
+            padding: 12px 16px;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .chatbot-close-btn:hover {
+                color: #ff9800;
+            }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            background-color: #f9f9f9;
+        }
+
+        .chatbot-input-container {
+            padding: 10px;
+            border-top: 1px solid #ccc;
+            display: flex;
+            gap: 8px;
+            background-color: white;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chatbot-send-btn {
+            padding: 8px 16px;
+            background-color: #4d5b9e;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .chatbot-send-btn:hover {
+                background-color: #3a4a7e;
+            }
+
+        .user-message {
+            margin-bottom: 10px;
+            text-align: right;
+            color: #4d5b9e;
+        }
+
+        .bot-message {
+            margin-bottom: 10px;
+            text-align: left;
+            color: #333;
+        }
+
+        .system-message {
+            margin-bottom: 10px;
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
         .footer {
             background-color: #0d1b2a;
             color: white;
@@ -158,7 +392,6 @@
                     color: #ff9800;
                 }
 
-        /* Newsletter Input */
         input[type="email"] {
             width: 80%;
             padding: 8px;
@@ -182,7 +415,6 @@
                 background-color: #ffb74d;
             }
 
-        /* Social Media Icons */
         .social-icons {
             display: flex;
             gap: 15px;
@@ -201,7 +433,6 @@
                 color: #ffcc00;
             }
 
-        /* Footer Bottom */
         .footer-bottom {
             margin-top: 20px;
             font-size: 0.9em;
@@ -209,7 +440,121 @@
             padding-top: 10px;
         }
 
+        .footer {
+            background-color: #0d1b2a;
+            color: white;
+            padding: 40px 0 20px 0;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-top: 75px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .footer {
+            margin-top: auto;
+        }
+
+        .client-header {
+            background-color: #0d1b2a;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            height: 100px;
+        }
+
+        .admin-header {
+            background-color: #2c3e50;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .container {
+            padding-top: 20px;
+        }
+
+        .navbar {
+            background-color: #0d1b2a;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+        }
+
+            .nav-link:hover {
+                color: #ff9800 !important;
+            }
+
+            .navbar-brand img {
+                max-height: 40px;
+            }
+
+            .navbar-brand span {
+                font-size: 1rem;
+                color: white;
+            }
+
+        .admin-header {
+            background-color: #2c3e50;
+            position: fixed;
+        }
+
+            .admin-header .nav-link {
+                color: #fff !important;
+            }
+
+                .admin-header .nav-link:hover {
+                    color: #ff9800 !important;
+                }
+    h5 {
+    color: #ff9800; /* Using your dark blue-grey variable */
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--primary-accent); /* Orange accent underline
+    */            padding-bottom: 5px;
+    display: inline-block;
+    }
+    .social-icons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+    }
+
+
+    .social-icon {
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    }
+
+    .social-icon:hover {
+    color: #ffcc00;
+    }
+
+    .footer-bottom {
+    margin-top: 20px;
+    font-size: 0.9em;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 10px;
+    }
     </style>
+
+
+    
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -217,40 +562,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-<style>
-    /* Header Styling */
-    .navbar {
-        background-color: #0d1b2a;
-    }
-
-    .navbar-brand, .nav-link {
-        color: #fff !important;
-    }
-
-        .nav-link:hover {
-            color: #ff9800 !important;
-        }
-
-        .navbar-brand img {
-            max-height: 40px;
-        }
-
-        .navbar-brand span {
-            font-size: 1rem;
-            color: white;
-        }
-
-    /* Admin Header Styling */
-    .admin-header {
-        background-color: #2c3e50;
-    }
-
-        .admin-header .nav-link {
-            color: #fff !important;
-        }
-
-            .admin-header .nav-link:hover {
-                color: #ff9800 !important;
-            }
-
-</style>
