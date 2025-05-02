@@ -37,12 +37,16 @@ namespace AstroSafar.Models
 
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime ?DateOfBirth { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "*")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
         [Display(Name = "Phone Number")]
         public string Phone { get; set; }
+
+      
+
     }
+
 }
 

@@ -145,7 +145,7 @@
         </div>
 
         <!-- Date of Birth -->
-        <div class="mb-4">
+       @*  <div class="mb-4">
             @Html.LabelFor(model => model.DateOfBirth, new { @class = "form-label" })
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
@@ -153,7 +153,19 @@
             </div>
             <div class="invalid-feedback">Please enter your date of birth.</div>
             @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+        </div> *@
+        <div class="mb-4">
+            <label for="dobInput" class="form-label">Enrollment Date </label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                <input type="text"
+                       id="dobInput"
+                       class="form-control"
+                       value="@DateTime.Now.ToString("dd/MM/yyyy")"
+                       readonly />
+            </div>
         </div>
+
         <!-- Standard -->
         <div class="mb-3">
             <label asp-for="Standard" class="form-label">Standard</label>

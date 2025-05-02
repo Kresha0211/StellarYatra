@@ -1,4 +1,6 @@
-﻿using AstroSafar.Migrations;
+﻿
+
+using AstroSafar.Migrations;
 using AstroSafar.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +15,46 @@ public class CertificateController : Controller
     {
         _context = context;
     }
-    
+
+    //public IActionResult CertificatePrompt()
+    //{
+    //    // Retrieve the score from TempData
+    //    int score = 0;
+    //    if (TempData["Score"] != null)
+    //    {
+    //        score = Convert.ToInt32(TempData["Score"]);
+    //    }
+    //    else
+    //    {
+    //        // If TempData["Score"] is null, try to get the score from the database
+    //        // Get the enrollment ID (that you stored in TempData["enId"])
+    //        if (TempData["enId"] != null)
+    //        {
+    //            int enrollmentId = Convert.ToInt32(TempData["enId"]);
+
+    //            // Get the latest exam result for this enrollment
+    //            var examResult = _context.ExamResults
+    //                .Where(r => r.EnrollmentId == enrollmentId)
+    //                .OrderByDescending(r => r.CompletedAt)
+    //                .FirstOrDefault();
+
+    //            if (examResult != null)
+    //            {
+    //                score = examResult.Score;
+    //            }
+    //        }
+    //    }
+
+    //    // Create a view model to pass to the view
+    //    var viewModel = new CertificateViewModel
+    //    {
+    //        Score = score
+    //        // Add other properties as needed
+    //    };
+
+    //    return View(viewModel);
+    //}
+
     public IActionResult CertificatePrompt()
     {
         // Retrieve the score from TempData
@@ -25,17 +66,15 @@ public class CertificateController : Controller
         else
         {
             // If TempData["Score"] is null, try to get the score from the database
-            // Get the enrollment ID (that you stored in TempData["enId"])
             if (TempData["enId"] != null)
             {
                 int enrollmentId = Convert.ToInt32(TempData["enId"]);
 
-                // Get the latest exam result for this enrollment
-                var examResult = _context.ExamResults
-                    .Where(r => r.EnrollmentId == enrollmentId)
-                    .OrderByDescending(r => r.CompletedAt)
-                    .FirstOrDefault();
+                // Try to determine which type of enrollment it is based on TempData
+                string enrollmentType = TempData["enrollmentType"]?.ToString() ?? "primary";
 
+                // Get the latest exam result for this enrollment
+                var examResult = GetExamResultsByEnrollmentType(enrollmentId, enrollmentType);
                 if (examResult != null)
                 {
                     score = examResult.Score;
@@ -51,6 +90,30 @@ public class CertificateController : Controller
         };
 
         return View(viewModel);
+    }
+
+    private ExamResult GetExamResultsByEnrollmentType(int enrollmentId, string enrollmentType)
+    {
+        switch (enrollmentType.ToLower())
+        {
+            case "secondary":
+                return _context.ExamResults
+                    .Where(r => r.SecondaryEnrollId == enrollmentId)
+                    .OrderByDescending(r => r.CompletedAt)
+                    .FirstOrDefault();
+
+            case "highersecondary":
+                return _context.ExamResults
+                    .Where(r => r.HigherSecondaryEnrollId == enrollmentId)
+                    .OrderByDescending(r => r.CompletedAt)
+                    .FirstOrDefault();
+
+            default: // Primary enrollment
+                return _context.ExamResults
+                    .Where(r => r.EnrollmentId == enrollmentId)
+                    .OrderByDescending(r => r.CompletedAt)
+                    .FirstOrDefault();
+        }
     }
 
     //  View certificate success message with buttons
@@ -86,6 +149,10 @@ public class CertificateController : Controller
         return View("CertificateTemplate", certificate); // Use HTML certificate template
     }
 
+
+
+
+
     // Download PDF using Rotativa
     public IActionResult DownloadCertificate(int id)
     {
@@ -108,4 +175,8 @@ public class CertificateController : Controller
         };
 
     }
+
+
 }
+
+

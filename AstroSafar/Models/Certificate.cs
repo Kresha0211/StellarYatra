@@ -14,6 +14,13 @@ namespace AstroSafar.Models
 
         public virtual Enrollment Enrollment { get; set; }
 
+        [ForeignKey("SecondaryEnroll")]
+        public int? SecondaryEnrollId { get; set; }
+        public virtual SecondaryEnroll SecondaryEnroll { get; set; }
+
+        [ForeignKey("HigherSecondaryEnroll")]
+        public int? HigherSecondaryEnrollId { get; set; }
+        public virtual HigherSecondaryEnroll HigherSecondaryEnroll { get; set; }
         [Required]
         public DateTime IssuedOn { get; set; } = DateTime.Now;
 

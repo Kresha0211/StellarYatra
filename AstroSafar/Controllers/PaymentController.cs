@@ -179,6 +179,7 @@ namespace AstroSafar.Controllers
 
                 // ✅ Step 5: Redirect to Certificate View
                 return RedirectToAction("CertificateGenerated", "Certificate", new { enrollmentId });
+
             }
             catch (Exception ex)
             {

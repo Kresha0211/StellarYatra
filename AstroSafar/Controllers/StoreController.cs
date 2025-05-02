@@ -524,36 +524,10 @@ namespace AstroSafar.Controllers
             shipping.TotalAmount = subtotal + gst + delivery;
 
             return View("Checkout", shipping);
-            // ← Notice we render the Checkout.cshtml view here,
-            //     which now shows both the order summary and payment selector.
+           
         }
 
-        // STEP 3: Proceed to payment (you can wire up Razorpay/Stripe here)
-        // STEP 4: PAYMENT GATEWAY (dummy)
-        [HttpGet]
-        public IActionResult PaymentGateway()
-        {
-            if (TempData["CheckoutModel"] == null)
-                return RedirectToAction("ShippingDetails");
 
-            TempData.Keep("CheckoutModel");
-            var model = JsonConvert.DeserializeObject<CheckoutViewModel>(
-                            TempData["CheckoutModel"].ToString());
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult PaymentGatewayPost()
-        {
-            if (TempData["CheckoutModel"] == null)
-                return RedirectToAction("ShippingDetails");
-
-            var model = JsonConvert.DeserializeObject<CheckoutViewModel>(
-                            TempData["CheckoutModel"].ToString());
-
-            // TODO: integrate real gateway here, then:
-            return RedirectToAction("OrderConfirmation", new { method = model.PaymentMethod });
-        }
 
         // STEP 5: ORDER CONFIRMATION
         [HttpGet]
@@ -562,6 +536,41 @@ namespace AstroSafar.Controllers
             ViewBag.PaymentMethod = method;
             return View();
         }
+
+        [HttpPost]
+        public IActionResult BuyNow(int bookId)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Clear existing cart items for this user
+            var existingItems = _context.CartItems.Where(c => c.UserId == userId);
+            _context.CartItems.RemoveRange(existingItems);
+            _context.SaveChanges();
+
+            // Add the book to cart with quantity 1
+            var book = _context.Books.Find(bookId);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            var cartItem = new CartItem
+            {
+                BookId = bookId,
+                UserId = userId.Value,
+                Quantity = 1
+            };
+
+            _context.CartItems.Add(cartItem);
+            _context.SaveChanges();
+
+            return RedirectToAction("Checkout");
+        }
+
     }
 
 

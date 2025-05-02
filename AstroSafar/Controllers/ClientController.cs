@@ -100,6 +100,7 @@ namespace AstroSafar.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Enroll(Enrollment model)
         {
+            
             _context.enrollments.Add(model);
             _context.SaveChanges();
             return RedirectToAction("Units", new { courseId = model.CourseId });

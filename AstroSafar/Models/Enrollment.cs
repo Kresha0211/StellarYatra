@@ -35,7 +35,7 @@ namespace AstroSafar.Models
 
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }= DateTime.Now;
 
 
         [Required(ErrorMessage = "Please select your gender")]

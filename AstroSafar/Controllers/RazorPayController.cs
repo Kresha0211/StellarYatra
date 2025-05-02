@@ -55,31 +55,7 @@ namespace AstroSafar.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> PaymentSuccess(string paymentId, string orderId, string signature)
-        //{
-        //    // Verify the payment signature (as shown earlier)
-        //    if (IsValidPayment(paymentId, orderId, signature))
-        //    {
-        //        // Example: Update the BookOrder with payment information
-        //        var order = await _context.BookOrders
-        //                                   .FirstOrDefaultAsync(o => o.BookOrderId == Convert.ToInt32(orderId));
-        //        if (order != null)
-        //        {
-        //            order.PaymentId = paymentId;
-        //           // order.Status = "Paid";
-        //            await _context.SaveChangesAsync();
-        //        }
-
-        //        return Ok("Payment Successful");
-        //    }
-        //    else
-        //    {
-        //        return BadRequest("Invalid payment signature");
-        //    }
-
-        //}
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult PaymentSuccess([FromBody] RazorpaySuccessViewModel razorData)

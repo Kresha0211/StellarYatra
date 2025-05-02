@@ -76,7 +76,7 @@
                                     data-fullname="@user.FullName"
                                     data-email="@user.Email"
                                     data-gender="@user.Gender"
-                                    data-dob="@user.DateOfBirth.ToShortDateString()"
+                                    data-dob="@user.DateOfBirth?.ToShortDateString()"
                                     data-standard="@user.Standard"
                                     data-address="@user.Address">
                                 <i class="fas fa-eye"></i> View Details
@@ -122,7 +122,7 @@
                                     data-fullname="@user.FullName"
                                     data-email="@user.Email"
                                     data-gender="@user.Gender"
-                                    data-dob="@user.DateOfBirth.ToShortDateString()"
+                                    data-dob="@user.DateOfBirth?.ToShortDateString()"
                                     data-standard="@user.Standard"
                                     data-address="@user.Address">
                                 <i class="fas fa-eye"></i> View Details
@@ -161,6 +161,7 @@
                     <td>@user.FullName</td>
                     <td>@user.Email</td>
                     <td>@user.Standard</td>
+                 
                     <td>
                         <div class="action-buttons">
                             <button type="button" class="btn btn-info view-details-btn"
@@ -168,7 +169,7 @@
                                     data-fullname="@user.FullName"
                                     data-email="@user.Email"
                                     data-gender="@user.Gender"
-                                    data-dob="@user.DateOfBirth.ToShortDateString()"
+                                    data-dob="@user.DateOfBirth?.ToShortDateString()"
                                     data-standard="@user.Standard"
                                     data-address="@user.Address">
                                 <i class="fas fa-eye"></i> View Details
@@ -199,7 +200,7 @@
                 <p><strong>Full Name:</strong> <span id="modalFullName"></span></p>
                 <p><strong>Email:</strong> <span id="modalEmail"></span></p>
                 <p><strong>Gender:</strong> <span id="modalGender"></span></p>
-                <p><strong>Date of Birth:</strong> <span id="modalDOB"></span></p>
+                <p><strong>Enrollment Date:</strong> <span id="modalDOB"></span></p>
                 <p><strong>Standard:</strong> <span id="modalStandard"></span></p>
                 <p><strong>Address:</strong> <span id="modalAddress"></span></p>
             </div>

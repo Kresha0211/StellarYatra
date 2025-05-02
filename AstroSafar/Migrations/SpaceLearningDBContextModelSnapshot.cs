@@ -238,15 +238,25 @@ namespace AstroSafar.Migrations
                     b.Property<int>("EnrollmentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("HigherSecondaryEnrollId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDownloaded")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("IssuedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("SecondaryEnrollId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EnrollmentId");
+
+                    b.HasIndex("HigherSecondaryEnrollId");
+
+                    b.HasIndex("SecondaryEnrollId");
 
                     b.ToTable("Certificates");
                 });
@@ -343,6 +353,10 @@ namespace AstroSafar.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CourseType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Options")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -373,7 +387,10 @@ namespace AstroSafar.Migrations
                     b.Property<DateTime>("CompletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("EnrollmentId")
+                    b.Property<int?>("EnrollmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HigherSecondaryEnrollId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsCompleted")
@@ -382,12 +399,19 @@ namespace AstroSafar.Migrations
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SecondaryEnrollId")
+                        .HasColumnType("int");
+
                     b.Property<TimeSpan>("TimeTaken")
                         .HasColumnType("time");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EnrollmentId");
+
+                    b.HasIndex("HigherSecondaryEnrollId");
+
+                    b.HasIndex("SecondaryEnrollId");
 
                     b.ToTable("ExamResults");
                 });
@@ -764,7 +788,19 @@ namespace AstroSafar.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AstroSafar.Models.HigherSecondaryEnroll", "HigherSecondaryEnroll")
+                        .WithMany()
+                        .HasForeignKey("HigherSecondaryEnrollId");
+
+                    b.HasOne("AstroSafar.Models.SecondaryEnroll", "SecondaryEnroll")
+                        .WithMany()
+                        .HasForeignKey("SecondaryEnrollId");
+
                     b.Navigation("Enrollment");
+
+                    b.Navigation("HigherSecondaryEnroll");
+
+                    b.Navigation("SecondaryEnroll");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.CourseAdmin", b =>
@@ -805,10 +841,23 @@ namespace AstroSafar.Migrations
                     b.HasOne("AstroSafar.Models.Enrollment", "Enrollment")
                         .WithMany()
                         .HasForeignKey("EnrollmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("AstroSafar.Models.HigherSecondaryEnroll", "HigherSecondaryEnroll")
+                        .WithMany()
+                        .HasForeignKey("HigherSecondaryEnrollId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("AstroSafar.Models.SecondaryEnroll", "SecondaryEnroll")
+                        .WithMany()
+                        .HasForeignKey("SecondaryEnrollId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Enrollment");
+
+                    b.Navigation("HigherSecondaryEnroll");
+
+                    b.Navigation("SecondaryEnroll");
                 });
 
             modelBuilder.Entity("AstroSafar.Models.HigherSecondaryEnroll", b =>

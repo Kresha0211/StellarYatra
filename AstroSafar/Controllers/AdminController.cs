@@ -226,34 +226,7 @@ namespace AstroSafar.Controllers
 
             return View(course);
         }
-        //public IActionResult CourseList()
-        //{
-        //    // Fetch courses along with their categories
-        //    var courses = _context.courseAdmins
-        //        .Include(c => c.Category) // Ensure Category navigation property is included
-        //        .ToList();
-
-        //    return View(courses);
-        //}
-
-        //public IActionResult CourseList(string categoryFilter = "All")
-        //{
-        //    // Fetch courses along with their categories
-        //    var courses = _context.courseAdmins
-        //        .Include(c => c.Category)
-        //        .AsQueryable();
-
-        //    // Apply filter if not showing all
-        //    if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter != "All")
-        //    {
-        //        courses = courses.Where(c => c.Category.Name == categoryFilter);
-        //    }
-
-        //    // Pass selected category to the view
-        //    ViewBag.SelectedCategory = categoryFilter;
-
-        //    return View(courses.ToList());
-        //}
+        
 
         public IActionResult CourseList(int categoryFilter = 0, int page = 1, int pageSize = 5)
         {
@@ -506,6 +479,9 @@ namespace AstroSafar.Controllers
 
             return RedirectToAction("UnitList");
         }
+
+
+
 
         public IActionResult EnrolledUsers(string? categoryFilter = "All")
         {

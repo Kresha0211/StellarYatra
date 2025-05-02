@@ -1,27 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿    using System.ComponentModel.DataAnnotations.Schema;
+    using System.ComponentModel.DataAnnotations;
 
-namespace AstroSafar.Models
-{
-    public class ExamQuestion
+    namespace AstroSafar.Models
     {
-        [Key]
-        public int Id { get; set; }
+        public class ExamQuestion
+        {
+            [Key]
+            public int Id { get; set; }
 
-        [Required]
-        public string QuestionText { get; set; }
+            [Required]
+            public string QuestionText { get; set; }
 
-        [Required]
-        public string Options { get; set; } // Store options as a comma-separated string
+            [Required]
+            public string Options { get; set; } // Store options as a comma-separated string
 
-        [Required]
-        public string CorrectAnswer { get; set; }
+            [Required]
+            public string CorrectAnswer { get; set; }
 
-        [Required]
-        public string QuestionType { get; set; } // "MCQ", "TrueFalse"
+            [Required]
+            public string QuestionType { get; set; } // "MCQ", "TrueFalse"
 
-        [ForeignKey("Course")]
-        public int CourseId { get; set; }
-        public CourseAdmin Course { get; set; } // Navigation property
+            [ForeignKey("Course")]
+            public int CourseId { get; set; }
+            public CourseAdmin Course { get; set; } // Navigation property
+
+        }
     }
-}

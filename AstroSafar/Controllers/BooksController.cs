@@ -70,11 +70,6 @@ namespace AstroSafar.Controllers
             return RedirectToAction("Index");
         }
 
-        //public IActionResult Edit(int id)
-        //{
-        //    var book = _context.Books.Find(id);
-        //    return View(book);
-        //}
 
         public IActionResult Edit(int id)
         {
@@ -87,14 +82,7 @@ namespace AstroSafar.Controllers
         }
 
 
-        //[HttpPost]
-        //public IActionResult Edit(Book book)
-        //{
-        //    _context.Books.Update(book);
-        //    _context.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
-
+       
         [HttpPost]
         public IActionResult Edit(Book book, IFormFile ImageUrl)
         {

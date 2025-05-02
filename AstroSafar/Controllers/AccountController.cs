@@ -102,6 +102,8 @@ namespace AstroSafar.Controllers
             {
                 try
                 {
+                    registration.DateOfBirth = DateTime.Now;
+
                     _context.Registrations.Add(registration);
                     await _context.SaveChangesAsync();
 
@@ -145,6 +147,7 @@ namespace AstroSafar.Controllers
             HttpContext.Session.SetString("UserEmail", customer.Email);
             HttpContext.Session.SetInt32("UserId", customer.Id);
             HttpContext.Session.SetString("CustomerName", customer.Firstname); // or user.Username
+
 
 
 

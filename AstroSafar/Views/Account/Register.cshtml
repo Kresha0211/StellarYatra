@@ -1,9 +1,9 @@
 ﻿
  @model AstroSafar.Models.Registration
 
-@{
+@* @{
     ViewBag.Title = "Join AstroSafar | Space Learning";
-}
+} *@
 
 <!DOCTYPE html>
 <html lang="en">
@@ -345,20 +345,15 @@
             </div>
 
             <div class="mb-4">
-                @Html.LabelFor(model => model.DateOfBirth, new { @class = "form-label" })
+                <label for="dobInput" class="form-label">Registration Date </label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                    @Html.TextBoxFor(model => model.DateOfBirth, new
-                        {
-                            @class = "form-control",
-                            type = "date",
-                            required = "required",
-                            id = "dobInput",
-                            max = DateTime.Now.ToString("yyyy-MM-dd")
-                        })
+                    <input type="text"
+                           id="dobInput"
+                           class="form-control"
+                           value="@DateTime.Now.ToString("dd/MM/yyyy")"
+                           readonly />
                 </div>
-                <div class="invalid-feedback">Please enter a valid date (not in future)</div>
-                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
             </div>
 
             <button type="submit" class="btn btn-primary w-100">LAUNCH YOUR JOURNEY</button>
